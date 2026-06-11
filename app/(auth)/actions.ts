@@ -1,0 +1,54 @@
+"use server";
+
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+
+export type AuthState = { error?: string } | undefined;
+
+export async function signInAction(
+  _prev: AuthState,
+  formData: FormData
+): Promise<AuthState> {
+  const email = String(formData.get("email") ?? "");
+  const password = String(formData.get("password") ?? "");
+  const next = String(formData.get("next") ?? "/dashboard");
+
+  const supabase = createClient();
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) return { error: error.message };
+
+  redirect(next || "/dashboard");
+}
+
+export async function signUpAction(
+  _prev: AuthState,
+  formData: FormData
+): Promise<AuthState> {
+  const email = String(formData.get("email") ?? "");
+  const password = String(formData.get("password") ?? "");
+  const orgName = String(formData.get("org_name") ?? "");
+
+  if (password.length < 8) {
+    return { error: "Password must be at least 8 characters." };
+  }
+
+  const supabase = createClient();
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { org_name: orgName },
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/dashboard`,
+    },
+  });
+  if (error) return { error: error.message };
+
+  // The handle_new_user trigger creates org + membership + trial + entitlements.
+  redirect("/dashboard");
+}
+
+export async function signOutAction() {
+  const supabase = createClient();
+  await supabase.auth.signOut();
+  redirect("/login");
+}

@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { SiteHeader } from "@/components/site/Header";
 import { Card, CardBody } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
+import { AuthForm } from "@/components/auth/AuthForm";
 import { TRIAL_PERIOD_DAYS } from "@/lib/stripe/config";
 
-// Placeholder — auth + Stripe checkout wiring lands in a later phase.
 export default function SignupPage() {
   return (
     <div className="min-h-screen bg-paper">
@@ -15,13 +14,20 @@ export default function SignupPage() {
             <h1 className="font-heading text-2xl font-semibold tracking-tight">
               Start your {TRIAL_PERIOD_DAYS}-day free trial
             </h1>
-            <p className="mt-2 text-sm text-slate">
-              Account creation and Stripe checkout are wired up in a later build
-              phase. This is the Phase 1 foundation.
+            <p className="mt-1 mb-6 text-sm text-slate">
+              No charge until day {TRIAL_PERIOD_DAYS + 1}. Cancel anytime.
             </p>
-            <Link href="/" className="mt-6 inline-block">
-              <Button variant="outline">Back to home</Button>
-            </Link>
+            <AuthForm mode="signup" />
+            <p className="mt-5 text-sm text-slate">
+              Already have an account?{" "}
+              <Link href="/login" className="text-evergreen hover:underline">
+                Sign in
+              </Link>
+            </p>
+            <p className="mt-4 text-xs text-slate">
+              By continuing you agree to our terms. Lintel provides software
+              tools, not legal, tax or financial advice.
+            </p>
           </CardBody>
         </Card>
       </main>

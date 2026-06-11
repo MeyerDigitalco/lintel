@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { SiteHeader } from "@/components/site/Header";
 import { Card, CardBody } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
+import { AuthForm } from "@/components/auth/AuthForm";
 
-// Placeholder — Supabase auth lands in a later phase.
-export default function LoginPage() {
+export default function LoginPage({
+  searchParams,
+}: {
+  searchParams: { next?: string };
+}) {
   return (
     <div className="min-h-screen bg-paper">
       <SiteHeader />
@@ -14,12 +17,14 @@ export default function LoginPage() {
             <h1 className="font-heading text-2xl font-semibold tracking-tight">
               Sign in
             </h1>
-            <p className="mt-2 text-sm text-slate">
-              Supabase authentication is wired up in a later build phase.
+            <p className="mt-1 mb-6 text-sm text-slate">Welcome back to Lintel.</p>
+            <AuthForm mode="signin" next={searchParams.next} />
+            <p className="mt-5 text-sm text-slate">
+              New here?{" "}
+              <Link href="/signup" className="text-evergreen hover:underline">
+                Start a free trial
+              </Link>
             </p>
-            <Link href="/" className="mt-6 inline-block">
-              <Button variant="outline">Back to home</Button>
-            </Link>
           </CardBody>
         </Card>
       </main>

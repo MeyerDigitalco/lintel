@@ -8,15 +8,14 @@ Digital) and switch on paid add-ons only if they want them.
 > **Positioning:** calm, precise, British, grown-up fintech. Trust and clarity
 > over "autonomous AI". Honest, modular, low-cost, jurisdiction-correct.
 
-## Status — Phase 1 (Foundation)
+## Status — Phases 1 & 2 complete
 
-This repo currently contains the Phase 1 foundation:
+**Phase 1 — Foundation**
 
 - **Next.js (App Router) + TypeScript + Tailwind** with the Lintel design system.
 - **Jurisdiction rules engine** (`/lib/jurisdictions`) for England, Wales,
   Scotland and Northern Ireland.
-- **Supabase** clients + a full SQL migration with RLS on every table
-  (`/supabase/migrations/0001_init.sql`).
+- **Supabase** clients + SQL migrations with RLS on every table.
 - **Stripe** pricing config, entitlements model and webhook handler (30-day trial,
   add-on items).
 - **SendGrid** email wrapper + a Vercel Cron compliance-sweep route.
@@ -24,6 +23,27 @@ This repo currently contains the Phase 1 foundation:
   no "file to HMRC" until HMRC recognition is granted.
 - **Landing page** + **public calculator suite** (SDLT/LTT/LBTT, yield, income
   tax, CGT, Section 24, MTD estimator, mortgage, rent increase, deposit cap, EPC).
+
+**Phase 2 — Core MTD app**
+
+- **Auth & onboarding** — Supabase email/password; a signup trigger
+  (`0002_auth_bootstrap.sql`) creates the org, owner membership, a 30-day trialing
+  subscription and the always-on `core` entitlement. Middleware refreshes the
+  session and guards `/dashboard`.
+- **Dashboard** — protected app shell (sidebar, entitlement provider) with a
+  portfolio overview (income, expenses, arrears, MTD band, compliance due soon).
+- **Properties & units** — jurisdiction-tagged, with units, registrations
+  (Rent Smart Wales / Scottish / NI) driven by the active nation's rules, and the
+  jurisdiction document checklist.
+- **Income & expenses** — SA105-mapped ledger, receipt upload to private storage,
+  **Tesseract OCR** (`/api/ocr`) that pre-fills amount/date/vendor, mileage and
+  Section 24 finance-cost handling.
+- **Log-only rent ledger** — tenancies, generated rent periods, mark-received,
+  automatic arrears flagging. No bank links, no payment processing.
+- **Compliance vault** — jurisdiction-aware, expiry status (60/30/7) with
+  statutory basis shown.
+- **Tax & MTD** — readiness band, quarterly summaries, Section 24 reducer,
+  accountant **CSV export** (`/api/export/csv`) and a printable tax pack.
 
 ## Tech stack
 
