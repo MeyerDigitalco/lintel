@@ -8,7 +8,7 @@ Digital) and switch on paid add-ons only if they want them.
 > **Positioning:** calm, precise, British, grown-up fintech. Trust and clarity
 > over "autonomous AI". Honest, modular, low-cost, jurisdiction-correct.
 
-## Status — Phases 1–5 complete
+## Status — Phases 1–6 complete
 
 **Phase 1 — Foundation:** Next.js (App Router) + TypeScript + Tailwind design
 system; jurisdiction rules engine (England/Wales/Scotland/NI); Supabase with RLS
@@ -42,6 +42,13 @@ tokenised link with **no account** (`/maintenance/[token]`, service-role
 validated). Status timeline, hazard-response timers (Awaab's-Law-style, tightest
 in England), and completion costs auto-posted to the expense ledger
 (repairs & maintenance). Added via migration `0006`.
+
+**Phase 6 — Voice assistant (add-on):** scoped, confirm-before-commit assistant
+(`/dashboard/assistant`). Speech-to-text via the browser Web Speech API with a
+typed-command fallback, and a deterministic intent parser (`/lib/voice`) — no
+autonomous behaviour. Log income/expense by voice (parsed → confirm → save,
+audit-logged), query the rent roll / arrears / certificate expiries (read-only),
+and draft (never send) tenant messages. Entitlement-gated on `voice`.
 
 ## Tech stack
 
@@ -100,5 +107,5 @@ HMRC recognition is granted.
 3. ✅ Jurisdiction toolkits
 4. ✅ Tenant portal
 5. ✅ Maintenance portal
-6. Voice AI add-on
+6. ✅ Voice assistant
 7. HMRC MTD ITSA API integration → recognition

@@ -13,6 +13,7 @@ const NAV = [
   { href: "/dashboard/maintenance", label: "Maintenance" },
   { href: "/dashboard/compliance", label: "Compliance" },
   { href: "/dashboard/toolkit", label: "Toolkit" },
+  { href: "/dashboard/assistant", label: "Assistant" },
   { href: "/dashboard/tax", label: "Tax & MTD" },
 ];
 
