@@ -4,8 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 export const dynamic = "force-dynamic";
 
 /**
- * Post-login router. Landlords (org members) go to the dashboard; tenants
- * (tenancy members) go to the portal. Used as the default post-auth landing.
+ * Post-login router. Accountants land on the accountant pack; other org members
+ * (owners/landlords) on the dashboard; tenants on the portal.
  */
 export default async function HomeRouter() {
   const supabase = createClient();
@@ -16,11 +16,14 @@ export default async function HomeRouter() {
 
   const { data: membership } = await supabase
     .from("memberships")
-    .select("org_id")
+    .select("org_id, role")
     .eq("user_id", user.id)
     .limit(1)
     .maybeSingle();
-  if (membership) redirect("/dashboard");
+  if (membership) {
+    if (membership.role === "accountant") redirect("/dashboard/accountant");
+    redirect("/dashboard");
+  }
 
   const { data: tenancy } = await supabase
     .from("tenancy_members")
@@ -30,6 +33,5 @@ export default async function HomeRouter() {
     .maybeSingle();
   if (tenancy) redirect("/portal");
 
-  // Signed in but neither landlord nor tenant yet.
   redirect("/onboarding");
 }

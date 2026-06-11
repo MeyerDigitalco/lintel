@@ -5,19 +5,24 @@ import { Card, CardBody } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { categoryLabel, SA105_CATEGORIES } from "@/lib/sa105";
 import { gbp } from "@/lib/format";
-import { quarterlyPeriods, taxYearStartFor, fmtDate } from "@/lib/dates";
-import { addAccountantNote, resolveAccountantNote } from "./actions";
+import { quarterlyPeriods, taxYearStartFor } from "@/lib/dates";
+import { addAccountantNote, resolveAccountantNote, inviteAccountant, revokeAccountant } from "./actions";
 
 export const dynamic = "force-dynamic";
 
+const inputCls =
+  "h-10 flex-1 rounded-lintel border border-hairline bg-surface px-3 text-sm outline-none focus:ring-2 focus:ring-evergreen/30";
+
 export default async function AccountantPage() {
-  const { orgId } = await requireSession();
+  const { orgId, role } = await requireSession();
+  const isWriter = ["owner", "admin", "landlord"].includes(role);
+  const isAccountant = role === "accountant";
   const supabase = createClient();
 
   const yStart = taxYearStartFor();
   const periods = quarterlyPeriods(yStart);
 
-  const [{ data: properties }, { data: tx }, { data: notes }, { count: docCount }] =
+  const [{ data: properties }, { data: tx }, { data: notes }, { count: docCount }, { data: accountants }] =
     await Promise.all([
       supabase.from("properties").select("id, label").eq("org_id", orgId),
       supabase
@@ -28,12 +33,10 @@ export default async function AccountantPage() {
         .lte("occurred_on", periods[3].endDate),
       supabase.from("accountant_notes").select("id, body, author_role, resolved, created_at").eq("org_id", orgId).order("created_at", { ascending: false }),
       supabase.from("property_documents").select("id", { count: "exact", head: true }).eq("org_id", orgId),
+      supabase.from("memberships").select("user_id").eq("org_id", orgId).eq("role", "accountant"),
     ]);
 
-  const propMap = new Map((properties ?? []).map((p) => [p.id, p.label]));
   const rows = tx ?? [];
-
-  // Books readiness
   const total = rows.length;
   const categorised = rows.filter((r) => r.sa105_category).length;
   const expenses = rows.filter((r) => r.direction === "expense");
@@ -41,19 +44,14 @@ export default async function AccountantPage() {
   const uncategorised = total - categorised;
   const pct = (n: number, d: number) => (d ? Math.round((n / d) * 100) : 100);
 
-  // Per-property SA105 breakdown
   const breakdown = (properties ?? []).map((p) => {
     const propRows = rows.filter((r) => r.property_id === p.id);
-    const byCat = new Map<string, number>();
-    let income = 0;
-    let expense = 0;
+    let income = 0, expense = 0;
     for (const r of propRows) {
       const a = Number(r.amount);
-      byCat.set(r.sa105_category ?? "uncategorised", (byCat.get(r.sa105_category ?? "uncategorised") ?? 0) + a);
-      if (r.direction === "income") income += a;
-      else expense += a;
+      if (r.direction === "income") income += a; else expense += a;
     }
-    return { id: p.id, label: p.label, income, expense, byCat };
+    return { id: p.id, label: p.label, income, expense };
   });
   const unassigned = rows.filter((r) => !r.property_id);
 
@@ -69,7 +67,13 @@ export default async function AccountantPage() {
         }
       />
 
-      {/* Books readiness */}
+      {isAccountant && (
+        <div className="mb-6 rounded-lintel border border-hairline bg-paper px-4 py-3 text-sm text-slate">
+          You have read-only access to this portfolio. You can review everything
+          and post queries, but cannot change the landlord&apos;s records.
+        </div>
+      )}
+
       <div className="mb-6 grid gap-4 sm:grid-cols-4">
         <Stat label="Transactions" value={String(total)} />
         <Stat label="Categorised" value={`${pct(categorised, total)}%`} tone={pct(categorised, total) === 100 ? "evergreen" : "amber"} hint={`${uncategorised} to review`} />
@@ -77,7 +81,33 @@ export default async function AccountantPage() {
         <Stat label="Property documents" value={String(docCount ?? 0)} />
       </div>
 
-      {/* Per-property SA105 */}
+      {/* Accountant access (writers only) */}
+      {isWriter && (
+        <Card className="mb-6">
+          <CardBody>
+            <h2 className="font-heading text-base font-semibold tracking-tight">Accountant access</h2>
+            <p className="mt-1 text-sm text-slate">Invite your accountant for free, read-only access across the portfolio.</p>
+            {accountants && accountants.length > 0 && (
+              <ul className="my-3 space-y-1 text-sm">
+                {accountants.map((a) => (
+                  <li key={a.user_id} className="flex items-center justify-between rounded-lintel bg-paper px-3 py-2">
+                    <span className="text-ink">Accountant linked <Badge tone="mint">read-only</Badge></span>
+                    <form action={revokeAccountant}>
+                      <input type="hidden" name="user_id" value={a.user_id} />
+                      <button type="submit" className="text-xs text-red hover:underline">Revoke</button>
+                    </form>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <form action={inviteAccountant} className="mt-3 flex gap-2">
+              <input name="email" type="email" required placeholder="accountant@firm.co.uk" className={inputCls} />
+              <Button size="sm" type="submit">Invite</Button>
+            </form>
+          </CardBody>
+        </Card>
+      )}
+
       <Card className="mb-6">
         <CardBody className="p-0">
           <div className="border-b border-hairline px-4 py-3">
@@ -116,7 +146,6 @@ export default async function AccountantPage() {
         </CardBody>
       </Card>
 
-      {/* Category totals (portfolio) */}
       <Card className="mb-6">
         <CardBody>
           <h2 className="mb-3 font-heading text-base font-semibold tracking-tight">Category totals (SA105)</h2>
@@ -137,27 +166,26 @@ export default async function AccountantPage() {
         </CardBody>
       </Card>
 
-      {/* Queries */}
       <Card>
         <CardBody>
-          <h2 className="mb-3 font-heading text-base font-semibold tracking-tight">Queries for your accountant</h2>
+          <h2 className="mb-3 font-heading text-base font-semibold tracking-tight">Queries</h2>
           <form action={addAccountantNote} className="flex gap-2">
-            <input name="body" required placeholder="e.g. Is the new boiler capital or revenue?" className="h-10 flex-1 rounded-lintel border border-hairline bg-surface px-3 text-sm outline-none focus:ring-2 focus:ring-evergreen/30" />
+            <input name="body" required placeholder={isAccountant ? "Ask the landlord a question…" : "e.g. Is the new boiler capital or revenue?"} className={inputCls} />
             <Button size="sm" type="submit">Add</Button>
           </form>
           {notes && notes.length > 0 ? (
             <ul className="mt-4 space-y-2">
               {notes.map((n) => (
                 <li key={n.id} className="flex items-start justify-between gap-2 rounded-lintel bg-paper px-3 py-2 text-sm">
-                  <span className={n.resolved ? "text-slate line-through" : "text-ink"}>{n.body}</span>
-                  <span className="flex items-center gap-2">
-                    {n.resolved ? <Badge tone="mint">Resolved</Badge> : (
-                      <form action={resolveAccountantNote}>
-                        <input type="hidden" name="id" value={n.id} />
-                        <button type="submit" className="text-xs text-evergreen hover:underline">Resolve</button>
-                      </form>
-                    )}
+                  <span className={n.resolved ? "text-slate line-through" : "text-ink"}>
+                    <Badge>{n.author_role}</Badge> {n.body}
                   </span>
+                  {!n.resolved && (
+                    <form action={resolveAccountantNote}>
+                      <input type="hidden" name="id" value={n.id} />
+                      <button type="submit" className="text-xs text-evergreen hover:underline">Resolve</button>
+                    </form>
+                  )}
                 </li>
               ))}
             </ul>
