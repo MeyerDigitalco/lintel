@@ -11,6 +11,7 @@ const NAV = [
   { href: "/dashboard/transactions", label: "Income & expenses" },
   { href: "/dashboard/rent", label: "Rent ledger" },
   { href: "/dashboard/compliance", label: "Compliance" },
+  { href: "/dashboard/toolkit", label: "Toolkit" },
   { href: "/dashboard/tax", label: "Tax & MTD" },
 ];
 

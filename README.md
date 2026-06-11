@@ -8,7 +8,7 @@ Digital) and switch on paid add-ons only if they want them.
 > **Positioning:** calm, precise, British, grown-up fintech. Trust and clarity
 > over "autonomous AI". Honest, modular, low-cost, jurisdiction-correct.
 
-## Status — Phases 1 & 2 complete
+## Status — Phases 1–3 complete
 
 **Phase 1 — Foundation**
 
@@ -44,6 +44,24 @@ Digital) and switch on paid add-ons only if they want them.
   statutory basis shown.
 - **Tax & MTD** — readiness band, quarterly summaries, Section 24 reducer,
   accountant **CSV export** (`/api/export/csv`) and a printable tax pack.
+
+**Phase 3 — Jurisdiction toolkits**
+
+- **Versioned, legislation-linked template library** (`/lib/toolkit`) with
+  possession grounds (England Section 8, Scotland's 18 Notice to Leave grounds)
+  and notice-period calculators (Scotland 28/84 days, NI 4/8/12 weeks).
+- **Notices store** (`0004_notices.sql`) with draft/served tracking and RLS.
+- **Jurisdiction-aware toolkit hub** — shows tools for the nations in your
+  portfolio first, plus a saved-documents / served tracker.
+- **England:** Section 8 grounds builder (Form 3A, correct notice period),
+  Section 13 rent increase, pet-request decision.
+- **Wales:** written-statement generator (14-day deadline), s.173 notice
+  (6-month period), Fitness for Human Habitation checklist.
+- **Scotland:** Notice to Leave (18 grounds, residence-based period), PRT
+  agreement generator.
+- **Northern Ireland:** Notice to Quit period calculator (by tenancy length).
+- Every generator carries a prominent "not legal advice — verify or consult a
+  solicitor" disclaimer and links the underlying legislation.
 
 ## Tech stack
 
