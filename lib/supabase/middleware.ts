@@ -1,11 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-/**
- * Refreshes the Supabase auth session on every request and guards the
- * /dashboard area. Returns the (possibly mutated) response so Set-Cookie
- * headers survive.
- */
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
 
@@ -20,9 +15,7 @@ export async function updateSession(request: NextRequest) {
         setAll(
           cookiesToSet: { name: string; value: string; options?: Record<string, unknown> }[]
         ) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
           response = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
             response.cookies.set(name, value, options as never)
@@ -36,11 +29,13 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const isDashboard = request.nextUrl.pathname.startsWith("/dashboard");
-  if (isDashboard && !user) {
+  const path = request.nextUrl.pathname;
+  const isProtected =
+    path.startsWith("/dashboard") || path.startsWith("/portal") || path === "/home";
+  if (isProtected && !user) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
-    url.searchParams.set("next", request.nextUrl.pathname);
+    url.searchParams.set("next", path);
     return NextResponse.redirect(url);
   }
 

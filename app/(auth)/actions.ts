@@ -11,13 +11,13 @@ export async function signInAction(
 ): Promise<AuthState> {
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
-  const next = String(formData.get("next") ?? "/dashboard");
+  const next = String(formData.get("next") ?? "/home");
 
   const supabase = createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) return { error: error.message };
 
-  redirect(next || "/dashboard");
+  redirect(next || "/home");
 }
 
 export async function signUpAction(
@@ -43,7 +43,6 @@ export async function signUpAction(
   });
   if (error) return { error: error.message };
 
-  // The handle_new_user trigger creates org + membership + trial + entitlements.
   redirect("/dashboard");
 }
 

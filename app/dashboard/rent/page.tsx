@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { PageHeader, EmptyState, Badge } from "@/components/app/ui";
@@ -48,10 +49,7 @@ export default async function RentPage() {
       <AddTenancyForm properties={properties ?? []} />
 
       {!tenancies || tenancies.length === 0 ? (
-        <EmptyState
-          title="No tenancies yet"
-          body="Create a tenancy to start logging rent."
-        />
+        <EmptyState title="No tenancies yet" body="Create a tenancy to start logging rent." />
       ) : (
         <div className="space-y-4">
           {tenancies.map((t) => {
@@ -69,12 +67,17 @@ export default async function RentPage() {
                         {t.start_date ? ` · since ${fmtDate(t.start_date)}` : ""}
                       </p>
                     </div>
-                    <form action={generateRentPeriods}>
-                      <input type="hidden" name="tenancy_id" value={t.id} />
-                      <Button size="sm" variant="outline" type="submit">
-                        Generate periods
-                      </Button>
-                    </form>
+                    <div className="flex items-center gap-2">
+                      <Link href={`/dashboard/tenancies/${t.id}`}>
+                        <Button size="sm" variant="ghost" type="button">Manage</Button>
+                      </Link>
+                      <form action={generateRentPeriods}>
+                        <input type="hidden" name="tenancy_id" value={t.id} />
+                        <Button size="sm" variant="outline" type="submit">
+                          Generate periods
+                        </Button>
+                      </form>
+                    </div>
                   </div>
 
                   {rows.length > 0 && (
@@ -82,8 +85,7 @@ export default async function RentPage() {
                       <tbody>
                         {rows.map((r) => {
                           const overdue =
-                            r.status !== "confirmed" &&
-                            (daysUntil(r.due_on) ?? 0) < 0;
+                            r.status !== "confirmed" && (daysUntil(r.due_on) ?? 0) < 0;
                           return (
                             <tr key={r.id} className="border-b border-hairline last:border-0">
                               <td className="py-2 text-slate">{r.period}</td>
@@ -94,6 +96,8 @@ export default async function RentPage() {
                               <td className="py-2">
                                 {r.status === "confirmed" ? (
                                   <Badge tone="mint">Received</Badge>
+                                ) : r.status === "marked" ? (
+                                  <Badge tone="amber">Tenant marked paid</Badge>
                                 ) : overdue ? (
                                   <Badge tone="red">Arrears</Badge>
                                 ) : (
@@ -104,10 +108,7 @@ export default async function RentPage() {
                                 {r.status !== "confirmed" && (
                                   <form action={confirmRent}>
                                     <input type="hidden" name="id" value={r.id} />
-                                    <button
-                                      type="submit"
-                                      className="text-sm text-evergreen hover:underline"
-                                    >
+                                    <button type="submit" className="text-sm text-evergreen hover:underline">
                                       Mark received
                                     </button>
                                   </form>
