@@ -8,7 +8,7 @@ Digital) and switch on paid add-ons only if they want them.
 > **Positioning:** calm, precise, British, grown-up fintech. Trust and clarity
 > over "autonomous AI". Honest, modular, low-cost, jurisdiction-correct.
 
-## Status — Phases 1–6 complete
+## Status — All 7 phases complete
 
 **Phase 1 — Foundation:** Next.js (App Router) + TypeScript + Tailwind design
 system; jurisdiction rules engine (England/Wales/Scotland/NI); Supabase with RLS
@@ -50,6 +50,14 @@ autonomous behaviour. Log income/expense by voice (parsed → confirm → save,
 audit-logged), query the rent roll / arrears / certificate expiries (read-only),
 and draft (never send) tenant messages. Entitlement-gated on `voice`.
 
+**Phase 7 — HMRC MTD ITSA integration:** real submission provider behind the
+`/lib/mtd` abstraction (`/lib/mtd/hmrc`) — OAuth 2.0 connect/callback, fraud-
+prevention headers, SA105→HMRC UK-Property field mapping, and quarterly /
+final-declaration submission. Kept strictly behind a recognition flag
+(`MTD_HMRC_RECOGNISED`) so no "file to HMRC" appears until granted; tokens stored
+service-side only (migration `0007`, no client RLS). `Lintel-accountant-questions.docx`
+validates the mapping and sponsors recognition first.
+
 ## Tech stack
 
 | Layer | Choice |
@@ -71,7 +79,7 @@ cp .env.example .env.local   # fill in Supabase / Stripe / SendGrid keys
 npm run dev
 ```
 
-Apply the SQL migrations in `supabase/migrations/` (0001–0006), in order, via the
+Apply the SQL migrations in `supabase/migrations/` (0001–0007), in order, via the
 Supabase SQL editor or CLI. They create the schema, RLS, auth bootstrap trigger,
 storage buckets (`receipts`, `tenancy-docs`, `maintenance`) and the notices/messages tables.
 
@@ -108,4 +116,4 @@ HMRC recognition is granted.
 4. ✅ Tenant portal
 5. ✅ Maintenance portal
 6. ✅ Voice assistant
-7. HMRC MTD ITSA API integration → recognition
+7. ✅ HMRC MTD ITSA integration (behind recognition flag)

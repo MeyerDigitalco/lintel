@@ -4,10 +4,13 @@ import { createClient } from "@/lib/supabase/server";
 import { PageHeader, Stat, Badge } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { HmrcPanel } from "@/components/app/tax/HmrcPanel";
 import { gbp } from "@/lib/format";
 import { quarterlyPeriods, taxYearStartFor } from "@/lib/dates";
 import { mtdMandation, calcSection24Reducer } from "@/lib/calculators";
-import { mtdProvider } from "@/lib/mtd/local-provider";
+import { getMtdProvider } from "@/lib/mtd/select";
+import { MTD_PROVIDER } from "@/lib/mtd/hmrc/config";
+import { hmrcConnectionStatus } from "@/lib/mtd/hmrc/connection";
 
 export const dynamic = "force-dynamic";
 
@@ -27,9 +30,7 @@ export default async function TaxPage() {
 
   const rows = tx ?? [];
   const summarise = (start: string, end: string) => {
-    let income = 0,
-      expenses = 0,
-      finance = 0;
+    let income = 0, expenses = 0, finance = 0;
     for (const t of rows) {
       if (t.occurred_on < start || t.occurred_on > end) continue;
       const a = Number(t.amount);
@@ -48,6 +49,10 @@ export default async function TaxPage() {
   const s24 = calcSection24Reducer(yearFinance);
   const mtd = mtdMandation(yearIncome);
 
+  const provider = getMtdProvider();
+  const showHmrc = MTD_PROVIDER === "hmrc";
+  const hmrc = showHmrc ? await hmrcConnectionStatus(orgId) : null;
+
   return (
     <div>
       <PageHeader
@@ -65,7 +70,6 @@ export default async function TaxPage() {
         }
       />
 
-      {/* MTD readiness */}
       <Card className="mb-6 border-evergreen/30">
         <CardBody>
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -86,12 +90,22 @@ export default async function TaxPage() {
           </div>
           <p className="mt-3 rounded-lintel bg-paper px-3 py-2 text-xs text-slate">
             Lintel keeps HMRC-shaped quarterly summaries now.{" "}
-            {mtdProvider.canSubmit()
+            {provider.canSubmit()
               ? "Submission to HMRC is enabled."
               : "Filing to HMRC is not yet available — it switches on once Lintel is HMRC-recognised."}
           </p>
         </CardBody>
       </Card>
+
+      {showHmrc && hmrc && (
+        <HmrcPanel
+          connected={hmrc.connected}
+          recognised={provider.canSubmit()}
+          maskedNino={hmrc.maskedNino}
+          businessId={hmrc.businessId}
+          periods={periods}
+        />
+      )}
 
       <div className="mb-6 grid gap-4 sm:grid-cols-4">
         <Stat label="Income" value={gbp(yearIncome)} tone="evergreen" />
@@ -100,7 +114,6 @@ export default async function TaxPage() {
         <Stat label="S24 reducer" value={gbp(s24)} hint={`on ${gbp(yearFinance)} finance costs`} />
       </div>
 
-      {/* Quarterly summaries */}
       <Card>
         <CardBody className="p-0">
           <table className="w-full text-sm">
