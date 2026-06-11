@@ -15,6 +15,7 @@ const NAV = [
   { href: "/dashboard/toolkit", label: "Toolkit" },
   { href: "/dashboard/assistant", label: "Assistant" },
   { href: "/dashboard/tax", label: "Tax & MTD" },
+  { href: "/dashboard/accountant", label: "Accountant" },
 ];
 
 export function Sidebar() {

@@ -79,7 +79,7 @@ cp .env.example .env.local   # fill in Supabase / Stripe / SendGrid keys
 npm run dev
 ```
 
-Apply the SQL migrations in `supabase/migrations/` (0001–0007), in order, via the
+Apply the SQL migrations in `supabase/migrations/` (0001–0008), in order, via the
 Supabase SQL editor or CLI. They create the schema, RLS, auth bootstrap trigger,
 storage buckets (`receipts`, `tenancy-docs`, `maintenance`) and the notices/messages tables.
 
@@ -116,4 +116,18 @@ HMRC recognition is granted.
 4. ✅ Tenant portal
 5. ✅ Maintenance portal
 6. ✅ Voice assistant
-7. ✅ HMRC MTD ITSA integration (behind recognition flag)
+7. ✅ Accountant workflow (replaces direct HMRC filing)
+
+## Recent changes
+
+- Theme reskinned to the **Midnight & Sky** palette (navy primary, sky-blue accent).
+- **Direct HMRC submission removed** — the app prepares an SA105 pack for an
+  accountant to review and file instead. HMRC provider code is dormant/inert.
+- **Per-property document vault** (`property_documents`, `property-docs` bucket) on
+  each property — EPC, certificates, deposit cert, inventory, correspondence.
+- **Court-readiness score** per tenancy (`/lib/court-readiness`) — deposit
+  protected in time, prescribed docs served, certificates in date, registration
+  valid, Right to Rent — with a what's-missing checklist.
+- **Accountant portal** (`/dashboard/accountant`) — SA105 per-property breakdown,
+  category totals, books-readiness (% categorised, % with receipt), CSV export,
+  and a queries thread. Added via migration `0008`.

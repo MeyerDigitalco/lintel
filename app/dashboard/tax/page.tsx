@@ -4,13 +4,9 @@ import { createClient } from "@/lib/supabase/server";
 import { PageHeader, Stat, Badge } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { HmrcPanel } from "@/components/app/tax/HmrcPanel";
 import { gbp } from "@/lib/format";
 import { quarterlyPeriods, taxYearStartFor } from "@/lib/dates";
 import { mtdMandation, calcSection24Reducer } from "@/lib/calculators";
-import { getMtdProvider } from "@/lib/mtd/select";
-import { MTD_PROVIDER } from "@/lib/mtd/hmrc/config";
-import { hmrcConnectionStatus } from "@/lib/mtd/hmrc/connection";
 
 export const dynamic = "force-dynamic";
 
@@ -49,10 +45,6 @@ export default async function TaxPage() {
   const s24 = calcSection24Reducer(yearFinance);
   const mtd = mtdMandation(yearIncome);
 
-  const provider = getMtdProvider();
-  const showHmrc = MTD_PROVIDER === "hmrc";
-  const hmrc = showHmrc ? await hmrcConnectionStatus(orgId) : null;
-
   return (
     <div>
       <PageHeader
@@ -63,8 +55,8 @@ export default async function TaxPage() {
             <a href={`/api/export/csv?year=${yStart}`}>
               <Button variant="outline" size="sm">Export CSV</Button>
             </a>
-            <Link href="/dashboard/tax/pack">
-              <Button size="sm">Tax pack (print)</Button>
+            <Link href="/dashboard/accountant">
+              <Button size="sm">Accountant pack</Button>
             </Link>
           </div>
         }
@@ -89,23 +81,11 @@ export default async function TaxPage() {
             </Badge>
           </div>
           <p className="mt-3 rounded-lintel bg-paper px-3 py-2 text-xs text-slate">
-            Lintel keeps HMRC-shaped quarterly summaries now.{" "}
-            {provider.canSubmit()
-              ? "Submission to HMRC is enabled."
-              : "Filing to HMRC is not yet available — it switches on once Lintel is HMRC-recognised."}
+            Lintel keeps HMRC-shaped quarterly summaries and a full SA105 breakdown
+            ready for your accountant to review, adjust and file on your behalf.
           </p>
         </CardBody>
       </Card>
-
-      {showHmrc && hmrc && (
-        <HmrcPanel
-          connected={hmrc.connected}
-          recognised={provider.canSubmit()}
-          maskedNino={hmrc.maskedNino}
-          businessId={hmrc.businessId}
-          periods={periods}
-        />
-      )}
 
       <div className="mb-6 grid gap-4 sm:grid-cols-4">
         <Stat label="Income" value={gbp(yearIncome)} tone="evergreen" />
@@ -145,9 +125,9 @@ export default async function TaxPage() {
       </Card>
 
       <p className="mt-4 text-xs text-slate">
-        Final-declaration preview is indicative and not tax advice. Section 24
-        means finance costs are not deducted from profit; instead they give a 20%
-        basic-rate tax reducer ({gbp(s24)} this year).
+        Indicative and not tax advice. Section 24 means finance costs are not
+        deducted from profit; instead they give a 20% basic-rate tax reducer
+        ({gbp(s24)} this year).
       </p>
     </div>
   );

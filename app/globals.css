@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --ink: #14181f;
-  --evergreen: #0e5c43;
-  --mint: #2fc78b;
-  --paper: #fbfaf6;
+  --ink: #0e141f;
+  --evergreen: #16233a;
+  --mint: #3b82f6;
+  --paper: #f6f8fb;
   --surface: #ffffff;
-  --slate: #5b6470;
-  --hairline: #e7e6df;
+  --slate: #5a6573;
+  --hairline: #e2e7ef;
   --amber: #e0a53d;
   --red: #d9534f;
 }

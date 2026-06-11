@@ -9,13 +9,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#14181F",
-        evergreen: "#0E5C43",
-        mint: "#2FC78B",
-        paper: "#FBFAF6",
+        ink: "#0E141F",
+        evergreen: "#16233A",
+        mint: "#3B82F6",
+        paper: "#F6F8FB",
         surface: "#FFFFFF",
-        slate: "#5B6470",
-        hairline: "#E7E6DF",
+        slate: "#5A6573",
+        hairline: "#E2E7EF",
         amber: "#E0A53D",
         red: "#D9534F",
       },
@@ -29,7 +29,7 @@ const config: Config = {
         lintel: "12px",
       },
       borderColor: {
-        DEFAULT: "#E7E6DF",
+        DEFAULT: "#E2E7EF",
       },
       fontSize: {
         // tightened display sizes
