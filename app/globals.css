@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #14181f;
+  --evergreen: #0e5c43;
+  --mint: #2fc78b;
+  --paper: #fbfaf6;
+  --surface: #ffffff;
+  --slate: #5b6470;
+  --hairline: #e7e6df;
+  --amber: #e0a53d;
+  --red: #d9534f;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading tracking-tight;
+    font-weight: 600;
+  }
+
+  /* Figures use tabular numerals for clean alignment */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-lintel border border-hairline bg-surface;
+  }
+
+  .hairline {
+    @apply border-hairline;
+  }
+}
