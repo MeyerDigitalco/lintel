@@ -8,7 +8,7 @@ Digital) and switch on paid add-ons only if they want them.
 > **Positioning:** calm, precise, British, grown-up fintech. Trust and clarity
 > over "autonomous AI". Honest, modular, low-cost, jurisdiction-correct.
 
-## Status — Phases 1–4 complete
+## Status — Phases 1–5 complete
 
 **Phase 1 — Foundation:** Next.js (App Router) + TypeScript + Tailwind design
 system; jurisdiction rules engine (England/Wales/Scotland/NI); Supabase with RLS
@@ -36,6 +36,13 @@ documents with signed-URL downloads; two-way audit-logged messaging; email
 notification prefs. Landlord side manages tenancies at
 `/dashboard/tenancies/[id]` (invite, share, reply).
 
+**Phase 5 — Maintenance portal (add-on):** tenant raises issues with photos and
+a hazard flag; landlord triages, assigns and tracks SLAs; contractors work via a
+tokenised link with **no account** (`/maintenance/[token]`, service-role
+validated). Status timeline, hazard-response timers (Awaab's-Law-style, tightest
+in England), and completion costs auto-posted to the expense ledger
+(repairs & maintenance). Added via migration `0006`.
+
 ## Tech stack
 
 | Layer | Choice |
@@ -57,9 +64,9 @@ cp .env.example .env.local   # fill in Supabase / Stripe / SendGrid keys
 npm run dev
 ```
 
-Apply the SQL migrations in `supabase/migrations/` (0001–0005), in order, via the
+Apply the SQL migrations in `supabase/migrations/` (0001–0006), in order, via the
 Supabase SQL editor or CLI. They create the schema, RLS, auth bootstrap trigger,
-storage buckets (`receipts`, `tenancy-docs`) and the notices/messages tables.
+storage buckets (`receipts`, `tenancy-docs`, `maintenance`) and the notices/messages tables.
 
 ## Project layout
 
@@ -76,7 +83,7 @@ lib/
   mtd/                     # MTD abstraction (local now, HMRC API later)
   stripe/ supabase/ email/ # integrations
   auth.ts tenant-auth.ts   # landlord & tenant session resolvers
-supabase/migrations/       # 0001–0005 SQL (schema, RLS, auth, storage, notices, portal)
+supabase/migrations/       # 0001–0006 SQL (schema, RLS, auth, storage, notices, portal, maintenance)
 ```
 
 ## Disclaimers
@@ -92,6 +99,6 @@ HMRC recognition is granted.
 2. ✅ Core MTD
 3. ✅ Jurisdiction toolkits
 4. ✅ Tenant portal
-5. Maintenance portal add-on
+5. ✅ Maintenance portal
 6. Voice AI add-on
 7. HMRC MTD ITSA API integration → recognition

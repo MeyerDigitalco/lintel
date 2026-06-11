@@ -48,7 +48,7 @@ export default async function PortalLayout({
         </form>
       </header>
       <main className="mx-auto max-w-md px-4 py-6">{children}</main>
-      <PortalNav />
+      <PortalNav showMaintenance={tenant.active.maintenanceEnabled} />
     </div>
   );
 }

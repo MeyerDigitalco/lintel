@@ -4,20 +4,26 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
 
-const TABS = [
+const BASE_TABS = [
   { href: "/portal", label: "Home" },
   { href: "/portal/rent", label: "Rent" },
   { href: "/portal/documents", label: "Docs" },
   { href: "/portal/messages", label: "Messages" },
-  { href: "/portal/settings", label: "Settings" },
 ];
 
-export function PortalNav() {
+export function PortalNav({ showMaintenance = false }: { showMaintenance?: boolean }) {
   const pathname = usePathname();
+  const tabs = [
+    ...BASE_TABS.slice(0, 3),
+    ...(showMaintenance ? [{ href: "/portal/maintenance", label: "Repairs" }] : []),
+    BASE_TABS[3],
+    { href: "/portal/settings", label: "Settings" },
+  ];
+
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-hairline bg-surface/95 backdrop-blur">
       <div className="mx-auto flex max-w-md items-stretch justify-between px-2">
-        {TABS.map((t) => {
+        {tabs.map((t) => {
           const active =
             t.href === "/portal" ? pathname === t.href : pathname.startsWith(t.href);
           return (
@@ -29,12 +35,7 @@ export function PortalNav() {
                 active ? "text-evergreen" : "text-slate"
               )}
             >
-              <span
-                className={cn(
-                  "h-1 w-1 rounded-full",
-                  active ? "bg-evergreen" : "bg-transparent"
-                )}
-              />
+              <span className={cn("h-1 w-1 rounded-full", active ? "bg-evergreen" : "bg-transparent")} />
               {t.label}
             </Link>
           );

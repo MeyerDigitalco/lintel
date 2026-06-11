@@ -1,0 +1,100 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { createServiceClient } from "@/lib/supabase/server";
+
+/**
+ * Contractor actions. Contractors have no account — they act via a tokenised
+ * link. Every action re-validates the token with the service-role client, which
+ * is the only trusted path (RLS does not grant contractors access).
+ */
+async function resolveByToken(token: string) {
+  const service = createServiceClient();
+  const { data } = await service
+    .from("maintenance_requests")
+    .select("id, contractor_token")
+    .eq("contractor_token", token)
+    .maybeSingle();
+  if (!data) throw new Error("Invalid link");
+  return { service, requestId: data.id };
+}
+
+export async function contractorAccept(formData: FormData) {
+  const token = String(formData.get("token"));
+  const { service, requestId } = await resolveByToken(token);
+  await service.from("maintenance_requests").update({ status: "in_progress" }).eq("id", requestId);
+  await service.from("maintenance_events").insert({
+    request_id: requestId,
+    actor_role: "contractor",
+    kind: "status_change",
+    new_status: "in_progress",
+    body: "Contractor accepted the job.",
+  });
+  revalidatePath(`/maintenance/${token}`);
+}
+
+export async function contractorSchedule(formData: FormData) {
+  const token = String(formData.get("token"));
+  const { service, requestId } = await resolveByToken(token);
+  const date = String(formData.get("scheduled_for") ?? "");
+  await service
+    .from("maintenance_requests")
+    .update({ scheduled_for: date || null, status: "scheduled" })
+    .eq("id", requestId);
+  await service.from("maintenance_events").insert({
+    request_id: requestId,
+    actor_role: "contractor",
+    kind: "schedule",
+    new_status: "scheduled",
+    body: date ? `Scheduled for ${date}.` : "Schedule updated.",
+  });
+  revalidatePath(`/maintenance/${token}`);
+}
+
+export async function contractorNote(formData: FormData) {
+  const token = String(formData.get("token"));
+  const { service, requestId } = await resolveByToken(token);
+  const body = String(formData.get("body") ?? "").trim();
+  if (!body) return;
+  await service.from("maintenance_events").insert({
+    request_id: requestId,
+    actor_role: "contractor",
+    kind: "note",
+    body,
+  });
+  revalidatePath(`/maintenance/${token}`);
+}
+
+export async function contractorComplete(formData: FormData) {
+  const token = String(formData.get("token"));
+  const { service, requestId } = await resolveByToken(token);
+
+  // Optional completion photo.
+  const file = formData.get("photo");
+  if (file instanceof File && file.size > 0) {
+    const path = `${requestId}/${Date.now()}-${file.name}`;
+    const { error: upErr } = await service.storage
+      .from("maintenance")
+      .upload(path, file, { upsert: false });
+    if (!upErr) {
+      await service.from("maintenance_photos").insert({
+        request_id: requestId,
+        storage_path: path,
+        uploaded_by_role: "contractor",
+      });
+    }
+  }
+
+  await service
+    .from("maintenance_requests")
+    .update({ status: "completed", completed_at: new Date().toISOString() })
+    .eq("id", requestId);
+  await service.from("maintenance_events").insert({
+    request_id: requestId,
+    actor_role: "contractor",
+    kind: "status_change",
+    new_status: "completed",
+    body: "Contractor marked the job complete.",
+  });
+  revalidatePath(`/maintenance/${token}`);
+}
