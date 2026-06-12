@@ -1,4 +1,4 @@
-import { requireSession } from "@/lib/auth";
+import { requireWriter } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { PageHeader, Stat, EmptyState, Badge } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
@@ -10,7 +10,7 @@ import { fmtDate, quarterlyPeriods, taxYearStartFor } from "@/lib/dates";
 export const dynamic = "force-dynamic";
 
 export default async function TransactionsPage() {
-  const { orgId } = await requireSession();
+  const { orgId } = await requireWriter();
   const supabase = createClient();
 
   const [{ data: properties }, { data: tx }] = await Promise.all([

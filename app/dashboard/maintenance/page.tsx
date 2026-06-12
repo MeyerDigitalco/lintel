@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { requireSession } from "@/lib/auth";
+import { requireWriter } from "@/lib/auth";
 import { hasEntitlement } from "@/lib/entitlements";
 import { createClient } from "@/lib/supabase/server";
 import { PageHeader, EmptyState, Badge } from "@/components/app/ui";
@@ -9,7 +9,7 @@ import { StatusBadge, SlaBadge, humanAge } from "@/components/app/maintenance/ui
 export const dynamic = "force-dynamic";
 
 export default async function MaintenancePage() {
-  const { orgId } = await requireSession();
+  const { orgId } = await requireWriter();
   const supabase = createClient();
 
   const portalOn = await hasEntitlement(orgId, "maintenance_portal");

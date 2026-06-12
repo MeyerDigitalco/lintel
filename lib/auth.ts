@@ -10,6 +10,9 @@ export interface SessionContext {
   role: string;
 }
 
+export const WRITER_ROLES = ["owner", "admin", "landlord"];
+export const isWriterRole = (role: string) => WRITER_ROLES.includes(role);
+
 /**
  * Resolve the current user + their primary org. Redirects to /login if not
  * signed in. Use at the top of every protected Server Component / action.
@@ -37,6 +40,16 @@ export async function requireSession(): Promise<SessionContext> {
     orgId: membership.org_id,
     role: membership.role,
   };
+}
+
+/**
+ * Like requireSession, but for write-capable pages. Read-only accountants are
+ * redirected to their read-only surface so they never see write controls.
+ */
+export async function requireWriter(): Promise<SessionContext> {
+  const session = await requireSession();
+  if (!isWriterRole(session.role)) redirect("/dashboard/accountant");
+  return session;
 }
 
 /** Load the org's entitlement map for UI gating. */

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { requireSession } from "@/lib/auth";
+import { requireWriter } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { PageHeader } from "@/components/app/ui";
 import { NoticeBuilder } from "@/components/app/toolkit/NoticeBuilder";
@@ -18,7 +18,7 @@ export default async function ToolPage({ params }: { params: { tool: string } })
   const form = toolForm(params.tool);
   if (!form) notFound();
 
-  const { orgId } = await requireSession();
+  const { orgId } = await requireWriter();
   const supabase = createClient();
   const { data: properties } = await supabase
     .from("properties")

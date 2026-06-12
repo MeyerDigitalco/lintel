@@ -8,18 +8,19 @@ import { cn } from "@/lib/cn";
 const NAV = [
   { href: "/dashboard", label: "Overview" },
   { href: "/dashboard/properties", label: "Properties" },
-  { href: "/dashboard/transactions", label: "Income & expenses" },
-  { href: "/dashboard/rent", label: "Rent ledger" },
-  { href: "/dashboard/maintenance", label: "Maintenance" },
+  { href: "/dashboard/transactions", label: "Income & expenses", writerOnly: true },
+  { href: "/dashboard/rent", label: "Rent ledger", writerOnly: true },
+  { href: "/dashboard/maintenance", label: "Maintenance", writerOnly: true },
   { href: "/dashboard/compliance", label: "Compliance" },
-  { href: "/dashboard/toolkit", label: "Toolkit" },
-  { href: "/dashboard/assistant", label: "Assistant" },
+  { href: "/dashboard/toolkit", label: "Toolkit", writerOnly: true },
+  { href: "/dashboard/assistant", label: "Assistant", writerOnly: true },
   { href: "/dashboard/tax", label: "Tax & MTD" },
   { href: "/dashboard/accountant", label: "Accountant" },
 ];
 
-export function Sidebar() {
+export function Sidebar({ readOnly = false }: { readOnly?: boolean }) {
   const pathname = usePathname();
+  const items = NAV.filter((i) => !(readOnly && i.writerOnly));
   return (
     <aside className="hidden w-60 shrink-0 border-r border-hairline bg-surface md:flex md:flex-col">
       <div className="px-5 py-5">
@@ -28,7 +29,7 @@ export function Sidebar() {
         </Link>
       </div>
       <nav className="flex-1 px-3">
-        {NAV.map((item) => {
+        {items.map((item) => {
           const active =
             item.href === "/dashboard"
               ? pathname === item.href

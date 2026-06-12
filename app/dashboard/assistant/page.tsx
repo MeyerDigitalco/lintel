@@ -1,4 +1,4 @@
-import { requireSession } from "@/lib/auth";
+import { requireWriter } from "@/lib/auth";
 import { hasEntitlement } from "@/lib/entitlements";
 import { PageHeader, Badge } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
@@ -7,7 +7,7 @@ import { VoiceConsole } from "@/components/app/assistant/VoiceConsole";
 export const dynamic = "force-dynamic";
 
 export default async function AssistantPage() {
-  const { orgId } = await requireSession();
+  const { orgId } = await requireWriter();
   const voiceOn = await hasEntitlement(orgId, "voice");
 
   return (

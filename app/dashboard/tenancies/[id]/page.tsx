@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { requireSession } from "@/lib/auth";
+import { requireWriter } from "@/lib/auth";
 import { hasEntitlement } from "@/lib/entitlements";
 import { createClient } from "@/lib/supabase/server";
 import { PageHeader, Badge } from "@/components/app/ui";
@@ -18,7 +18,7 @@ const inputCls =
   "h-10 w-full rounded-lintel border border-hairline bg-surface px-3 text-sm outline-none focus:ring-2 focus:ring-evergreen/30";
 
 export default async function TenancyManage({ params }: { params: { id: string } }) {
-  const { orgId } = await requireSession();
+  const { orgId } = await requireWriter();
   const supabase = createClient();
 
   const { data: tenancy } = await supabase
