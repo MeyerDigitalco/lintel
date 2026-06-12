@@ -21,6 +21,7 @@ const NAV = [
   { href: "/dashboard/assistant", label: "Assistant", writerOnly: true },
   { href: "/dashboard/tax", label: "Tax & MTD" },
   { href: "/dashboard/accountant", label: "Accountant" },
+  { href: "/dashboard/settings", label: "Settings" },
 ];
 
 export function Sidebar({ readOnly = false }: { readOnly?: boolean }) {
