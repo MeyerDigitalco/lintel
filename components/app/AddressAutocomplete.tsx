@@ -3,98 +3,146 @@
 import { useEffect, useRef, useState } from "react";
 import { loadGoogleMaps, type SelectedAddress } from "@/lib/google-maps";
 
+const inputCls =
+  "h-11 w-full rounded-lintel border border-hairline bg-surface px-3 text-sm outline-none focus:ring-2 focus:ring-evergreen/30";
+
 /**
- * Google Places address search using the new PlaceAutocompleteElement.
- * UK-restricted. On selection it parses the address components and calls
- * onSelect with line1/city/postcode. Renders nothing if no key is configured
- * (the form falls back to manual entry).
+ * Custom-styled UK address search using the Google Places Autocomplete Data API
+ * (AutocompleteSuggestion). Renders our own input + dropdown so it matches the
+ * design system. Returns nothing when no key is configured (manual entry).
  */
 export function AddressAutocomplete({
   onSelect,
 }: {
   onSelect: (address: SelectedAddress) => void;
 }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [available, setAvailable] = useState(false);
+  const [query, setQuery] = useState("");
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [open, setOpen] = useState(false);
+  const [enabled, setEnabled] = useState<boolean | null>(null);
+
+  const placesRef = useRef<any>(null);
+  const tokenRef = useRef<any>(null);
+  const debounceRef = useRef<any>(null);
+  const boxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let cancelled = false;
-
     (async () => {
       const google = await loadGoogleMaps();
-      if (!google || cancelled || !containerRef.current) return;
-
-      let places: any;
+      if (cancelled) return;
+      if (!google) return setEnabled(false);
       try {
-        places = await google.maps.importLibrary("places");
+        const places = await google.maps.importLibrary("places");
+        if (!places?.AutocompleteSuggestion) return setEnabled(false);
+        placesRef.current = places;
+        tokenRef.current = new places.AutocompleteSessionToken();
+        setEnabled(true);
       } catch {
-        return;
+        setEnabled(false);
       }
-      if (cancelled || !places?.PlaceAutocompleteElement) return;
-
-      let el: any;
-      try {
-        el = new places.PlaceAutocompleteElement({ includedRegionCodes: ["gb"] });
-      } catch {
-        // Older signature fallback.
-        try {
-          el = new places.PlaceAutocompleteElement();
-        } catch {
-          return;
-        }
-      }
-
-      el.style.width = "100%";
-      containerRef.current.innerHTML = "";
-      containerRef.current.appendChild(el);
-      setAvailable(true);
-
-      el.addEventListener("gmp-select", async (event: any) => {
-        try {
-          const prediction = event?.placePrediction;
-          if (!prediction) return;
-          const place = prediction.toPlace();
-          await place.fetchFields({
-            fields: ["addressComponents", "formattedAddress"],
-          });
-          const comps: any[] = place.addressComponents ?? [];
-          const find = (type: string) =>
-            comps.find((c) => (c.types ?? []).includes(type));
-          const txt = (c: any) => (c ? c.longText ?? c.shortText ?? "" : "");
-
-          const num = txt(find("street_number"));
-          const route = txt(find("route"));
-          const city = txt(find("postal_town")) || txt(find("locality"));
-          const postcode = txt(find("postal_code"));
-
-          onSelect({
-            line1: [num, route].filter(Boolean).join(" "),
-            city,
-            postcode,
-            formatted: place.formattedAddress ?? "",
-          });
-        } catch {
-          // ignore — user can fill manually
-        }
-      });
     })();
-
     return () => {
       cancelled = true;
     };
-  }, [onSelect]);
+  }, []);
+
+  useEffect(() => {
+    function onDoc(e: MouseEvent) {
+      if (boxRef.current && !boxRef.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", onDoc);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, []);
+
+  function handleChange(v: string) {
+    setQuery(v);
+    if (!placesRef.current || !v.trim()) {
+      setSuggestions([]);
+      setOpen(false);
+      return;
+    }
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const { AutocompleteSuggestion } = placesRef.current;
+        const res = await AutocompleteSuggestion.fetchAutocompleteSuggestions({
+          input: v,
+          sessionToken: tokenRef.current,
+          includedRegionCodes: ["gb"],
+        });
+        const list = res?.suggestions ?? [];
+        setSuggestions(list);
+        setOpen(list.length > 0);
+      } catch {
+        setSuggestions([]);
+        setOpen(false);
+      }
+    }, 250);
+  }
+
+  async function choose(s: any) {
+    try {
+      const place = s.placePrediction.toPlace();
+      await place.fetchFields({ fields: ["addressComponents", "formattedAddress"] });
+      const comps: any[] = place.addressComponents ?? [];
+      const find = (t: string) => comps.find((c) => (c.types ?? []).includes(t));
+      const txt = (c: any) => (c ? c.longText ?? c.shortText ?? "" : "");
+      const num = txt(find("street_number"));
+      const route = txt(find("route"));
+      const city = txt(find("postal_town")) || txt(find("locality"));
+      const postcode = txt(find("postal_code"));
+      onSelect({
+        line1: [num, route].filter(Boolean).join(" "),
+        city,
+        postcode,
+        formatted: place.formattedAddress ?? "",
+      });
+      setQuery(place.formattedAddress ?? s.placePrediction?.text?.text ?? "");
+    } catch {
+      // ignore — fields can be filled manually
+    }
+    setOpen(false);
+    setSuggestions([]);
+    if (placesRef.current) tokenRef.current = new placesRef.current.AutocompleteSessionToken();
+  }
+
+  if (enabled === false) return null;
 
   return (
-    <div>
-      <div
-        ref={containerRef}
-        className="rounded-lintel border border-hairline bg-surface [&_*]:font-sans"
+    <div ref={boxRef} className="relative">
+      <input
+        value={query}
+        onChange={(e) => handleChange(e.target.value)}
+        onFocus={() => suggestions.length > 0 && setOpen(true)}
+        placeholder="Start typing an address…"
+        className={inputCls}
+        autoComplete="off"
       />
-      {available && (
-        <span className="mt-1 block text-xs text-slate">
-          Search for the address, then check the fields below.
-        </span>
+      {open && suggestions.length > 0 && (
+        <ul className="absolute z-20 mt-1 max-h-72 w-full overflow-auto rounded-lintel border border-hairline bg-surface shadow-card">
+          {suggestions.map((s, i) => {
+            const pred = s.placePrediction;
+            const main = pred?.mainText?.text ?? pred?.text?.text ?? "";
+            const secondary = pred?.secondaryText?.text ?? "";
+            return (
+              <li key={i}>
+                <button
+                  type="button"
+                  onClick={() => choose(s)}
+                  className="block w-full px-3 py-2 text-left text-sm hover:bg-ink/5"
+                >
+                  <span className="text-ink">{main}</span>
+                  {secondary && <span className="ml-1 text-slate">{secondary}</span>}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
       )}
+      <span className="mt-1 block text-xs text-slate">
+        Powered by Google. Pick a result to fill the fields below.
+      </span>
     </div>
   );
 }
