@@ -4,8 +4,8 @@ import { revalidatePath } from "next/cache";
 import { requireSession } from "@/lib/auth";
 import { requireEntitlement } from "@/lib/entitlements";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
+import { newContractorToken } from "@/lib/maintenance";
 
-/** Confirm the tenancy belongs to the caller's org. Returns the org id. */
 async function assertTenancyOwner(tenancyId: string) {
   const { orgId } = await requireSession();
   const supabase = createClient();
@@ -18,7 +18,6 @@ async function assertTenancyOwner(tenancyId: string) {
   return orgId;
 }
 
-/** Invite a tenant by email and link them to the tenancy. */
 export async function inviteTenant(formData: FormData) {
   const tenancyId = String(formData.get("tenancy_id"));
   const orgId = await assertTenancyOwner(tenancyId);
@@ -28,14 +27,12 @@ export async function inviteTenant(formData: FormData) {
   if (!email) return;
 
   const service = createServiceClient();
-  // Invite (or fetch) the auth user, then attach a tenancy membership.
   const { data, error } = await service.auth.admin.inviteUserByEmail(email, {
     redirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/home`,
   });
 
   let userId = data?.user?.id;
   if (error && !userId) {
-    // User may already exist — look them up.
     const { data: list } = await service.auth.admin.listUsers();
     userId = list?.users?.find((u: any) => u.email === email)?.id;
     if (!userId) throw new Error(error.message);
@@ -49,7 +46,25 @@ export async function inviteTenant(formData: FormData) {
   revalidatePath(`/dashboard/tenancies/${tenancyId}`);
 }
 
-/** Share a document with the tenancy (upload + record). */
+/** Create (or keep) a tokenised, no-login tenant link for this tenancy. */
+export async function generatePortalLink(formData: FormData) {
+  const tenancyId = String(formData.get("tenancy_id"));
+  await assertTenancyOwner(tenancyId);
+  const supabase = createClient();
+  const { data } = await supabase
+    .from("tenancies")
+    .select("portal_token")
+    .eq("id", tenancyId)
+    .maybeSingle();
+  if (!data?.portal_token) {
+    await supabase
+      .from("tenancies")
+      .update({ portal_token: newContractorToken() })
+      .eq("id", tenancyId);
+  }
+  revalidatePath(`/dashboard/tenancies/${tenancyId}`);
+}
+
 export async function shareDocument(formData: FormData) {
   const tenancyId = String(formData.get("tenancy_id"));
   const orgId = await assertTenancyOwner(tenancyId);
@@ -60,9 +75,7 @@ export async function shareDocument(formData: FormData) {
 
   const supabase = createClient();
   const path = `${tenancyId}/${Date.now()}-${file.name}`;
-  const { error: upErr } = await supabase.storage
-    .from("tenancy-docs")
-    .upload(path, file, { upsert: false });
+  const { error: upErr } = await supabase.storage.from("tenancy-docs").upload(path, file, { upsert: false });
   if (upErr) throw new Error(upErr.message);
 
   const { error } = await supabase.from("shared_documents").insert({
@@ -77,7 +90,6 @@ export async function shareDocument(formData: FormData) {
   revalidatePath(`/dashboard/tenancies/${tenancyId}`);
 }
 
-/** Landlord replies in the tenancy message thread. */
 export async function sendLandlordMessage(formData: FormData) {
   const tenancyId = String(formData.get("tenancy_id"));
   const orgId = await assertTenancyOwner(tenancyId);

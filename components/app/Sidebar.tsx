@@ -8,12 +8,16 @@ import { cn } from "@/lib/cn";
 const NAV = [
   { href: "/dashboard", label: "Overview" },
   { href: "/dashboard/properties", label: "Properties" },
+  { href: "/dashboard/contacts", label: "Contacts", writerOnly: true },
   { href: "/dashboard/transactions", label: "Income & expenses", writerOnly: true },
+  { href: "/dashboard/invoices", label: "Invoices", writerOnly: true },
   { href: "/dashboard/rent", label: "Rent ledger", writerOnly: true },
   { href: "/dashboard/court-readiness", label: "Court-readiness" },
   { href: "/dashboard/maintenance", label: "Maintenance", writerOnly: true },
   { href: "/dashboard/compliance", label: "Compliance" },
+  { href: "/dashboard/documents", label: "Documents" },
   { href: "/dashboard/toolkit", label: "Toolkit", writerOnly: true },
+  { href: "/dashboard/reports", label: "Reports" },
   { href: "/dashboard/assistant", label: "Assistant", writerOnly: true },
   { href: "/dashboard/tax", label: "Tax & MTD" },
   { href: "/dashboard/accountant", label: "Accountant" },
@@ -29,7 +33,7 @@ export function Sidebar({ readOnly = false }: { readOnly?: boolean }) {
           <Logo />
         </Link>
       </div>
-      <nav className="flex-1 px-3">
+      <nav className="flex-1 overflow-y-auto px-3 pb-4">
         {items.map((item) => {
           const active =
             item.href === "/dashboard"

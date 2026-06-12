@@ -16,6 +16,7 @@ const DOC_TYPES = [
   ["inventory", "Inventory"],
   ["tenancy_agreement", "Tenancy agreement"],
   ["correspondence", "Correspondence"],
+  ["e_signature", "E-signature"],
   ["other", "Other"],
 ];
 

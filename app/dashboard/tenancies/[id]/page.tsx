@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { MessageThread } from "@/components/portal/MessageThread";
 import { ReadinessScore } from "@/components/app/ReadinessScore";
 import { tenancyReadiness } from "@/lib/court-readiness-server";
-import { inviteTenant, shareDocument, sendLandlordMessage } from "./actions";
+import { inviteTenant, shareDocument, sendLandlordMessage, generatePortalLink } from "./actions";
 import { fmtDate } from "@/lib/dates";
 
 export const dynamic = "force-dynamic";
@@ -23,7 +23,7 @@ export default async function TenancyManage({ params }: { params: { id: string }
 
   const { data: tenancy } = await supabase
     .from("tenancies")
-    .select("id, property_id, rent_amount, properties(label)")
+    .select("id, property_id, rent_amount, portal_token, properties(label)")
     .eq("org_id", orgId)
     .eq("id", params.id)
     .maybeSingle();
@@ -56,6 +56,23 @@ export default async function TenancyManage({ params }: { params: { id: string }
             <ReadinessScore result={readiness} />
           </div>
         )}
+
+        <Card className="lg:col-span-2">
+          <CardBody>
+            <h2 className="font-heading text-base font-semibold tracking-tight">Tenant link (no login)</h2>
+            <p className="mt-1 text-sm text-slate">Share a private, read-only link so your tenant can see rent and documents without an account.</p>
+            {(tenancy as any).portal_token ? (
+              <code className="mt-3 block break-all rounded-lintel bg-paper px-3 py-2 text-xs text-evergreen">
+                {(process.env.NEXT_PUBLIC_APP_URL ?? "")}/t/{(tenancy as any).portal_token}
+              </code>
+            ) : (
+              <form action={generatePortalLink} className="mt-3">
+                <input type="hidden" name="tenancy_id" value={params.id} />
+                <Button size="sm" type="submit">Create tenant link</Button>
+              </form>
+            )}
+          </CardBody>
+        </Card>
 
         {!portalOn && (
           <Card className="lg:col-span-2 border-amber/40">
