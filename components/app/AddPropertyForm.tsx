@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Card, CardBody } from "@/components/ui/Card";
-import { JURISDICTION_OPTIONS } from "@/lib/jurisdictions";
+import { resolveJurisdiction, type JurisdictionKey } from "@/lib/jurisdictions";
 import { createProperty } from "@/app/dashboard/properties/actions";
 import { useReadOnly } from "@/components/app/RoleProvider";
 import { AddressAutocomplete } from "@/components/app/AddressAutocomplete";
@@ -11,7 +11,7 @@ import { AddressAutocomplete } from "@/components/app/AddressAutocomplete";
 const inputCls =
   "h-11 w-full rounded-lintel border border-hairline bg-surface px-3 text-sm outline-none focus:ring-2 focus:ring-evergreen/30";
 
-export function AddPropertyForm() {
+export function AddPropertyForm({ region }: { region: JurisdictionKey }) {
   const readOnly = useReadOnly();
   const [open, setOpen] = useState(false);
   const [label, setLabel] = useState("");
@@ -21,6 +21,8 @@ export function AddPropertyForm() {
 
   if (readOnly) return null;
   if (!open) return <Button onClick={() => setOpen(true)}>Add property</Button>;
+
+  const regionName = resolveJurisdiction(region).name;
 
   return (
     <Card className="mb-6">
@@ -33,6 +35,9 @@ export function AddPropertyForm() {
           }}
           className="grid gap-4 sm:grid-cols-2"
         >
+          {/* Region is fixed to the account region */}
+          <input type="hidden" name="jurisdiction" value={region} />
+
           <div className="sm:col-span-2">
             <span className="mb-1 block text-sm text-ink">Find address</span>
             <AddressAutocomplete
@@ -50,16 +55,15 @@ export function AddPropertyForm() {
             <input name="label" required value={label} onChange={(e) => setLabel(e.target.value)} placeholder="e.g. 12 Oak Street" className={inputCls} />
           </label>
           <label className="block">
-            <span className="mb-1 block text-sm text-ink">Nation</span>
-            <select name="jurisdiction" className={inputCls} defaultValue="england">
-              {JURISDICTION_OPTIONS.map((o) => (<option key={o.value} value={o.value}>{o.label}</option>))}
-            </select>
-            <span className="mt-1 block text-xs text-slate">Loads the correct tenancy &amp; compliance rules.</span>
-          </label>
-          <label className="block">
             <span className="mb-1 block text-sm text-ink">Postcode</span>
             <input name="postcode" value={postcode} onChange={(e) => setPostcode(e.target.value)} placeholder="SW1A 1AA" className={inputCls} />
           </label>
+          <div className="block">
+            <span className="mb-1 block text-sm text-ink">Nation</span>
+            <div className="flex h-11 items-center rounded-lintel border border-hairline bg-paper px-3 text-sm text-slate">
+              {regionName} <span className="ml-2 text-xs">· your account region</span>
+            </div>
+          </div>
           <label className="block">
             <span className="mb-1 block text-sm text-ink">Address line</span>
             <input name="address_line1" value={line1} onChange={(e) => setLine1(e.target.value)} className={inputCls} />

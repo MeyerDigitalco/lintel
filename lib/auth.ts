@@ -2,21 +2,19 @@ import "server-only";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Feature } from "@/lib/stripe/config";
+import type { JurisdictionKey } from "@/lib/jurisdictions";
 
 export interface SessionContext {
   userId: string;
   email: string | null;
   orgId: string;
   role: string;
+  region: JurisdictionKey;
 }
 
 export const WRITER_ROLES = ["owner", "admin", "landlord"];
 export const isWriterRole = (role: string) => WRITER_ROLES.includes(role);
 
-/**
- * Resolve the current user + their primary org. Redirects to /login if not
- * signed in. Use at the top of every protected Server Component / action.
- */
 export async function requireSession(): Promise<SessionContext> {
   const supabase = createClient();
   const {
@@ -34,11 +32,18 @@ export async function requireSession(): Promise<SessionContext> {
 
   if (!membership) redirect("/onboarding");
 
+  const { data: org } = await supabase
+    .from("orgs")
+    .select("region")
+    .eq("id", membership.org_id)
+    .maybeSingle();
+
   return {
     userId: user.id,
     email: user.email ?? null,
     orgId: membership.org_id,
     role: membership.role,
+    region: (org?.region ?? "england") as JurisdictionKey,
   };
 }
 
@@ -52,7 +57,6 @@ export async function requireWriter(): Promise<SessionContext> {
   return session;
 }
 
-/** Load the org's entitlement map for UI gating. */
 export async function loadEntitlements(
   orgId: string
 ): Promise<Record<Feature, boolean>> {

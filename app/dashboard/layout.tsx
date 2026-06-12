@@ -1,4 +1,5 @@
 import { requireSession, loadEntitlements, isWriterRole } from "@/lib/auth";
+import { resolveJurisdiction } from "@/lib/jurisdictions";
 import { createClient } from "@/lib/supabase/server";
 import { EntitlementProvider } from "@/components/app/EntitlementProvider";
 import { RoleProvider } from "@/components/app/RoleProvider";
@@ -29,7 +30,7 @@ export default async function DashboardLayout({
         <div className="flex min-h-screen bg-paper">
           <Sidebar readOnly={readOnly} />
           <div className="flex min-w-0 flex-1 flex-col">
-            <Topbar email={session.email} orgName={org?.name} />
+            <Topbar email={session.email} orgName={org?.name} regionName={resolveJurisdiction(session.region).name} />
             <main className="flex-1 px-5 py-8">
               <div className="mx-auto max-w-5xl">{children}</div>
             </main>

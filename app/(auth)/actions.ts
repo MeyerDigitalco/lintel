@@ -27,6 +27,7 @@ export async function signUpAction(
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
   const orgName = String(formData.get("org_name") ?? "");
+  const region = String(formData.get("region") ?? "england");
 
   if (password.length < 8) {
     return { error: "Password must be at least 8 characters." };
@@ -37,7 +38,7 @@ export async function signUpAction(
     email,
     password,
     options: {
-      data: { org_name: orgName },
+      data: { org_name: orgName, region },
       emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/dashboard`,
     },
   });

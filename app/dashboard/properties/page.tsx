@@ -10,7 +10,7 @@ import type { JurisdictionKey } from "@/lib/jurisdictions";
 export const dynamic = "force-dynamic";
 
 export default async function PropertiesPage() {
-  const { orgId } = await requireSession();
+  const { orgId, region } = await requireSession();
   const supabase = createClient();
   const { data: properties } = await supabase
     .from("properties")
@@ -24,7 +24,7 @@ export default async function PropertiesPage() {
         title="Properties"
         subtitle="Each property loads its nation's tenancy and compliance rules."
       />
-      <AddPropertyForm />
+      <AddPropertyForm region={region} />
 
       {!properties || properties.length === 0 ? (
         <EmptyState

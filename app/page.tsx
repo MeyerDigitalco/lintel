@@ -75,6 +75,33 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Court-ready highlight */}
+      <section className="mx-auto max-w-6xl px-5 py-12">
+        <div className="rounded-lintel border border-evergreen/30 bg-surface p-8 md:flex md:items-center md:justify-between md:gap-8">
+          <div className="max-w-xl">
+            <span className="inline-flex items-center gap-2 rounded-full bg-evergreen/8 px-3 py-1 text-xs font-medium text-evergreen">
+              Court-ready evidence
+            </span>
+            <h2 className="mt-4 font-heading text-2xl font-semibold tracking-tight text-ink">
+              Know each tenancy would stand up.
+            </h2>
+            <p className="mt-3 text-sm text-slate">
+              Lintel scores every tenancy on the things that decide a possession
+              claim: deposit protected in time, prescribed documents served,
+              certificates in date, registration valid and Right to Rent. You get
+              a clear score and a checklist of exactly what to fix — before it matters.
+            </p>
+          </div>
+          <div className="mt-6 shrink-0 md:mt-0">
+            <div className="rounded-lintel border border-hairline bg-paper p-6 text-center">
+              <p className="text-xs uppercase tracking-wide text-slate">Court-readiness</p>
+              <p className="mt-1 font-heading text-5xl font-semibold tabular-nums text-evergreen">92</p>
+              <p className="mt-1 text-xs text-slate">/ 100 · Strong</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Jurisdictions */}
       <section id="jurisdictions" className="mx-auto max-w-6xl px-5 py-12">
         <h2 className="font-heading text-2xl font-semibold tracking-tight text-ink">

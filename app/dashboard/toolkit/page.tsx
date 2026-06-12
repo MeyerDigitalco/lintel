@@ -1,86 +1,52 @@
 import Link from "next/link";
-import { requireWriter } from "@/lib/auth";
+import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { PageHeader, EmptyState, Badge } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
 import { markNoticeServed } from "./actions";
-import {
-  resolveJurisdiction,
-  listJurisdictions,
-  type JurisdictionKey,
-} from "@/lib/jurisdictions";
+import { resolveJurisdiction } from "@/lib/jurisdictions";
 import { toolsForJurisdiction } from "@/lib/toolkit";
 import { fmtDate } from "@/lib/dates";
 
 export const dynamic = "force-dynamic";
 
 export default async function ToolkitPage() {
-  const { orgId } = await requireWriter();
+  const { orgId, region } = await requireSession();
   const supabase = createClient();
 
-  const [{ data: properties }, { data: notices }] = await Promise.all([
-    supabase.from("properties").select("jurisdiction").eq("org_id", orgId),
-    supabase
-      .from("notices")
-      .select("id, title, kind, status, served_at, created_at")
-      .eq("org_id", orgId)
-      .order("created_at", { ascending: false })
-      .limit(50),
-  ]);
+  const { data: notices } = await supabase
+    .from("notices")
+    .select("id, title, kind, status, served_at, created_at")
+    .eq("org_id", orgId)
+    .order("created_at", { ascending: false })
+    .limit(50);
 
-  // Which nations are in the portfolio? Show those first; offer the rest below.
-  const present = new Set((properties ?? []).map((p) => p.jurisdiction as JurisdictionKey));
-  const ordered = listJurisdictions().sort((a, b) => {
-    const ap = present.has(a.key) ? 0 : 1;
-    const bp = present.has(b.key) ? 0 : 1;
-    return ap - bp;
-  });
+  const rules = resolveJurisdiction(region);
+  const tools = toolsForJurisdiction(region);
 
   return (
     <div>
       <PageHeader
         title="Tenancy toolkit"
         subtitle="Jurisdiction-correct notices and agreements. Template-assisted — not legal advice."
+        action={<Badge tone="mint">{rules.name}</Badge>}
       />
 
-      <div className="space-y-6">
-        {ordered.map((j) => {
-          const tools = toolsForJurisdiction(j.key);
-          if (tools.length === 0) return null;
-          return (
-            <section key={j.key}>
-              <div className="mb-3 flex items-center gap-2">
-                <h2 className="font-heading text-base font-semibold tracking-tight">{j.name}</h2>
-                {present.has(j.key) ? (
-                  <Badge tone="mint">In your portfolio</Badge>
-                ) : (
-                  <Badge>Available</Badge>
-                )}
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {tools.map((t) => (
-                  <Link key={t.key} href={`/dashboard/toolkit/${t.slug}`}>
-                    <Card className="h-full transition-colors hover:border-evergreen/40">
-                      <CardBody>
-                        <h3 className="font-heading text-sm font-semibold tracking-tight">
-                          {t.title}
-                        </h3>
-                        <p className="mt-1 text-xs text-slate">{t.blurb}</p>
-                      </CardBody>
-                    </Card>
-                  </Link>
-                ))}
-              </div>
-            </section>
-          );
-        })}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {tools.map((t) => (
+          <Link key={t.key} href={`/dashboard/toolkit/${t.slug}`}>
+            <Card className="h-full transition-colors hover:border-evergreen/40">
+              <CardBody>
+                <h3 className="font-heading text-sm font-semibold tracking-tight">{t.title}</h3>
+                <p className="mt-1 text-xs text-slate">{t.blurb}</p>
+              </CardBody>
+            </Card>
+          </Link>
+        ))}
       </div>
 
-      {/* Served / saved documents tracker */}
       <div className="mt-10">
-        <h2 className="mb-3 font-heading text-base font-semibold tracking-tight">
-          Saved documents
-        </h2>
+        <h2 className="mb-3 font-heading text-base font-semibold tracking-tight">Saved documents</h2>
         {!notices || notices.length === 0 ? (
           <EmptyState
             title="No documents yet"

@@ -3,6 +3,10 @@
 import { useFormState, useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/Button";
 import { signInAction, signUpAction, type AuthState } from "@/app/(auth)/actions";
+import { JURISDICTION_OPTIONS } from "@/lib/jurisdictions";
+
+const fieldCls =
+  "h-11 w-full rounded-lintel border border-hairline bg-surface px-3 text-sm outline-none focus:ring-2 focus:ring-evergreen/30";
 
 function Submit({ label }: { label: string }) {
   const { pending } = useFormStatus();
@@ -26,24 +30,28 @@ export function AuthForm({
   return (
     <form action={formAction} className="space-y-4">
       {mode === "signup" && (
-        <label className="block">
-          <span className="mb-1 block text-sm text-ink">Portfolio name</span>
-          <input
-            name="org_name"
-            placeholder="e.g. Meyer Lettings"
-            className="h-11 w-full rounded-lintel border border-hairline bg-surface px-3 text-sm outline-none focus:ring-2 focus:ring-evergreen/30"
-          />
-        </label>
+        <>
+          <label className="block">
+            <span className="mb-1 block text-sm text-ink">Portfolio name</span>
+            <input name="org_name" placeholder="e.g. Meyer Lettings" className={fieldCls} />
+          </label>
+          <label className="block">
+            <span className="mb-1 block text-sm text-ink">Your region</span>
+            <select name="region" defaultValue="england" className={fieldCls}>
+              {JURISDICTION_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>{o.label}</option>
+              ))}
+            </select>
+            <span className="mt-1 block text-xs text-slate">
+              Loads the correct tenancy, tax and compliance rules. You can&apos;t
+              change this later, so pick where your properties are.
+            </span>
+          </label>
+        </>
       )}
       <label className="block">
         <span className="mb-1 block text-sm text-ink">Email</span>
-        <input
-          name="email"
-          type="email"
-          required
-          autoComplete="email"
-          className="h-11 w-full rounded-lintel border border-hairline bg-surface px-3 text-sm outline-none focus:ring-2 focus:ring-evergreen/30"
-        />
+        <input name="email" type="email" required autoComplete="email" className={fieldCls} />
       </label>
       <label className="block">
         <span className="mb-1 block text-sm text-ink">Password</span>
@@ -53,7 +61,7 @@ export function AuthForm({
           required
           autoComplete={mode === "signin" ? "current-password" : "new-password"}
           minLength={8}
-          className="h-11 w-full rounded-lintel border border-hairline bg-surface px-3 text-sm outline-none focus:ring-2 focus:ring-evergreen/30"
+          className={fieldCls}
         />
       </label>
       {next && <input type="hidden" name="next" value={next} />}
