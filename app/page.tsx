@@ -113,7 +113,16 @@ export default function HomePage() {
         </p>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {jurisdictions.map((j) => (
-            <Card key={j.key}>
+            <Card key={j.key} className="overflow-hidden">
+              <div
+                className="h-24 w-full"
+                style={{
+                  backgroundImage: `url(/regions/${j.key}.jpg), url(/regions/${j.key}.svg)`,
+                  backgroundSize: "cover, cover",
+                  backgroundPosition: "center, center",
+                  backgroundRepeat: "no-repeat, no-repeat",
+                }}
+              />
               <CardBody>
                 <h3 className="font-heading text-base font-semibold tracking-tight">
                   {j.name}

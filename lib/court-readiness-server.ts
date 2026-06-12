@@ -5,15 +5,16 @@ import { scoreReadiness, type ReadinessResult } from "@/lib/court-readiness";
 import { daysUntil } from "@/lib/dates";
 
 /**
- * Gather the data for a tenancy and compute its court-readiness score.
- * Pulls from the property's jurisdiction rules, deposit fields, compliance
- * items, property documents and registrations.
+ * Gather data for a tenancy and compute its court-readiness score. Accepts an
+ * optional Supabase client so it can run under a user session (RLS) or the
+ * service client (e.g. the tokenised tenant page, which has no session).
  */
 export async function tenancyReadiness(
   orgId: string,
-  tenancyId: string
+  tenancyId: string,
+  client?: any
 ): Promise<ReadinessResult | null> {
-  const supabase = createClient();
+  const supabase = client ?? createClient();
 
   const { data: tenancy } = await supabase
     .from("tenancies")
@@ -33,20 +34,18 @@ export async function tenancyReadiness(
   ]);
 
   const inDate = (key: string): boolean | null => {
-    const item = (compliance ?? []).find((c) => c.item_key === key);
+    const item = (compliance ?? []).find((c: any) => c.item_key === key);
     if (!item) return null;
     if (!item.expires_at) return true;
     return (daysUntil(item.expires_at) ?? -1) >= 0;
   };
 
-  // Documents we have evidence for: from compliance items, the document vault,
-  // and the jurisdiction checklist mapped by key.
   const servedDocKeys = new Set<string>();
   for (const c of compliance ?? []) servedDocKeys.add(c.item_key);
   for (const d of docs ?? []) if (d.doc_type) servedDocKeys.add(d.doc_type);
 
   const registrationValid =
-    (regs ?? []).some((r) => !r.renews_at || (daysUntil(r.renews_at) ?? -1) >= 0) &&
+    (regs ?? []).some((r: any) => !r.renews_at || (daysUntil(r.renews_at) ?? -1) >= 0) &&
     (regs ?? []).length > 0;
 
   const prescribedDocs = rules.documentChecklist

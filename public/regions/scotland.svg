@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 520" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="skys" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#aebccb"/>
+      <stop offset="1" stop-color="#e4e9ea"/>
+    </linearGradient>
+    <linearGradient id="lochs" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5f7886"/>
+      <stop offset="1" stop-color="#8ea2ad"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="520" fill="url(#skys)"/>
+  <ellipse cx="500" cy="100" rx="200" ry="26" fill="#ffffff" opacity="0.45"/>
+  <ellipse cx="1180" cy="120" rx="180" ry="24" fill="#ffffff" opacity="0.4"/>
+  <path d="M-40 380 L 320 120 L 680 380 Z" fill="#5a6b6f"/>
+  <path d="M230 190 L 320 120 L 410 190 L 340 220 L 270 215 Z" fill="#f2f5f6"/>
+  <path d="M380 380 L 820 90 L 1280 380 Z" fill="#49595d"/>
+  <path d="M715 168 L 820 90 L 925 168 L 845 205 L 770 200 Z" fill="#f4f7f8"/>
+  <path d="M1040 380 L 1380 150 L 1660 380 Z" fill="#586a6e"/>
+  <path d="M1300 200 L 1380 150 L 1460 200 L 1390 222 Z" fill="#eef2f3"/>
+  <path d="M0 380 C 380 358 760 380 1080 372 C 1340 366 1480 380 1600 374 L1600 438 L0 438 Z" fill="#46564b"/>
+  <path d="M0 438 C 300 426 560 446 900 436 C 1240 426 1420 444 1600 436 L1600 520 L0 520 Z" fill="url(#lochs)"/>
+  <g fill="#ffffff" opacity="0.22">
+    <rect x="240" y="462" width="300" height="3"/><rect x="820" y="480" width="360" height="3"/><rect x="1180" y="496" width="280" height="3"/>
+  </g>
+</svg>

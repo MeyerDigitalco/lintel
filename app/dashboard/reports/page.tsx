@@ -16,6 +16,7 @@ const REPORTS: {
   { slug: "overdue-rent", title: "Overdue rent payments", body: "Outstanding tenant balances and arrears. Section 8-ready PDF.", group: "Rent" },
   { slug: "fault-transcript", title: "Fault transcript", body: "Court-ready timestamped fault chronology, per maintenance fault.", group: "Evidence" },
   { slug: "compliance-status", title: "Compliance status", body: "Per-property Gas Safety, EICR, EPC, insurance status.", group: "Compliance" },
+  { slug: "court-readiness", title: "Court-readiness assessment", body: "Per-tenancy readiness score with the exact items to fix.", group: "Evidence" },
   { slug: "tenancy-journey", title: "Tenancy journey", body: "Every event for a tenancy — setup, notices, rent, maintenance.", group: "Evidence" },
   { title: "Income & expense statement", body: "Comprehensive breakdown of income and expenses over a period.", group: "Accounting", soon: true },
   { title: "P&L summary", body: "High-level profit and loss overview.", group: "Accounting", soon: true },

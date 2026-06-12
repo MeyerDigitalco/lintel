@@ -8,6 +8,7 @@ import { humanStatus } from "@/lib/maintenance";
 import { gbp } from "@/lib/format";
 import { fmtDate, daysUntil } from "@/lib/dates";
 import { raiseFaultByToken } from "./actions";
+import { tenancyReadiness } from "@/lib/court-readiness-server";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +20,7 @@ export default async function TokenTenantPage({ params }: { params: { token: str
 
   const { data: tenancy } = await service
     .from("tenancies")
-    .select("id, rent_amount, properties(label, city, postcode)")
+    .select("id, org_id, rent_amount, properties(label, city, postcode)")
     .eq("portal_token", params.token)
     .maybeSingle();
   if (!tenancy) notFound();
@@ -41,13 +42,26 @@ export default async function TokenTenantPage({ params }: { params: { token: str
 
   const activeFaults = (faults ?? []).filter((f) => f.status !== "completed" && f.status !== "closed");
 
+  const { data: org } = await service.from("orgs").select("region").eq("id", (tenancy as any).org_id).maybeSingle();
+  const region = ((org as any)?.region as string) ?? "england";
+  const readiness = await tenancyReadiness((tenancy as any).org_id, tenancy.id, service);
+  const tenantChecks = (readiness?.checks ?? []).filter((c) => c.key !== "registration");
+
   return (
     <div className="min-h-screen bg-paper pb-10">
-      <header className="bg-ink px-5 py-6 text-paper">
+      <header
+        className="px-5 py-10 text-paper"
+        style={{
+          backgroundImage: `linear-gradient(rgba(14,20,31,0.68), rgba(14,20,31,0.88)), url(/regions/${region}.jpg), url(/regions/${region}.svg)`,
+          backgroundSize: "cover, cover, cover",
+          backgroundPosition: "center, center, center",
+          backgroundRepeat: "no-repeat, no-repeat, no-repeat",
+        }}
+      >
         <div className="mx-auto max-w-md">
-          <p className="text-xs uppercase tracking-widest text-paper/60">Lintel</p>
+          <p className="text-xs uppercase tracking-widest text-paper/70">Lintel</p>
           <h1 className="mt-1 font-heading text-2xl font-semibold tracking-tight">Welcome home 👋</h1>
-          <p className="mt-1 text-sm text-paper/70">{[prop?.label, prop?.city, prop?.postcode].filter(Boolean).join(", ")}</p>
+          <p className="mt-1 text-sm text-paper/80">{[prop?.label, prop?.city, prop?.postcode].filter(Boolean).join(", ")}</p>
         </div>
       </header>
 
@@ -62,6 +76,36 @@ export default async function TokenTenantPage({ params }: { params: { token: str
                   {f.title} <Badge tone="amber">{humanStatus(f.status)}</Badge>
                 </p>
               ))}
+            </CardBody>
+          </Card>
+        )}
+
+        {/* Safety & compliance (tenant-friendly) */}
+        {readiness && (
+          <Card>
+            <CardBody>
+              <div className="flex items-center justify-between">
+                <h2 className="font-heading text-sm font-semibold tracking-tight">Your home — safety &amp; compliance</h2>
+                <Badge tone={readiness.rag === "green" ? "mint" : readiness.rag === "amber" ? "amber" : "red"}>
+                  {readiness.rag === "green" ? "All in order" : "Being sorted"}
+                </Badge>
+              </div>
+              <ul className="mt-3 space-y-1.5 text-sm">
+                {tenantChecks.map((c) => {
+                  const ok = c.status === "ok" || c.status === "na";
+                  return (
+                    <li key={c.key} className="flex items-center gap-2">
+                      <span className={ok ? "text-evergreen" : "text-amber"}>{ok ? "✓" : "•"}</span>
+                      <span className="text-ink">{c.label}</span>
+                      {!ok && <span className="text-xs text-slate">— your landlord has been notified</span>}
+                    </li>
+                  );
+                })}
+              </ul>
+              <p className="mt-3 text-xs text-slate">
+                Compliance score {readiness.score}/100. This reflects safety
+                certificates, your deposit protection and required documents.
+              </p>
             </CardBody>
           </Card>
         )}

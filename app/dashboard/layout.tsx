@@ -30,11 +30,11 @@ export default async function DashboardLayout({
   const r = session.region;
   const contentStyle: React.CSSProperties = {
     backgroundImage:
-      `linear-gradient(to bottom, rgba(246,248,251,0.30) 0px, rgba(246,248,251,0.88) 250px, #F6F8FB 470px), ` +
+      `linear-gradient(to bottom, rgba(246,248,251,0.34) 0px, rgba(246,248,251,0.06) 140px, rgba(246,248,251,0.10) 360px, rgba(246,248,251,0.86) 600px, #F6F8FB 760px), ` +
       `url(/regions/${r}.jpg), url(/regions/${r}.svg)`,
     backgroundRepeat: "no-repeat, no-repeat, no-repeat",
     backgroundSize: "cover, cover, cover",
-    backgroundPosition: "top center, top center, top center",
+    backgroundPosition: "center top, center 38%, center 38%",
     backgroundAttachment: "fixed, fixed, fixed",
   };
 
