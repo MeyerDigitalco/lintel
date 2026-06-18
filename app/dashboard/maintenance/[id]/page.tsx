@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { StatusBadge, SlaBadge, Timeline, humanAge } from "@/components/app/maintenance/ui";
 import { updateStatus, assignContractor, recordCost } from "@/app/dashboard/maintenance/actions";
 import { STATUS_FLOW } from "@/lib/maintenance";
-import { gbp } from "@/lib/format";
+import { formatMoney } from "@/lib/i18n/currency";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +16,8 @@ const inputCls =
   "h-10 w-full rounded-lintel border border-hairline bg-surface px-3 text-sm outline-none focus:ring-2 focus:ring-evergreen/30";
 
 export default async function ManageRequest({ params }: { params: { id: string } }) {
-  const { orgId } = await requireWriter();
+  const { orgId, currency} = await requireWriter();
+  const gbp = (n: number, opts?: { decimals?: boolean }) => formatMoney(n, currency, opts);
   const supabase = createClient();
 
   const { data: req } = await supabase

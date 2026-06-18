@@ -3,8 +3,9 @@ import { createClient } from "@/lib/supabase/server";
 import { PageHeader, Badge } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { PLAN, FULLY_LOADED_PRICE, TRIAL_PERIOD_DAYS, priceIdFor } from "@/lib/stripe/config";
-import { gbp } from "@/lib/format";
+import { PLAN, TRIAL_PERIOD_DAYS, priceIdFor } from "@/lib/stripe/config";
+import { formatMoney } from "@/lib/i18n/currency";
+import { localPrice, priceDecimals, fullyLoadedPrice } from "@/lib/i18n/pricing";
 import { fmtDate } from "@/lib/dates";
 import { toggleAddon, startCheckout, openBillingPortal } from "../actions";
 
@@ -23,7 +24,8 @@ export default async function BillingPage({
 }: {
   searchParams: { checkout?: string };
 }) {
-  const { orgId, role } = await requireWriter();
+  const { orgId, role, currency } = await requireWriter();
+  const money = (n: number) => formatMoney(n, currency, { decimals: priceDecimals(currency) });
   const isAdmin = role === "owner" || role === "admin";
   const ent = await loadEntitlements(orgId);
 
@@ -37,15 +39,15 @@ export default async function BillingPage({
   const stripeConfigured = Boolean(process.env.STRIPE_SECRET_KEY && priceIdFor("core"));
   const subscribed = Boolean(sub?.stripe_subscription_id);
   const monthly =
-    PLAN.core.pricePerMonth +
-    ADDONS.reduce((s, f) => s + (ent[f] ? PLAN[f].pricePerMonth : 0), 0);
+    localPrice("core", currency) +
+    ADDONS.reduce((s, f) => s + (ent[f] ? localPrice(f, currency) : 0), 0);
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Plan & add-ons"
         subtitle={stripeConfigured ? "Manage your subscription and add-ons." : "Switch features on or off. Changes apply immediately."}
-        action={<Badge tone="mint">{gbp(monthly, { decimals: true })}/mo</Badge>}
+        action={<Badge tone="mint">{money(monthly)}/mo</Badge>}
       />
 
       {sub?.status === "trialing" && (
@@ -78,7 +80,7 @@ export default async function BillingPage({
               <p className="mt-1 text-xs text-slate">Always on. Properties, tax record-keeping, rent ledger, compliance and reports.</p>
             </div>
             <div className="text-right">
-              <p className="font-heading text-lg font-semibold tnum">{gbp(PLAN.core.pricePerMonth, { decimals: true })}<span className="text-xs font-normal text-slate">/mo</span></p>
+              <p className="font-heading text-lg font-semibold tnum">{money(localPrice("core", currency))}<span className="text-xs font-normal text-slate">/mo</span></p>
               <Badge tone="mint">Included</Badge>
             </div>
           </div>
@@ -116,7 +118,7 @@ export default async function BillingPage({
                     <span className="min-w-0 flex-1">
                       <span className="flex items-center justify-between gap-2">
                         <span className="font-heading text-sm font-semibold tracking-tight">{PLAN[f].label}</span>
-                        <span className="font-heading text-sm font-semibold tnum">+{gbp(PLAN[f].pricePerMonth, { decimals: true })}<span className="text-xs font-normal text-slate">/mo</span></span>
+                        <span className="font-heading text-sm font-semibold tnum">+{money(localPrice(f, currency))}<span className="text-xs font-normal text-slate">/mo</span></span>
                       </span>
                       <span className="mt-1 block text-xs text-slate">{BLURB[f]}</span>
                     </span>
@@ -149,7 +151,7 @@ export default async function BillingPage({
                         <p className="mt-1 text-xs text-slate">{BLURB[f]}</p>
                       </div>
                       <div className="shrink-0 text-right">
-                        <p className="font-heading text-sm font-semibold tnum">+{gbp(PLAN[f].pricePerMonth, { decimals: true })}<span className="text-xs font-normal text-slate">/mo</span></p>
+                        <p className="font-heading text-sm font-semibold tnum">+{money(localPrice(f, currency))}<span className="text-xs font-normal text-slate">/mo</span></p>
                         {isAdmin && !portalManaged && (
                           <form action={toggleAddon} className="mt-2">
                             <input type="hidden" name="feature" value={f} />
@@ -169,7 +171,7 @@ export default async function BillingPage({
       )}
 
       <p className="text-xs text-slate">
-        Fully loaded is {gbp(FULLY_LOADED_PRICE, { decimals: true })}/mo.{" "}
+        Fully loaded is {money(fullyLoadedPrice(currency))}/mo.{" "}
         {stripeConfigured
           ? "Add-ons are billed monthly with proration through Stripe."
           : "Card billing through Stripe connects once the STRIPE_* env vars are set; for now add-ons toggle instantly."}

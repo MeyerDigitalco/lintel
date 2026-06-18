@@ -3,13 +3,16 @@ import { requireTenant } from "@/lib/tenant-auth";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardBody } from "@/components/ui/Card";
 import { Badge } from "@/components/app/ui";
-import { gbp } from "@/lib/format";
+import { formatMoney } from "@/lib/i18n/currency";
+import { orgCurrency } from "@/lib/i18n/org";
 import { fmtDate, daysUntil } from "@/lib/dates";
 
 export const dynamic = "force-dynamic";
 
 export default async function PortalHome() {
   const { active, email } = await requireTenant();
+  const cur = active ? await orgCurrency(active.orgId) : "GBP";
+  const gbp = (n: number, opts?: { decimals?: boolean }) => formatMoney(n, cur, opts);
   const supabase = createClient();
 
   const { data: nextRent } = await supabase

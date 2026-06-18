@@ -5,7 +5,7 @@ import { PageHeader, Stat, Badge, EmptyState } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
 import { AddInvoiceForm } from "@/components/app/AddInvoiceForm";
 import { setInvoiceStatus } from "./actions";
-import { gbp } from "@/lib/format";
+import { formatMoney } from "@/lib/i18n/currency";
 import { fmtDate } from "@/lib/dates";
 import { cn } from "@/lib/cn";
 
@@ -20,7 +20,8 @@ export default async function InvoicesPage({
 }: {
   searchParams: { status?: string };
 }) {
-  const { orgId } = await requireWriter();
+  const { orgId, currency} = await requireWriter();
+  const gbp = (n: number, opts?: { decimals?: boolean }) => formatMoney(n, currency, opts);
   const supabase = createClient();
 
   const [{ data: invoices }, { data: contacts }, { data: properties }] = await Promise.all([

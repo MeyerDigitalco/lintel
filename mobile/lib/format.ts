@@ -29,3 +29,16 @@ export const REGION_LABEL: Record<string, string> = {
   scotland: "Scotland",
   northern_ireland: "Northern Ireland",
 };
+
+const MONEY_LOCALE: Record<string, string> = { GBP: "en-GB", USD: "en-US", AED: "en-AE", ZAR: "en-ZA", EUR: "en-IE", AUD: "en-AU", CAD: "en-CA" };
+
+export function formatMoney(amount: number, currency = "GBP", decimals = false): string {
+  const n = Number.isFinite(amount) ? amount : 0;
+  try {
+    return new Intl.NumberFormat(MONEY_LOCALE[currency] ?? "en-GB", {
+      style: "currency", currency, minimumFractionDigits: decimals ? 2 : 0, maximumFractionDigits: decimals ? 2 : 0,
+    }).format(n);
+  } catch {
+    return `${currency} ${n.toFixed(decimals ? 2 : 0)}`;
+  }
+}

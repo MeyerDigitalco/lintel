@@ -4,7 +4,7 @@ import { useRouter } from "expo-router";
 import { Screen, PageTitle, Card, Badge, Stat, Row, Loading, colors, font } from "@/components/ui";
 import { useAuth } from "@/providers/AuthProvider";
 import { supabase } from "@/lib/supabase";
-import { gbp, REGION_LABEL, daysUntil } from "@/lib/format";
+import { formatMoney, REGION_LABEL, daysUntil } from "@/lib/format";
 import { scheduleComplianceReminders } from "@/lib/notifications";
 
 function taxYearStartISO(): string {
@@ -15,7 +15,8 @@ function taxYearStartISO(): string {
 }
 
 export default function Dashboard() {
-  const { orgId, orgName, region } = useAuth();
+  const { orgId, orgName, region, currency } = useAuth();
+  const gbp = (n: number, d = false) => formatMoney(n, currency, d);
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);

@@ -23,6 +23,7 @@ export default function AppLayout() {
       <Stack.Screen name="add-property" options={{ title: "Add property", presentation: "modal" }} />
       <Stack.Screen name="maintenance/[id]" options={{ title: "Repair" }} />
       <Stack.Screen name="tasks" options={{ title: "Tasks" }} />
+      <Stack.Screen name="region-rules" options={{ title: "Region rules" }} />
     </Stack>
   );
 }

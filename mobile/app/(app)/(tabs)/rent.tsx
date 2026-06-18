@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import { Screen, PageTitle, Card, Badge, Row, Stat, EmptyState, Loading, colors, font } from "@/components/ui";
 import { useAuth } from "@/providers/AuthProvider";
 import { supabase } from "@/lib/supabase";
-import { gbp, fmtDate } from "@/lib/format";
+import { formatMoney, fmtDate } from "@/lib/format";
 
 type Ledger = {
   id: string; period: string | null; due_on: string | null; amount_due: number | string;
@@ -15,7 +15,8 @@ const STATUS_TONE: Record<string, "default" | "mint" | "amber" | "red" | "green"
 };
 
 export default function Rent() {
-  const { orgId } = useAuth();
+  const { orgId, currency } = useAuth();
+  const gbp = (n: number, d = false) => formatMoney(n, currency, d);
   const [rows, setRows] = useState<Ledger[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);

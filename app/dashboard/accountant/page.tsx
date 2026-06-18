@@ -4,7 +4,7 @@ import { PageHeader, Stat, Badge, EmptyState } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { categoryLabel, SA105_CATEGORIES } from "@/lib/sa105";
-import { gbp } from "@/lib/format";
+import { formatMoney } from "@/lib/i18n/currency";
 import { quarterlyPeriods, taxYearStartFor } from "@/lib/dates";
 import { addAccountantNote, resolveAccountantNote, inviteAccountant, revokeAccountant } from "./actions";
 
@@ -14,7 +14,8 @@ const inputCls =
   "h-10 flex-1 rounded-lintel border border-hairline bg-surface px-3 text-sm outline-none focus:ring-2 focus:ring-evergreen/30";
 
 export default async function AccountantPage() {
-  const { orgId, role } = await requireSession();
+  const { orgId, role, currency} = await requireSession();
+  const gbp = (n: number, opts?: { decimals?: boolean }) => formatMoney(n, currency, opts);
   const isWriter = ["owner", "admin", "landlord"].includes(role);
   const isAccountant = role === "accountant";
   const supabase = createClient();

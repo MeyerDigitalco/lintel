@@ -5,7 +5,7 @@ import { Card, CardBody } from "@/components/ui/Card";
 import { Badge } from "@/components/app/ui";
 import { Button } from "@/components/ui/Button";
 import { humanStatus } from "@/lib/maintenance";
-import { gbp } from "@/lib/format";
+import { formatMoney } from "@/lib/i18n/currency";
 import { fmtDate, daysUntil } from "@/lib/dates";
 import { raiseFaultByToken } from "./actions";
 import { tenancyReadiness } from "@/lib/court-readiness-server";
@@ -42,8 +42,10 @@ export default async function TokenTenantPage({ params }: { params: { token: str
 
   const activeFaults = (faults ?? []).filter((f) => f.status !== "completed" && f.status !== "closed");
 
-  const { data: org } = await service.from("orgs").select("region").eq("id", (tenancy as any).org_id).maybeSingle();
+  const { data: org } = await service.from("orgs").select("region, currency").eq("id", (tenancy as any).org_id).maybeSingle();
   const region = ((org as any)?.region as string) ?? "england";
+  const cur = ((org as any)?.currency as string) ?? "GBP";
+  const gbp = (n: number, opts?: { decimals?: boolean }) => formatMoney(n, cur, opts);
   const readiness = await tenancyReadiness((tenancy as any).org_id, tenancy.id, service);
   const tenantChecks = (readiness?.checks ?? []).filter((c) => c.key !== "registration");
 

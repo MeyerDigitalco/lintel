@@ -2,7 +2,7 @@ import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { ReportShell } from "@/components/app/ReportShell";
 import { fmtDate } from "@/lib/dates";
-import { gbp } from "@/lib/format";
+import { formatMoney } from "@/lib/i18n/currency";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +12,8 @@ interface JourneyEvent {
 }
 
 export default async function TenancyJourneyReport() {
-  const { orgId } = await requireSession();
+  const { orgId, currency} = await requireSession();
+  const gbp = (n: number, opts?: { decimals?: boolean }) => formatMoney(n, currency, opts);
   const supabase = createClient();
 
   const [{ data: org }, { data: tenancies }] = await Promise.all([

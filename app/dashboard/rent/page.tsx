@@ -6,13 +6,14 @@ import { Card, CardBody } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { AddTenancyForm } from "@/components/app/RentForms";
 import { generateRentPeriods, confirmRent } from "@/app/dashboard/rent/actions";
-import { gbp } from "@/lib/format";
+import { formatMoney } from "@/lib/i18n/currency";
 import { fmtDate, daysUntil } from "@/lib/dates";
 
 export const dynamic = "force-dynamic";
 
 export default async function RentPage() {
-  const { orgId } = await requireWriter();
+  const { orgId, currency} = await requireWriter();
+  const gbp = (n: number, opts?: { decimals?: boolean }) => formatMoney(n, currency, opts);
   const supabase = createClient();
 
   const { data: properties } = await supabase

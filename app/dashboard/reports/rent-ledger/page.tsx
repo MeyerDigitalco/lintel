@@ -1,13 +1,14 @@
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { ReportShell } from "@/components/app/ReportShell";
-import { gbp } from "@/lib/format";
+import { formatMoney } from "@/lib/i18n/currency";
 import { fmtDate } from "@/lib/dates";
 
 export const dynamic = "force-dynamic";
 
 export default async function RentLedgerReport() {
-  const { orgId } = await requireSession();
+  const { orgId, currency} = await requireSession();
+  const gbp = (n: number, opts?: { decimals?: boolean }) => formatMoney(n, currency, opts);
   const supabase = createClient();
 
   const [{ data: org }, { data: tenancies }, { data: ledger }] = await Promise.all([

@@ -4,14 +4,18 @@ import { createClient } from "@/lib/supabase/server";
 import { PageHeader, Stat, Badge } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { gbp } from "@/lib/format";
+import { formatMoney } from "@/lib/i18n/currency";
+import { resolveRegion } from "@/lib/i18n/rulesets";
 import { quarterlyPeriods, taxYearStartFor } from "@/lib/dates";
 import { mtdMandation, calcSection24Reducer } from "@/lib/calculators";
 
 export const dynamic = "force-dynamic";
 
 export default async function TaxPage() {
-  const { orgId } = await requireSession();
+  const { orgId, currency, country, region } = await requireSession();
+  const ruleset = resolveRegion(country, region);
+  const isUK = country === "GB";
+  const gbp = (n: number, opts?: { decimals?: boolean }) => formatMoney(n, currency, opts);
   const supabase = createClient();
 
   const yStart = taxYearStartFor();
@@ -48,8 +52,8 @@ export default async function TaxPage() {
   return (
     <div>
       <PageHeader
-        title="Tax & MTD"
-        subtitle={`Tax year ${yStart}/${(yStart + 1) % 100} · quarters end 5 Jul, 5 Oct, 5 Jan, 5 Apr`}
+        title={isUK ? "Tax & MTD" : "Tax & records"}
+        subtitle={isUK ? `Tax year ${yStart}/${(yStart + 1) % 100} · quarters end 5 Jul, 5 Oct, 5 Jan, 5 Apr` : `${ruleset.taxLabel} · records export-ready for your accountant`}
         action={
           <div className="flex gap-2">
             <a href={`/api/export/csv?year=${yStart}`}>
@@ -64,26 +68,41 @@ export default async function TaxPage() {
 
       <Card className="mb-6 border-evergreen/30">
         <CardBody>
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h2 className="font-heading text-base font-semibold tracking-tight">
-                Making Tax Digital for Income Tax
-              </h2>
-              <p className="mt-1 text-sm text-slate">
-                Qualifying property income {gbp(yearIncome)}.{" "}
-                {mtd.mandated
-                  ? `You fall in the ${gbp(mtd.band!)} band — MTD applies from ${mtd.from}.`
-                  : "Below the £20,000 band; keep digital records ready."}
+          {isUK ? (
+            <>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <h2 className="font-heading text-base font-semibold tracking-tight">
+                    Making Tax Digital for Income Tax
+                  </h2>
+                  <p className="mt-1 text-sm text-slate">
+                    Qualifying property income {gbp(yearIncome)}.{" "}
+                    {mtd.mandated
+                      ? `You fall in the ${gbp(mtd.band!)} band — MTD applies from ${mtd.from}.`
+                      : "Below the £20,000 band; keep digital records ready."}
+                  </p>
+                </div>
+                <Badge tone={mtd.mandated ? "amber" : "mint"}>
+                  {mtd.mandated ? `From ${mtd.from}` : "Not yet mandated"}
+                </Badge>
+              </div>
+              <p className="mt-3 rounded-lintel bg-paper px-3 py-2 text-xs text-slate">
+                Lintel keeps HMRC-shaped quarterly summaries and a full SA105 breakdown
+                ready for your accountant to review, adjust and file on your behalf.
               </p>
+            </>
+          ) : (
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h2 className="font-heading text-base font-semibold tracking-tight">{ruleset.taxLabel}</h2>
+                <p className="mt-1 text-sm text-slate">
+                  Property income {gbp(yearIncome)} this year. Lintel keeps your income and
+                  expenses organised and export-ready for {ruleset.taxLabel}.
+                </p>
+              </div>
+              <Badge tone="mint">{ruleset.countryName}</Badge>
             </div>
-            <Badge tone={mtd.mandated ? "amber" : "mint"}>
-              {mtd.mandated ? `From ${mtd.from}` : "Not yet mandated"}
-            </Badge>
-          </div>
-          <p className="mt-3 rounded-lintel bg-paper px-3 py-2 text-xs text-slate">
-            Lintel keeps HMRC-shaped quarterly summaries and a full SA105 breakdown
-            ready for your accountant to review, adjust and file on your behalf.
-          </p>
+          )}
         </CardBody>
       </Card>
 

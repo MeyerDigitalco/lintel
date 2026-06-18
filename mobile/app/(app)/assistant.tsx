@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Screen, Card, Field, Button, Row, Badge, colors, font, radius } from "@/components/ui";
 import { useAuth } from "@/providers/AuthProvider";
 import { supabase } from "@/lib/supabase";
-import { gbp } from "@/lib/format";
+import { formatMoney } from "@/lib/format";
 
 type Parsed = { amount: number; description: string } | null;
 
@@ -19,7 +19,8 @@ function parseExpense(text: string): Parsed {
 }
 
 export default function Assistant() {
-  const { orgId } = useAuth();
+  const { orgId, currency } = useAuth();
+  const gbp = (n: number, d = false) => formatMoney(n, currency, d);
   const router = useRouter();
   const [text, setText] = useState("");
   const [parsed, setParsed] = useState<Parsed>(null);

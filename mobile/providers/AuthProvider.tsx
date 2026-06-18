@@ -12,6 +12,8 @@ interface Ctx {
   orgName: string | null;
   role: string | null;
   region: Region;
+  currency: string;
+  country: string;
   isWriter: boolean;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
@@ -29,10 +31,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [orgName, setOrgName] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
   const [region, setRegion] = useState<Region>("england");
+  const [currency, setCurrency] = useState<string>("GBP");
+  const [country, setCountry] = useState<string>("GB");
 
   const loadContext = useCallback(async (s: Session | null) => {
     if (!s?.user) {
-      setOrgId(null); setRole(null); setOrgName(null); setRegion("england");
+      setOrgId(null); setRole(null); setOrgName(null); setRegion("england"); setCurrency("GBP"); setCountry("GB");
       return;
     }
     const { data: membership } = await supabase
@@ -46,11 +50,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setRole(membership.role);
       const { data: org } = await supabase
         .from("orgs")
-        .select("name, region")
+        .select("name, region, currency, country")
         .eq("id", membership.org_id)
         .maybeSingle();
       setOrgName(org?.name ?? null);
       setRegion(((org?.region as Region) ?? "england"));
+      setCurrency(((org as any)?.currency as string) ?? "GBP");
+      setCountry(((org as any)?.country as string) ?? "GB");
     }
   }, []);
 
@@ -94,6 +100,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     orgName,
     role,
     region,
+    currency,
+    country,
     isWriter: role ? WRITER_ROLES.includes(role) : false,
     signIn,
     signOut,

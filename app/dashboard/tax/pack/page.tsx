@@ -3,14 +3,15 @@ import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { PrintButton } from "@/components/app/PrintButton";
 import { categoryLabel, SA105_CATEGORIES } from "@/lib/sa105";
-import { gbp } from "@/lib/format";
+import { formatMoney } from "@/lib/i18n/currency";
 import { quarterlyPeriods, taxYearStartFor, fmtDate } from "@/lib/dates";
 import { calcSection24Reducer } from "@/lib/calculators";
 
 export const dynamic = "force-dynamic";
 
 export default async function TaxPackPage() {
-  const { orgId } = await requireSession();
+  const { orgId, currency} = await requireSession();
+  const gbp = (n: number, opts?: { decimals?: boolean }) => formatMoney(n, currency, opts);
   const supabase = createClient();
 
   const yStart = taxYearStartFor();

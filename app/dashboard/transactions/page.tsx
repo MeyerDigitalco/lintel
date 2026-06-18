@@ -4,13 +4,14 @@ import { PageHeader, Stat, EmptyState, Badge } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
 import { AddTransactionForm } from "@/components/app/AddTransactionForm";
 import { categoryLabel } from "@/lib/sa105";
-import { gbp } from "@/lib/format";
+import { formatMoney } from "@/lib/i18n/currency";
 import { fmtDate, quarterlyPeriods, taxYearStartFor } from "@/lib/dates";
 
 export const dynamic = "force-dynamic";
 
 export default async function TransactionsPage() {
-  const { orgId } = await requireWriter();
+  const { orgId, currency} = await requireWriter();
+  const gbp = (n: number, opts?: { decimals?: boolean }) => formatMoney(n, currency, opts);
   const supabase = createClient();
 
   const [{ data: properties }, { data: tx }] = await Promise.all([

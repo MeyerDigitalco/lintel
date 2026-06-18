@@ -3,8 +3,9 @@ import { View, Text, Alert, Share, TouchableOpacity, Image } from "react-native"
 import { useLocalSearchParams, Stack } from "expo-router";
 import { Screen, Card, Badge, Button, Field, Row, SectionTitle, Loading, EmptyState, colors, font } from "@/components/ui";
 import { supabase, API_URL } from "@/lib/supabase";
-import { gbp, fmtDate, daysUntil, REGION_LABEL } from "@/lib/format";
+import { formatMoney, fmtDate, daysUntil, REGION_LABEL } from "@/lib/format";
 import { streetViewUrl } from "@/lib/streetview";
+import { useAuth } from "@/providers/AuthProvider";
 
 const SCHEME_LABEL: Record<string, string> = {
   england: "PRS Database",
@@ -23,6 +24,8 @@ function genToken(): string {
 
 export default function PropertyDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { currency } = useAuth();
+  const gbp = (n: number, d = false) => formatMoney(n, currency, d);
   const [loading, setLoading] = useState(true);
   const [prop, setProp] = useState<any>(null);
   const [tenancies, setTenancies] = useState<any[]>([]);

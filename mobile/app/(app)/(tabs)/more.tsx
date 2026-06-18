@@ -34,6 +34,7 @@ export default function More() {
       <LinkRow icon="document-text-outline" label="Documents" hint="Per-property document vault" onPress={() => router.push("/(app)/documents")} />
       <LinkRow icon="ribbon-outline" label="Court-readiness" hint="Evidence score per tenancy" onPress={() => router.push("/(app)/court-readiness")} />
       <LinkRow icon="checkbox-outline" label="Tasks" hint="Reminders & to-dos" onPress={() => router.push("/(app)/tasks")} />
+      <LinkRow icon="map-outline" label="Region rules" hint="Your country\u2019s rules" onPress={() => router.push("/(app)/region-rules")} />
       <LinkRow icon="receipt-outline" label="Scan a receipt" hint="Snap to log an expense" onPress={() => router.push("/(app)/scan-receipt")} />
       <LinkRow icon="sparkles-outline" label="Assistant" hint="Log & ask by text" onPress={() => router.push("/(app)/assistant")} />
 
