@@ -16,6 +16,7 @@ const NAV = [
   { href: "/dashboard/maintenance", label: "Maintenance", writerOnly: true },
   { href: "/dashboard/tasks", label: "Tasks" },
   { href: "/dashboard/compliance", label: "Compliance" },
+  { href: "/dashboard/region", label: "Region rules" },
   { href: "/dashboard/documents", label: "Documents" },
   { href: "/dashboard/toolkit", label: "Toolkit", writerOnly: true },
   { href: "/dashboard/reports", label: "Reports" },
