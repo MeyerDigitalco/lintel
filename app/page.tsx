@@ -13,6 +13,8 @@ const REGIONS = [
   { name: "United States", detail: "All 50 states", note: "State-aware leases and deposits, Schedule E-ready income & expense records.", status: "New" },
   { name: "Middle East", detail: "UAE · Dubai · GCC", note: "Ejari-friendly tenancy records, cheque rent schedules and VAT-ready expenses.", status: "New" },
   { name: "South Africa", detail: "All provinces", note: "Lease and deposit tracking aligned to the Rental Housing Act.", status: "New" },
+  { name: "Australia", detail: "All states & territories", note: "State bond authorities, condition reports and ATO-ready records.", status: "New" },
+  { name: "New Zealand", detail: "Nationwide", note: "Healthy Homes Standards, Tenancy Services bonds and IR3 records.", status: "New" },
 ];
 
 const FEATURES = [

@@ -113,6 +113,54 @@ const ZA: RegionRuleset = {
   ],
 };
 
+const AU: RegionRuleset = {
+  country: "AU", countryName: "Australia", currency: "AUD",
+  governingLaw: "State & territory Residential Tenancies Acts",
+  tenancyTerm: "tenancy", depositTerm: "bond", taxLabel: "ATO rental schedule (individual tax return)",
+  tenancyTypes: [
+    { label: "Fixed-term agreement", description: "Set term, then continues as a periodic agreement." },
+    { label: "Periodic agreement", description: "Rolling agreement terminable on state-set notice." },
+  ],
+  compliance: [
+    { label: "Minimum housing standards", note: "Each state sets minimum standards (safety, weatherproofing)." },
+    { label: "Smoke alarms", note: "Compliant smoke alarms required and maintained." },
+    { label: "Bond lodged with authority", note: "Bond lodged with the state bond authority (RTBA, RTA, Rental Bonds Online, etc.)." },
+    { label: "Entry condition report", note: "Condition report required at move-in." },
+  ],
+  deposit: { cap: "Bond typically 4 weeks' rent (varies by state).", protection: "Lodged with the state bond authority; released after the exit condition report." },
+  checklist: ["Residential tenancy agreement", "Entry condition report", "Bond lodgement", "State tenant information statement"],
+  notices: [
+    { label: "Notice to remedy breach", when: "Tenant breach (e.g. arrears)", period: "Varies by state (often 14 days)" },
+    { label: "Notice to vacate / termination", when: "End the tenancy", period: "Varies by state & ground" },
+    { label: "Rent increase notice", when: "Increase rent", period: "60 days (most states)" },
+  ],
+  notes: ["Tenancy law and bond authorities differ by state/territory.", "Report rental income to the ATO; negative gearing and depreciation may apply."],
+};
+
+const NZ: RegionRuleset = {
+  country: "NZ", countryName: "New Zealand", currency: "NZD",
+  governingLaw: "Residential Tenancies Act 1986",
+  tenancyTerm: "tenancy", depositTerm: "bond", taxLabel: "IR3 rental income (Inland Revenue)",
+  tenancyTypes: [
+    { label: "Periodic tenancy", description: "Open-ended; ended on statutory notice." },
+    { label: "Fixed-term tenancy", description: "Set term; becomes periodic unless agreed otherwise." },
+  ],
+  compliance: [
+    { label: "Healthy Homes Standards", note: "Heating, insulation, ventilation, moisture and draught stopping." },
+    { label: "Smoke alarms", note: "Working smoke alarms required." },
+    { label: "Insulation statement", note: "Ceiling and underfloor insulation required and disclosed." },
+    { label: "Bond lodged with Tenancy Services", note: "Bond lodged within 23 working days." },
+  ],
+  deposit: { cap: "Bond max 4 weeks' rent.", protection: "Lodged with Tenancy Services (MBIE) within 23 working days." },
+  checklist: ["Tenancy agreement", "Healthy Homes compliance statement", "Insulation statement", "Bond lodgement form"],
+  notices: [
+    { label: "14-day notice to remedy", when: "Tenant breach", period: "14 days" },
+    { label: "Termination notice", when: "Landlord ends a periodic tenancy", period: "90 days (or 42 days on set grounds)" },
+    { label: "Rent increase notice", when: "Increase rent", period: "60 days; once per 12 months" },
+  ],
+  notes: ["Healthy Homes compliance is mandatory for tenancies.", "Declare rental income on IR3; ring-fencing limits loss offset."],
+};
+
 function ukToRuleset(j: JurisdictionRules, currency = "GBP"): RegionRuleset {
   return {
     country: "GB",
@@ -171,6 +219,13 @@ const SUBREGION_RULES: Record<string, SubRule> = {
   za_gauteng: { name: "Gauteng", extraCompliance: [{ label: "Gauteng Rental Housing Tribunal", note: "Free dispute resolution; provincial Unfair Practice Regulations apply." }], extraNotes: ["Deposit + interest returned within 7–14 days after the outgoing inspection."] },
   za_western_cape: { name: "Western Cape", extraCompliance: [{ label: "Western Cape Rental Housing Tribunal", note: "Free dispute resolution; provincial Unfair Practice Regulations apply." }], extraNotes: ["Deposit must be invested; interest accrues to the tenant."] },
   za_kwazulu_natal: { name: "KwaZulu-Natal", extraCompliance: [{ label: "KZN Rental Housing Tribunal", note: "Free dispute resolution; provincial Unfair Practice Regulations apply." }], extraNotes: ["Joint incoming and outgoing inspections are required."] },
+
+  // Australia (states/territories)
+  au_nsw: { name: "New South Wales", depositCap: "Bond max 4 weeks' rent.", depositReturn: "Released via Rental Bonds Online after the exit report.", extraCompliance: [{ label: "NSW minimum standards", note: "Residential Tenancies Act 2010; smoke alarms maintained." }], extraNotes: ["Rent increase: 60 days' notice; once per 12 months (periodic)."] },
+  au_vic: { name: "Victoria", depositCap: "Bond max 1 month's rent (rent under threshold).", depositReturn: "Lodged with the RTBA; released after the exit report.", extraCompliance: [{ label: "Victorian minimum standards", note: "Residential Tenancies Act 1997; rental minimum standards apply." }], extraNotes: ["Rent increase: 60 days' notice; once per 12 months."] },
+  au_qld: { name: "Queensland", depositCap: "Bond max 4 weeks' rent.", depositReturn: "Lodged with the RTA; released after the exit condition report.", extraCompliance: [{ label: "QLD minimum housing standards", note: "Residential Tenancies and Rooming Accommodation Act 2008." }], extraNotes: ["Rent increase: 2 months' notice; once per 12 months."] },
+  au_wa: { name: "Western Australia", depositCap: "Bond max 4 weeks' rent.", depositReturn: "Lodged with the Bond Administrator.", extraCompliance: [{ label: "WA standards", note: "Residential Tenancies Act 1987." }], extraNotes: ["Rent increase: 60 days' notice; not within 6 months of the last."] },
+
 };
 
 function withSub(base: RegionRuleset, code?: string | null): RegionRuleset {
@@ -190,8 +245,10 @@ export function resolveRegion(country?: string | null, region?: string | null, r
   if (cc === "US") return withSub(US, regionCode);
   if (cc === "AE") return withSub(UAE, regionCode);
   if (cc === "ZA") return withSub(ZA, regionCode);
+  if (cc === "AU") return withSub(AU, regionCode);
+  if (cc === "NZ") return NZ;
   const key = (["england", "wales", "scotland", "northern_ireland"].includes(region ?? "") ? region : "england") as JurisdictionKey;
   return ukToRuleset(resolveJurisdiction(key));
 }
 
-export const INTERNATIONAL_RULESETS = { US, UAE, ZA };
+export const INTERNATIONAL_RULESETS = { US, UAE, ZA, AU, NZ };

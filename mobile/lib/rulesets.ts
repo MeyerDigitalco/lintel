@@ -82,6 +82,54 @@ const ZA: RegionRuleset = {
   notes: ["Deductions supported by the outgoing inspection.", "Declare income on ITR12; provisional tax twice yearly."],
 };
 
+const AU: RegionRuleset = {
+  countryName: "Australia",
+  governingLaw: "State & territory Residential Tenancies Acts", tenancyTerm: "tenancy", depositTerm: "bond",
+  taxLabel: "ATO rental schedule (individual tax return)",
+  tenancyTypes: [
+    { label: "Fixed-term agreement", description: "Set term, then continues as periodic." },
+    { label: "Periodic agreement", description: "Rolling agreement on state-set notice." },
+  ],
+  compliance: [
+    { label: "Minimum housing standards", note: "Each state sets safety/weatherproofing standards." },
+    { label: "Smoke alarms", note: "Compliant smoke alarms required." },
+    { label: "Bond lodged with authority", note: "Lodged with the state bond authority (RTBA, RTA, Rental Bonds Online)." },
+    { label: "Entry condition report", note: "Required at move-in." },
+  ],
+  deposit: { cap: "Bond typically 4 weeks' rent (varies by state).", protection: "Lodged with the state bond authority; released after the exit report." },
+  checklist: ["Residential tenancy agreement", "Entry condition report", "Bond lodgement", "State tenant information statement"],
+  notices: [
+    { label: "Notice to remedy breach", when: "Tenant breach", period: "Varies by state (often 14 days)" },
+    { label: "Notice to vacate", when: "End the tenancy", period: "Varies by state & ground" },
+    { label: "Rent increase notice", when: "Increase rent", period: "60 days (most states)" },
+  ],
+  notes: ["Law and bond authorities differ by state/territory.", "Report income to the ATO; negative gearing may apply."],
+};
+
+const NZ: RegionRuleset = {
+  countryName: "New Zealand",
+  governingLaw: "Residential Tenancies Act 1986", tenancyTerm: "tenancy", depositTerm: "bond",
+  taxLabel: "IR3 rental income (Inland Revenue)",
+  tenancyTypes: [
+    { label: "Periodic tenancy", description: "Open-ended; ended on statutory notice." },
+    { label: "Fixed-term tenancy", description: "Set term; becomes periodic unless agreed." },
+  ],
+  compliance: [
+    { label: "Healthy Homes Standards", note: "Heating, insulation, ventilation, moisture, draughts." },
+    { label: "Smoke alarms", note: "Working smoke alarms required." },
+    { label: "Insulation statement", note: "Ceiling & underfloor insulation disclosed." },
+    { label: "Bond lodged with Tenancy Services", note: "Lodged within 23 working days." },
+  ],
+  deposit: { cap: "Bond max 4 weeks' rent.", protection: "Lodged with Tenancy Services (MBIE) within 23 working days." },
+  checklist: ["Tenancy agreement", "Healthy Homes compliance statement", "Insulation statement", "Bond lodgement form"],
+  notices: [
+    { label: "14-day notice to remedy", when: "Tenant breach", period: "14 days" },
+    { label: "Termination notice", when: "Landlord ends periodic tenancy", period: "90 days (42 on set grounds)" },
+    { label: "Rent increase notice", when: "Increase rent", period: "60 days; once per 12 months" },
+  ],
+  notes: ["Healthy Homes compliance is mandatory.", "Declare income on IR3; ring-fencing limits loss offset."],
+};
+
 const UK_NAMES: Record<string, string> = { england: "England", wales: "Wales", scotland: "Scotland", northern_ireland: "Northern Ireland" };
 
 function uk(region?: string | null): RegionRuleset {
@@ -133,6 +181,12 @@ const SUBREGION_RULES: Record<string, { name: string; depositCap?: string; depos
   za_gauteng: { name: "Gauteng", extra: [{ label: "Gauteng Rental Housing Tribunal", note: "Free dispute resolution; provincial regulations apply." }], notes: ["Deposit + interest returned within 7–14 days after outgoing inspection."] },
   za_western_cape: { name: "Western Cape", extra: [{ label: "Western Cape Rental Housing Tribunal", note: "Free dispute resolution; provincial regulations apply." }], notes: ["Deposit must be invested; interest to the tenant."] },
   za_kwazulu_natal: { name: "KwaZulu-Natal", extra: [{ label: "KZN Rental Housing Tribunal", note: "Free dispute resolution; provincial regulations apply." }], notes: ["Joint incoming and outgoing inspections required."] },
+
+  au_nsw: { name: "New South Wales", depositCap: "Bond max 4 weeks' rent.", depositReturn: "Via Rental Bonds Online after exit report.", extra: [{ label: "NSW standards", note: "Residential Tenancies Act 2010." }], notes: ["Rent increase: 60 days; once per 12 months."] },
+  au_vic: { name: "Victoria", depositCap: "Bond max 1 month's rent.", depositReturn: "Lodged with the RTBA.", extra: [{ label: "Victorian minimum standards", note: "Residential Tenancies Act 1997." }], notes: ["Rent increase: 60 days; once per 12 months."] },
+  au_qld: { name: "Queensland", depositCap: "Bond max 4 weeks' rent.", depositReturn: "Lodged with the RTA.", extra: [{ label: "QLD minimum housing standards", note: "RTRA Act 2008." }], notes: ["Rent increase: 2 months; once per 12 months."] },
+  au_wa: { name: "Western Australia", depositCap: "Bond max 4 weeks' rent.", depositReturn: "Lodged with the Bond Administrator.", extra: [{ label: "WA standards", note: "Residential Tenancies Act 1987." }], notes: ["Rent increase: 60 days; not within 6 months."] },
+
 };
 
 function withSub(base: RegionRuleset, code?: string | null): RegionRuleset {
@@ -146,6 +200,8 @@ export function resolveRegion(country?: string | null, region?: string | null, r
   if (cc === "US") return withSub(US, regionCode);
   if (cc === "AE") return withSub(AE, regionCode);
   if (cc === "ZA") return withSub(ZA, regionCode);
+  if (cc === "AU") return withSub(AU, regionCode);
+  if (cc === "NZ") return NZ;
   return uk(region);
 }
 

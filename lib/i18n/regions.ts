@@ -42,11 +42,22 @@ const UK_NATIONS: RegionOption[] = [
   { value: "northern_ireland", label: "Northern Ireland" },
 ];
 
+const AU_STATES: RegionOption[] = [
+  ["nsw","New South Wales"],["vic","Victoria"],["qld","Queensland"],["wa","Western Australia"],
+  ["sa","South Australia"],["tas","Tasmania"],["act","Australian Capital Territory"],["nt","Northern Territory"],
+].map(([value, label]) => ({ value: `au_${value}`, label }));
+
+const NZ_REGIONS: RegionOption[] = [
+  "Auckland","Wellington","Canterbury","Waikato","Bay of Plenty","Otago","Manawatū-Whanganui","Northland",
+].map((n) => ({ value: `nz_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
+
 export const COUNTRIES: CountryInfo[] = [
   { code: "GB", name: "United Kingdom", currency: "GBP", taxLabel: "Self Assessment (SA105) / MTD", tenancyTerm: "tenancy", depositTerm: "deposit", regions: UK_NATIONS },
   { code: "US", name: "United States", currency: "USD", taxLabel: "Schedule E (Form 1040)", tenancyTerm: "lease", depositTerm: "security deposit", regions: US_STATES },
   { code: "AE", name: "United Arab Emirates", currency: "AED", taxLabel: "VAT records", tenancyTerm: "tenancy contract", depositTerm: "security deposit", regions: UAE_EMIRATES },
   { code: "ZA", name: "South Africa", currency: "ZAR", taxLabel: "ITR12 / provisional tax", tenancyTerm: "lease", depositTerm: "deposit", regions: ZA_PROVINCES },
+  { code: "AU", name: "Australia", currency: "AUD", taxLabel: "ATO rental schedule", tenancyTerm: "tenancy", depositTerm: "bond", regions: AU_STATES },
+  { code: "NZ", name: "New Zealand", currency: "NZD", taxLabel: "IR3 rental income", tenancyTerm: "tenancy", depositTerm: "bond", regions: NZ_REGIONS },
 ];
 
 export function countryByCode(code?: string | null): CountryInfo {
@@ -58,6 +69,8 @@ export function countryForRegion(region?: string | null): CountryInfo {
   if (region.startsWith("us_")) return countryByCode("US");
   if (region.startsWith("ae_")) return countryByCode("AE");
   if (region.startsWith("za_")) return countryByCode("ZA");
+  if (region.startsWith("au_")) return countryByCode("AU");
+  if (region.startsWith("nz_")) return countryByCode("NZ");
   return countryByCode("GB");
 }
 
