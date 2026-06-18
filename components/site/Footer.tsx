@@ -9,8 +9,8 @@ export function SiteFooter() {
           <div className="max-w-xs">
             <Logo />
             <p className="mt-3 text-sm text-slate">
-              Calm, precise tax and compliance for UK landlords. Built for Making
-              Tax Digital, correct in every nation.
+              Calm, precise tax and compliance for landlords worldwide — the UK, USA,
+              Middle East and South Africa, correct in every market.
             </p>
           </div>
           <div className="grid grid-cols-2 gap-10 text-sm sm:grid-cols-3">
@@ -23,12 +23,12 @@ export function SiteFooter() {
               </ul>
             </div>
             <div>
-              <p className="mb-3 font-medium text-ink">Nations</p>
+              <p className="mb-3 font-medium text-ink">Regions</p>
               <ul className="space-y-2 text-slate">
-                <li>England</li>
-                <li>Wales</li>
-                <li>Scotland</li>
-                <li>Northern Ireland</li>
+                <li>United Kingdom</li>
+                <li>United States</li>
+                <li>Middle East</li>
+                <li>South Africa</li>
               </ul>
             </div>
             <div>

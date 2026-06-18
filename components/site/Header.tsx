@@ -11,7 +11,7 @@ export function SiteHeader() {
         </Link>
         <nav className="hidden items-center gap-7 text-sm text-slate md:flex">
           <Link href="/#features" className="hover:text-ink">Features</Link>
-          <Link href="/#jurisdictions" className="hover:text-ink">Nations</Link>
+          <Link href="/#regions" className="hover:text-ink">Regions</Link>
           <Link href="/calculators" className="hover:text-ink">Calculators</Link>
           <Link href="/#pricing" className="hover:text-ink">Pricing</Link>
         </nav>

@@ -48,6 +48,17 @@ export default async function BillingPage({
         action={<Badge tone="mint">{gbp(monthly, { decimals: true })}/mo</Badge>}
       />
 
+      {sub?.status === "trialing" && (
+        <Card className="border-mint/40">
+          <CardBody>
+            <p className="text-sm text-evergreen">
+              You&apos;re on your free trial — every add-on is on{sub.trial_ends_at ? ` until ${fmtDate(sub.trial_ends_at)}` : ""}.
+              Keep the tools you use and switch off the rest before your trial ends; you&apos;ll only be billed for what you keep.
+            </p>
+          </CardBody>
+        </Card>
+      )}
+
       {searchParams?.checkout === "success" && (
         <Card className="border-mint/40">
           <CardBody><p className="text-sm text-evergreen">Subscription started — it can take a few seconds for add-ons to switch on.</p></CardBody>
