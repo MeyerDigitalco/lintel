@@ -18,6 +18,7 @@ export const COUNTRY_CURRENCY: Record<string, string> = {
   GB: "GBP", US: "USD", AE: "AED", ZA: "ZAR",
   IE: "EUR", SA: "SAR", QA: "QAR", KW: "KWD", BH: "BHD", OM: "OMR",
   AU: "AUD", CA: "CAD", NZ: "NZD",
+  DE: "EUR", ES: "EUR", IN: "INR",
 };
 
 export function currencyForCountry(cc?: string | null): string {

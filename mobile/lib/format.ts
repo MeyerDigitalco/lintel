@@ -30,7 +30,7 @@ export const REGION_LABEL: Record<string, string> = {
   northern_ireland: "Northern Ireland",
 };
 
-const MONEY_LOCALE: Record<string, string> = { GBP: "en-GB", USD: "en-US", AED: "en-AE", ZAR: "en-ZA", EUR: "en-IE", AUD: "en-AU", CAD: "en-CA", NZD: "en-NZ" };
+const MONEY_LOCALE: Record<string, string> = { GBP: "en-GB", USD: "en-US", AED: "en-AE", ZAR: "en-ZA", EUR: "en-IE", AUD: "en-AU", CAD: "en-CA", NZD: "en-NZ", INR: "en-IN" };
 
 export function formatMoney(amount: number, currency = "GBP", decimals = false): string {
   const n = Number.isFinite(amount) ? amount : 0;

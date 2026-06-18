@@ -33,7 +33,7 @@ export async function createProperty(formData: FormData) {
   // Region-aware compliance auto-seeding from the org's country/region ruleset.
   if (created && created.id) {
     try {
-      const ruleset = resolveRegion(country, region, regionCode);
+      const ruleset = country === "GB" ? resolveRegion("GB", jurisdiction) : resolveRegion(country, region, regionCode);
       const rows = ruleset.compliance.map((c) => ({
         org_id: orgId,
         property_id: created.id,

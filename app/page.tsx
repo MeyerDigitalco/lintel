@@ -17,6 +17,9 @@ const REGIONS = [
   { name: "New Zealand", detail: "Nationwide", note: "Healthy Homes Standards, Tenancy Services bonds and IR3 records.", status: "New" },
   { name: "Canada", detail: "All provinces", note: "Provincial tenancy boards, deposit rules and T776 records.", status: "New" },
   { name: "Ireland", detail: "Nationwide", note: "RTB registration, minimum standards and Rent Pressure Zone caps.", status: "New" },
+  { name: "Germany", detail: "All Bundesländer", note: "BGB tenancy, Kaution in a separate account and Mietspiegel rent index.", status: "New" },
+  { name: "Spain", detail: "All regions", note: "LAU leases, fianza lodgement and IRPF-ready records.", status: "New" },
+  { name: "India", detail: "Major states", note: "Model Tenancy Act agreements, registration and TDS-ready records.", status: "New" },
 ];
 
 const FEATURES = [

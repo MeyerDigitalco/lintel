@@ -177,6 +177,75 @@ const IE: RegionRuleset = {
   notes: ["RTB registration is mandatory and annual.", "Declare income on Form 11."],
 };
 
+const DE: RegionRuleset = {
+  countryName: "Germany",
+  governingLaw: "German Civil Code (BGB) tenancy provisions", tenancyTerm: "tenancy (Mietvertrag)", depositTerm: "deposit (Kaution)",
+  taxLabel: "Anlage V (income tax return)",
+  tenancyTypes: [
+    { label: "Unlimited tenancy", description: "Open-ended Mietvertrag - the standard lease." },
+    { label: "Fixed-term (Zeitmietvertrag)", description: "Allowed only with a statutory reason." },
+  ],
+  compliance: [
+    { label: "Deposit in separate account", note: "Kaution max 3 months' cold rent, separate interest-bearing account." },
+    { label: "Mietspiegel rent index", note: "Rent benchmarked to the local rent index." },
+    { label: "Mietpreisbremse", note: "Rent caps in tight housing markets." },
+    { label: "Operating cost statement", note: "Annual Betriebskostenabrechnung required." },
+  ],
+  deposit: { cap: "Max 3 months' cold rent.", protection: "Separate interest-bearing account; returned after handover." },
+  checklist: ["Mietvertrag", "Handover protocol", "Deposit account confirmation", "Operating cost schedule"],
+  notices: [
+    { label: "Ordinary termination", when: "Landlord with legitimate interest", period: "3-9 months by length" },
+    { label: "Rent increase notice", when: "To local comparable rent", period: "Capped; Mietspiegel" },
+  ],
+  notes: ["Strong tenant protection; termination needs legitimate interest.", "Declare income via Anlage V."],
+};
+
+const ES: RegionRuleset = {
+  countryName: "Spain",
+  governingLaw: "Ley de Arrendamientos Urbanos (LAU)", tenancyTerm: "lease (contrato)", depositTerm: "deposit (fianza)",
+  taxLabel: "IRPF rental income",
+  tenancyTypes: [
+    { label: "Vivienda habitual", description: "Primary residence; extendable to 5 years (7 if company)." },
+    { label: "Temporary lease", description: "Non-residential / seasonal." },
+  ],
+  compliance: [
+    { label: "Fianza deposit lodged", note: "1 month lodged with the regional housing authority." },
+    { label: "Energy certificate", note: "Certificado de eficiencia energetica required." },
+    { label: "Stressed-area caps", note: "Rent caps in declared stressed areas." },
+    { label: "Habitability certificate", note: "Cedula de habitabilidad in several regions." },
+  ],
+  deposit: { cap: "1 month (residential); extra guarantee max 2 months.", protection: "Fianza lodged with the autonomous community." },
+  checklist: ["Contrato de arrendamiento", "Energy certificate", "Fianza lodgement", "Inventory"],
+  notices: [
+    { label: "Notice not to renew", when: "End at statutory term", period: "4 months (landlord) / 2 (tenant)" },
+    { label: "Rent update notice", when: "Annual update", period: "Per index; caps in stressed areas" },
+  ],
+  notes: ["Strong renewal rights up to 5-7 years.", "Declare on IRPF; reductions for habitual residence."],
+};
+
+const IN: RegionRuleset = {
+  countryName: "India",
+  governingLaw: "Model Tenancy Act 2021 & state rent acts", tenancyTerm: "rent agreement", depositTerm: "security deposit",
+  taxLabel: "ITR - income from house property (TDS)",
+  tenancyTypes: [
+    { label: "Leave & licence", description: "Common 11-month renewable arrangement." },
+    { label: "Lease", description: "Longer term; registration over set durations." },
+  ],
+  compliance: [
+    { label: "Agreement registration", note: "Register and lodge with the Rent Authority (MTA)." },
+    { label: "Police verification", note: "Tenant verification required in many cities." },
+    { label: "Security deposit cap", note: "MTA caps residential deposits at 2 months." },
+    { label: "TDS on rent", note: "Tenants deduct TDS over thresholds." },
+  ],
+  deposit: { cap: "Max 2 months (MTA); higher in some states.", protection: "Refunded within 1 month of vacating, less dues." },
+  checklist: ["Rent agreement", "Agreement registration", "Police verification", "Deposit receipt"],
+  notices: [
+    { label: "Notice to vacate", when: "End the tenancy", period: "Per agreement (often 1-2 months)" },
+    { label: "Eviction (Rent Authority)", when: "Default / breach", period: "Via the Rent Court" },
+  ],
+  notes: ["MTA is adopted state-by-state; check your state.", "Claim 30% standard deduction on house property income."],
+};
+
 const UK_NAMES: Record<string, string> = { england: "England", wales: "Wales", scotland: "Scotland", northern_ireland: "Northern Ireland" };
 
 function uk(region?: string | null): RegionRuleset {
@@ -255,6 +324,9 @@ export function resolveRegion(country?: string | null, region?: string | null, r
   if (cc === "NZ") return NZ;
   if (cc === "CA") return withSub(CA, regionCode);
   if (cc === "IE") return IE;
+  if (cc === "DE") return DE;
+  if (cc === "ES") return ES;
+  if (cc === "IN") return IN;
   return uk(region);
 }
 

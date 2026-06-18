@@ -60,6 +60,18 @@ const IE_REGIONS: RegionOption[] = [
   "Leinster","Munster","Connacht","Ulster",
 ].map((n) => ({ value: `ie_${n.toLowerCase()}`, label: n }));
 
+const DE_STATES: RegionOption[] = [
+  "Berlin","Bavaria","North Rhine-Westphalia","Hamburg","Hesse","Baden-Württemberg","Saxony","Lower Saxony",
+].map((n) => ({ value: `de_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
+
+const ES_REGIONS: RegionOption[] = [
+  "Madrid","Catalonia","Andalusia","Valencia","Basque Country","Galicia","Balearic Islands","Canary Islands",
+].map((n) => ({ value: `es_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
+
+const IN_STATES: RegionOption[] = [
+  "Maharashtra","Delhi","Karnataka","Tamil Nadu","Telangana","Gujarat","Uttar Pradesh","West Bengal","Haryana","Rajasthan",
+].map((n) => ({ value: `in_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
+
 export const COUNTRIES: CountryInfo[] = [
   { code: "GB", name: "United Kingdom", currency: "GBP", taxLabel: "Self Assessment (SA105) / MTD", tenancyTerm: "tenancy", depositTerm: "deposit", regions: UK_NATIONS },
   { code: "US", name: "United States", currency: "USD", taxLabel: "Schedule E (Form 1040)", tenancyTerm: "lease", depositTerm: "security deposit", regions: US_STATES },
@@ -69,6 +81,9 @@ export const COUNTRIES: CountryInfo[] = [
   { code: "NZ", name: "New Zealand", currency: "NZD", taxLabel: "IR3 rental income", tenancyTerm: "tenancy", depositTerm: "bond", regions: NZ_REGIONS },
   { code: "CA", name: "Canada", currency: "CAD", taxLabel: "T776 — Statement of Real Estate Rentals", tenancyTerm: "tenancy", depositTerm: "deposit", regions: CA_PROVINCES },
   { code: "IE", name: "Ireland", currency: "EUR", taxLabel: "Form 11 rental income (Revenue)", tenancyTerm: "tenancy", depositTerm: "deposit", regions: IE_REGIONS },
+  { code: "DE", name: "Germany", currency: "EUR", taxLabel: "Anlage V (income tax return)", tenancyTerm: "tenancy (Mietvertrag)", depositTerm: "deposit (Kaution)", regions: DE_STATES },
+  { code: "ES", name: "Spain", currency: "EUR", taxLabel: "IRPF rental income", tenancyTerm: "lease (contrato de arrendamiento)", depositTerm: "deposit (fianza)", regions: ES_REGIONS },
+  { code: "IN", name: "India", currency: "INR", taxLabel: "ITR (house property income, TDS)", tenancyTerm: "rent agreement", depositTerm: "security deposit", regions: IN_STATES },
 ];
 
 export function countryByCode(code?: string | null): CountryInfo {
@@ -84,6 +99,9 @@ export function countryForRegion(region?: string | null): CountryInfo {
   if (region.startsWith("nz_")) return countryByCode("NZ");
   if (region.startsWith("ca_")) return countryByCode("CA");
   if (region.startsWith("ie_")) return countryByCode("IE");
+  if (region.startsWith("de_")) return countryByCode("DE");
+  if (region.startsWith("es_")) return countryByCode("ES");
+  if (region.startsWith("in_")) return countryByCode("IN");
   return countryByCode("GB");
 }
 
