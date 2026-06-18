@@ -81,6 +81,23 @@ export default async function RegionRulesPage() {
 
       <Card>
         <CardBody>
+          <h2 className="font-heading text-base font-semibold tracking-tight">Notices &amp; deadlines</h2>
+          <div className="mt-3 space-y-3">
+            {r.notices.map((n) => (
+              <div key={n.label} className="flex items-start justify-between gap-3 border-b border-hairline pb-3 last:border-0 last:pb-0">
+                <div>
+                  <p className="text-sm font-medium text-ink">{n.label}</p>
+                  <p className="text-xs text-slate">{n.when}</p>
+                </div>
+                <Badge tone="amber">{n.period}</Badge>
+              </div>
+            ))}
+          </div>
+        </CardBody>
+      </Card>
+
+      <Card>
+        <CardBody>
           <h2 className="font-heading text-base font-semibold tracking-tight">Good to know</h2>
           <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-slate">
             {r.notes.map((n, i) => (<li key={i}>{n}</li>))}

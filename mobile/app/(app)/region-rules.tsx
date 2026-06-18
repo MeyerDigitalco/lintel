@@ -49,6 +49,19 @@ export default function RegionRules() {
         </View>
       </Card>
 
+      <SectionTitle>Notices & deadlines</SectionTitle>
+      {r.notices.map((n) => (
+        <Card key={n.label} style={{ marginBottom: 8 }}>
+          <Row>
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontWeight: "600", color: colors.ink }}>{n.label}</Text>
+              <Text style={{ fontSize: font.tiny, color: colors.slate, marginTop: 2 }}>{n.when}</Text>
+            </View>
+            <Badge tone="amber">{n.period}</Badge>
+          </Row>
+        </Card>
+      ))}
+
       <Text style={{ fontSize: font.tiny, color: colors.slate }}>Guidance only — Lintel provides software, not legal or tax advice.</Text>
     </Screen>
   );

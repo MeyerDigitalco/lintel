@@ -10,6 +10,7 @@ export interface RegionRuleset {
   compliance: { label: string; note: string }[];
   deposit: { cap: string; protection: string };
   checklist: string[];
+  notices: { label: string; when: string; period: string }[];
   notes: string[];
 }
 
@@ -30,6 +31,11 @@ const US: RegionRuleset = {
   ],
   deposit: { cap: "Varies by state — often 1–2 months' rent.", protection: "Return within the state deadline with an itemised statement." },
   checklist: ["Written lease", "Lead paint disclosure (pre-1978)", "Move-in inspection", "State-required disclosures"],
+  notices: [
+    { label: "Notice to Pay Rent or Quit", when: "Rent unpaid", period: "3-14 days (state-specific)" },
+    { label: "Notice to Cure or Quit", when: "Lease violation", period: "Varies by state" },
+    { label: "Notice to Terminate (no cause)", when: "End a month-to-month", period: "30-60 days" },
+  ],
   notes: ["Rules differ by state (CA, OR, NY are stronger).", "Report income/expenses on Schedule E; 1099 contractors paid $600+."],
 };
 
@@ -45,6 +51,10 @@ const AE: RegionRuleset = {
   ],
   deposit: { cap: "Typically 5% (unfurnished) or 10% (furnished) of annual rent.", protection: "Refundable at end of contract less damages." },
   checklist: ["Tenancy contract", "Ejari/Tawtheeq registration", "Title deed copy", "Tenant ID", "Cheque schedule"],
+  notices: [
+    { label: "Eviction notice", when: "Valid grounds", period: "12 months, notarised" },
+    { label: "Non-renewal / vary terms", when: "Change rent or terms", period: "90 days before expiry" },
+  ],
   notes: ["Rent commonly paid by 1–4 post-dated cheques.", "No personal income tax; residential leases generally VAT-exempt."],
 };
 
@@ -64,6 +74,11 @@ const ZA: RegionRuleset = {
   ],
   deposit: { cap: "No statutory cap (commonly 1–2 months' rent).", protection: "Held in interest-bearing account; returned with interest within 7–14 days after outgoing inspection." },
   checklist: ["Written lease", "Incoming inspection report", "Deposit receipt", "House rules"],
+  notices: [
+    { label: "Breach notice", when: "Tenant breach", period: "20 business days to remedy" },
+    { label: "Cancellation (CPA)", when: "Early cancellation", period: "20 business days notice" },
+    { label: "Notice to vacate", when: "End a month-to-month", period: "1 month" },
+  ],
   notes: ["Deductions supported by the outgoing inspection.", "Declare income on ITR12; provisional tax twice yearly."],
 };
 
@@ -85,6 +100,10 @@ function uk(region?: string | null): RegionRuleset {
     ],
     deposit: { cap: "5 weeks' rent (annual rent < £50k), else 6 weeks.", protection: "Protect within 30 days in an approved scheme." },
     checklist: ["Tenancy agreement", "EPC", "Gas safety certificate", region === "england" ? "Right to Rent check" : "Deposit prescribed information"],
+    notices: [
+      { label: "Possession notice", when: "Statutory grounds", period: "Grounds-dependent" },
+      { label: "Rent increase notice", when: "Increase rent", period: region === "scotland" ? "3 months" : "1-2 months" },
+    ],
     notes: ["Jurisdiction-correct notices and court-readiness in the web app.", "Records map to SA105 for Self Assessment / MTD."],
   };
 }
@@ -102,6 +121,11 @@ const SUBREGION_RULES: Record<string, { name: string; depositCap?: string; depos
   us_co: { name: "Colorado", depositCap: "No statutory cap.", depositReturn: "30 days (up to 60 if the lease says).", extra: [{ label: "Warranty of habitability", note: "Strengthened repair timelines." }], notes: ["Rent increase notice: 60 days.", "No statewide rent control."] },
   us_az: { name: "Arizona", depositCap: "Max 1.5 months' rent.", depositReturn: "Within 14 business days.", extra: [{ label: "Move-in checklist", note: "Tenant may request a condition form." }], notes: ["Notice: 30 days.", "No rent control."] },
 
+  us_pa: { name: "Pennsylvania", depositCap: "Max 2 months (yr 1), 1 month thereafter.", depositReturn: "Within 30 days.", extra: [{ label: "Escrow over $100", note: "Deposits over $100 held 2+ years in escrow with interest." }], notes: ["Notice to quit: 15-30 days.", "No state rent control."] },
+  us_oh: { name: "Ohio", depositCap: "No statutory cap.", depositReturn: "Within 30 days.", extra: [{ label: "Deposit interest", note: "Interest over $50 / 6+ months." }], notes: ["Notice: 30 days.", "No rent control."] },
+  us_nc: { name: "North Carolina", depositCap: "1.5 months (m-t-m) / 2 months (longer).", depositReturn: "Within 30 days (up to 60).", extra: [{ label: "Trust account", note: "Held in a NC trust account or bonded." }], notes: ["Notice: 7 days.", "No rent control."] },
+  us_mi: { name: "Michigan", depositCap: "Max 1.5 months.", depositReturn: "Within 30 days.", extra: [{ label: "Inventory checklist", note: "Required to keep a deposit." }], notes: ["Notice: 30 days.", "No rent control."] },
+  us_va: { name: "Virginia", depositCap: "Max 2 months.", depositReturn: "Within 45 days.", extra: [{ label: "VRLTA disclosures", note: "Move-in report and statutory disclosures." }], notes: ["Notice: 30 days.", "No rent control."] },
   ae_dubai: { name: "Dubai", depositCap: "5% (unfurnished) / 10% (furnished) of annual rent.", depositReturn: "Refunded at end less damages.", extra: [{ label: "Ejari registration", note: "Contracts registered with Ejari (RERA/DLD)." }, { label: "RERA rental index", note: "Increases capped; Decree 43 of 2013." }, { label: "Eviction notice", note: "12 months' notarised notice (Law 33/2008)." }], notes: ["Disputes: Dubai Rental Dispute Centre.", "Cheque-based rent is standard."] },
   ae_abu_dhabi: { name: "Abu Dhabi", depositCap: "5% (unfurnished) / 10% (furnished).", depositReturn: "Refunded at end less damages.", extra: [{ label: "Tawtheeq registration", note: "Contracts registered via Tawtheeq (ADM)." }], notes: ["Check current ADREC rent-cap rules.", "Cheque-based rent is standard."] },
   ae_sharjah: { name: "Sharjah", extra: [{ label: "Municipality registration", note: "Contracts attested via Sharjah Municipality." }], notes: ["Disputes via the Sharjah rent committee."] },
