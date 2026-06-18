@@ -11,12 +11,21 @@ export const CURRENCIES: Record<string, Currency> = {
   KWD: { code: "KWD", symbol: "KWD", locale: "en" },
   AUD: { code: "AUD", symbol: "A$", locale: "en-AU" },
   CAD: { code: "CAD", symbol: "C$", locale: "en-CA" },
+  NZD: { code: "NZD", symbol: "NZ$", locale: "en-NZ" },
+  INR: { code: "INR", symbol: "₹", locale: "en-IN" },
+  SGD: { code: "SGD", symbol: "S$", locale: "en-SG" },
+  CHF: { code: "CHF", symbol: "CHF", locale: "de-CH" },
+  JPY: { code: "JPY", symbol: "¥", locale: "ja-JP" },
+  MXN: { code: "MXN", symbol: "MX$", locale: "es-MX" },
+  BRL: { code: "BRL", symbol: "R$", locale: "pt-BR" },
+  PLN: { code: "PLN", symbol: "zł", locale: "pl-PL" },
+  HKD: { code: "HKD", symbol: "HK$", locale: "en-HK" },
 };
 
 // ISO country code -> default currency.
 export const COUNTRY_CURRENCY: Record<string, string> = {
   GB: "GBP", US: "USD", AE: "AED", ZA: "ZAR",
-  IE: "EUR", SA: "SAR", QA: "QAR", KW: "KWD", BH: "BHD", OM: "OMR",
+  IE: "EUR", SA: "SAR", QA: "QAR", KW: "KWD",
   AU: "AUD", CA: "CAD", NZ: "NZD",
   DE: "EUR", ES: "EUR", IN: "INR",
   FR: "EUR", NL: "EUR", SG: "SGD",
