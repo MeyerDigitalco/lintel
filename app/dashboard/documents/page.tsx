@@ -4,6 +4,8 @@ import { PageHeader, Badge, EmptyState } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
 import { DocumentsFilter } from "@/components/app/DocumentsFilter";
 import { summarizeDocument } from "./actions";
+import { updateDocument, deleteDocument } from "@/app/dashboard/properties/document-actions";
+import { DOC_TYPES, DOC_CATEGORIES } from "@/lib/doc-types";
 import { hasAi } from "@/lib/ai";
 import { fmtDate } from "@/lib/dates";
 import { docLabel, docStatus, type DocStatusKey } from "@/lib/doc-types";
@@ -30,7 +32,7 @@ export default async function DocumentsPage({
   const [{ data: docs }, { data: properties }] = await Promise.all([
     supabase
       .from("property_documents")
-      .select("id, label, doc_type, ai_summary, storage_path, expires_at, created_at, property_id, properties(label)")
+      .select("id, label, doc_type, ai_summary, storage_path, issued_at, expires_at, created_at, property_id, properties(label)")
       .eq("org_id", orgId)
       .order("created_at", { ascending: false }),
     supabase.from("properties").select("id, label").eq("org_id", orgId).order("label"),
@@ -94,7 +96,36 @@ export default async function DocumentsPage({
                         <button type="submit" className="text-sm text-slate hover:text-ink">Summarise</button>
                       </form>
                     )}
+                    {canWrite && (
+                      <form action={deleteDocument}>
+                        <input type="hidden" name="id" value={d.id} />
+                        <button type="submit" className="text-sm text-red hover:underline">Delete</button>
+                      </form>
+                    )}
                   </div>
+                  {canWrite && (
+                    <details className="mt-2 text-sm">
+                      <summary className="cursor-pointer text-slate hover:text-ink">Edit details</summary>
+                      <form action={updateDocument} className="mt-2 grid gap-2">
+                        <input type="hidden" name="id" value={d.id} />
+                        <input name="label" defaultValue={d.label} className="h-9 rounded-lintel border border-hairline bg-surface px-2 text-sm" />
+                        <select name="doc_type" defaultValue={d.doc_type ?? "other"} className="h-9 rounded-lintel border border-hairline bg-surface px-2 text-sm">
+                          {DOC_CATEGORIES.map((cat) => (
+                            <optgroup key={cat} label={cat}>
+                              {DOC_TYPES.filter((dt) => dt.category === cat).map((dt) => (
+                                <option key={dt.key} value={dt.key}>{dt.label}</option>
+                              ))}
+                            </optgroup>
+                          ))}
+                        </select>
+                        <div className="flex gap-2">
+                          <input name="issued_at" type="date" defaultValue={(d as any).issued_at ?? ""} className="h-9 flex-1 rounded-lintel border border-hairline bg-surface px-2 text-sm" />
+                          <input name="expires_at" type="date" defaultValue={d.expires_at ?? ""} className="h-9 flex-1 rounded-lintel border border-hairline bg-surface px-2 text-sm" />
+                        </div>
+                        <button type="submit" className="h-9 rounded-lintel bg-evergreen px-3 text-sm font-medium text-paper">Save</button>
+                      </form>
+                    </details>
+                  )}
                 </CardBody>
               </Card>
             );
