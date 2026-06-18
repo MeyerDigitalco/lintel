@@ -20,6 +20,9 @@ const REGIONS = [
   { name: "Germany", detail: "All Bundesländer", note: "BGB tenancy, Kaution in a separate account and Mietspiegel rent index.", status: "New" },
   { name: "Spain", detail: "All regions", note: "LAU leases, fianza lodgement and IRPF-ready records.", status: "New" },
   { name: "India", detail: "Major states", note: "Model Tenancy Act agreements, registration and TDS-ready records.", status: "New" },
+  { name: "France", detail: "All régions", note: "Loi 1989 baux, dépôt de garantie and DPE diagnostics.", status: "New" },
+  { name: "Netherlands", detail: "All provinces", note: "WWS points system, energy label and Huurcommissie oversight.", status: "New" },
+  { name: "Singapore", detail: "Nationwide", note: "Stamped tenancy agreements, HDB rules and IRAS-ready records.", status: "New" },
 ];
 
 const FEATURES = [

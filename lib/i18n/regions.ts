@@ -72,6 +72,18 @@ const IN_STATES: RegionOption[] = [
   "Maharashtra","Delhi","Karnataka","Tamil Nadu","Telangana","Gujarat","Uttar Pradesh","West Bengal","Haryana","Rajasthan",
 ].map((n) => ({ value: `in_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
 
+const FR_REGIONS: RegionOption[] = [
+  "Île-de-France","Provence-Alpes-Côte d'Azur","Auvergne-Rhône-Alpes","Occitanie","Nouvelle-Aquitaine","Grand Est","Hauts-de-France","Brittany",
+].map((n) => ({ value: `fr_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
+
+const NL_PROVINCES: RegionOption[] = [
+  "North Holland","South Holland","Utrecht","North Brabant","Gelderland","Overijssel","Limburg","Groningen",
+].map((n) => ({ value: `nl_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
+
+const SG_REGIONS: RegionOption[] = [
+  "Central","East","North","North-East","West",
+].map((n) => ({ value: `sg_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
+
 export const COUNTRIES: CountryInfo[] = [
   { code: "GB", name: "United Kingdom", currency: "GBP", taxLabel: "Self Assessment (SA105) / MTD", tenancyTerm: "tenancy", depositTerm: "deposit", regions: UK_NATIONS },
   { code: "US", name: "United States", currency: "USD", taxLabel: "Schedule E (Form 1040)", tenancyTerm: "lease", depositTerm: "security deposit", regions: US_STATES },
@@ -84,6 +96,9 @@ export const COUNTRIES: CountryInfo[] = [
   { code: "DE", name: "Germany", currency: "EUR", taxLabel: "Anlage V (income tax return)", tenancyTerm: "tenancy (Mietvertrag)", depositTerm: "deposit (Kaution)", regions: DE_STATES },
   { code: "ES", name: "Spain", currency: "EUR", taxLabel: "IRPF rental income", tenancyTerm: "lease (contrato de arrendamiento)", depositTerm: "deposit (fianza)", regions: ES_REGIONS },
   { code: "IN", name: "India", currency: "INR", taxLabel: "ITR (house property income, TDS)", tenancyTerm: "rent agreement", depositTerm: "security deposit", regions: IN_STATES },
+  { code: "FR", name: "France", currency: "EUR", taxLabel: "Revenus fonciers (micro-foncier / réel)", tenancyTerm: "lease (bail)", depositTerm: "deposit (dépôt de garantie)", regions: FR_REGIONS },
+  { code: "NL", name: "Netherlands", currency: "EUR", taxLabel: "Box 3 / rental income", tenancyTerm: "tenancy (huurovereenkomst)", depositTerm: "deposit (waarborgsom)", regions: NL_PROVINCES },
+  { code: "SG", name: "Singapore", currency: "SGD", taxLabel: "IRAS rental income", tenancyTerm: "tenancy agreement", depositTerm: "security deposit", regions: SG_REGIONS },
 ];
 
 export function countryByCode(code?: string | null): CountryInfo {
@@ -102,6 +117,9 @@ export function countryForRegion(region?: string | null): CountryInfo {
   if (region.startsWith("de_")) return countryByCode("DE");
   if (region.startsWith("es_")) return countryByCode("ES");
   if (region.startsWith("in_")) return countryByCode("IN");
+  if (region.startsWith("fr_")) return countryByCode("FR");
+  if (region.startsWith("nl_")) return countryByCode("NL");
+  if (region.startsWith("sg_")) return countryByCode("SG");
   return countryByCode("GB");
 }
 

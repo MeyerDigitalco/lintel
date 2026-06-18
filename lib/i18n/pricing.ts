@@ -13,6 +13,7 @@ export const LOCAL_PRICES: Record<string, Prices> = {
   CAD: { core: 16.99, voice: 3.99, tenant_portal: 7.99, maintenance_portal: 7.99 },
   NZD: { core: 19.99, voice: 3.99, tenant_portal: 8.99, maintenance_portal: 8.99 },
   INR: { core: 799, voice: 149, tenant_portal: 399, maintenance_portal: 399 },
+  SGD: { core: 16.99, voice: 3.49, tenant_portal: 7.49, maintenance_portal: 7.49 },
 };
 
 const WHOLE = ["AED", "ZAR", "SAR", "QAR", "KWD", "INR"];

@@ -277,6 +277,72 @@ const IN: RegionRuleset = {
   notes: ["The Model Tenancy Act is adopted state-by-state; check your state's rules.", "Declare rental income under house property; claim 30% standard deduction."],
 };
 
+const FR: RegionRuleset = {
+  country: "FR", countryName: "France", currency: "EUR",
+  governingLaw: "Loi n. 89-462 du 6 juillet 1989",
+  tenancyTerm: "lease (bail)", depositTerm: "deposit (depot de garantie)", taxLabel: "Revenus fonciers (micro-foncier / reel)",
+  tenancyTypes: [
+    { label: "Bail vide (unfurnished)", description: "3-year lease (6 if landlord is a company)." },
+    { label: "Bail meuble (furnished)", description: "1-year lease (9 months for students)." },
+  ],
+  compliance: [
+    { label: "Diagnostics (DDT)", note: "DPE, lead, asbestos, gas/electrical and risk diagnostics attached to the lease." },
+    { label: "Decent housing standard", note: "Logement decent (surface, safety, performance) required." },
+    { label: "Encadrement des loyers", note: "Rent caps apply in tense zones (Paris, Lille, etc.)." },
+  ],
+  deposit: { cap: "1 month (unfurnished) / 2 months (furnished), excl. charges.", protection: "Returned within 1-2 months of handover." },
+  checklist: ["Bail (lease)", "Etat des lieux (inventory)", "Diagnostics (DDT)", "Deposit receipt"],
+  notices: [
+    { label: "Conge (notice to leave)", when: "Landlord ends at term", period: "6 months (unfurnished) / 3 (furnished)" },
+    { label: "Rent revision", when: "Annual indexation", period: "Per IRL index; caps in tense zones" },
+  ],
+  notes: ["Strong tenant protection; valid grounds needed to end an unfurnished lease.", "Declare under revenus fonciers (micro or reel)."],
+};
+
+const NL: RegionRuleset = {
+  country: "NL", countryName: "Netherlands", currency: "EUR",
+  governingLaw: "Dutch Civil Code (BW Book 7) tenancy law",
+  tenancyTerm: "tenancy (huurovereenkomst)", depositTerm: "deposit (waarborgsom)", taxLabel: "Box 3 / rental income",
+  tenancyTypes: [
+    { label: "Indefinite tenancy", description: "Open-ended; strong security of tenure." },
+    { label: "Temporary tenancy", description: "Limited use since the 2024 Fixed-term reform." },
+  ],
+  compliance: [
+    { label: "Points system (WWS)", note: "The puntensysteem sets the maximum rent for regulated homes." },
+    { label: "Affordable Rent Act", note: "Mid-market caps apply from 2024; rent increases limited." },
+    { label: "Energy label", note: "A valid energy label is required and affects the rent points." },
+  ],
+  deposit: { cap: "Typically 1-2 months' rent (max ~2 months in practice).", protection: "Returned within 14 days of handover (less damages)." },
+  checklist: ["Huurovereenkomst", "Inspection report", "Energy label", "Deposit receipt"],
+  notices: [
+    { label: "Notice to end", when: "Landlord ends on legal ground", period: "3-6 months by tenancy length" },
+    { label: "Rent increase notice", when: "Annual increase", period: "Capped; Huurcommissie oversight" },
+  ],
+  notes: ["Disputes: the Huurcommissie (Rent Tribunal).", "Private landlords are generally taxed under Box 3."],
+};
+
+const SG: RegionRuleset = {
+  country: "SG", countryName: "Singapore", currency: "SGD",
+  governingLaw: "Contract-based (no rent control); CEA for agents",
+  tenancyTerm: "tenancy agreement", depositTerm: "security deposit", taxLabel: "IRAS rental income",
+  tenancyTypes: [
+    { label: "Private residential lease", description: "Typically 1-2 year tenancy agreement." },
+    { label: "HDB lease", description: "Subject to HDB subletting approval and conditions." },
+  ],
+  compliance: [
+    { label: "Stamp duty", note: "Tenancy must be stamped with IRAS (tenant usually pays)." },
+    { label: "HDB approval", note: "Subletting an HDB flat needs HDB approval and minimum occupation period." },
+    { label: "Occupancy limits", note: "Maximum occupants per URA/HDB rules." },
+  ],
+  deposit: { cap: "Commonly 1 month's deposit per year of lease.", protection: "Refunded at end of term less damages; no statutory scheme." },
+  checklist: ["Tenancy agreement", "Stamp duty certificate", "Inventory list", "Handover checklist"],
+  notices: [
+    { label: "Notice to terminate", when: "Per the diplomatic/break clause", period: "Per agreement (often 2 months)" },
+    { label: "Renewal notice", when: "Renew the tenancy", period: "Per agreement" },
+  ],
+  notes: ["No rent control; terms are largely contractual.", "Declare rental income to IRAS; expenses deductible."],
+};
+
 function ukToRuleset(j: JurisdictionRules, currency = "GBP"): RegionRuleset {
   return {
     country: "GB",
@@ -373,8 +439,11 @@ export function resolveRegion(country?: string | null, region?: string | null, r
   if (cc === "DE") return DE;
   if (cc === "ES") return ES;
   if (cc === "IN") return IN;
+  if (cc === "FR") return FR;
+  if (cc === "NL") return NL;
+  if (cc === "SG") return SG;
   const key = (["england", "wales", "scotland", "northern_ireland"].includes(region ?? "") ? region : "england") as JurisdictionKey;
   return ukToRuleset(resolveJurisdiction(key));
 }
 
-export const INTERNATIONAL_RULESETS = { US, UAE, ZA, AU, NZ, CA, IE, DE, ES, IN };
+export const INTERNATIONAL_RULESETS = { US, UAE, ZA, AU, NZ, CA, IE, DE, ES, IN, FR, NL, SG };

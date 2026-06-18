@@ -246,6 +246,72 @@ const IN: RegionRuleset = {
   notes: ["MTA is adopted state-by-state; check your state.", "Claim 30% standard deduction on house property income."],
 };
 
+const FR: RegionRuleset = {
+  countryName: "France",
+  governingLaw: "Loi n. 89-462 du 6 juillet 1989", tenancyTerm: "lease (bail)", depositTerm: "deposit (depot de garantie)",
+  taxLabel: "Revenus fonciers (micro-foncier / reel)",
+  tenancyTypes: [
+    { label: "Bail vide (unfurnished)", description: "3-year lease (6 if company)." },
+    { label: "Bail meuble (furnished)", description: "1-year lease (9 months students)." },
+  ],
+  compliance: [
+    { label: "Diagnostics (DDT)", note: "DPE, lead, asbestos and risk diagnostics attached." },
+    { label: "Decent housing standard", note: "Logement decent required." },
+    { label: "Encadrement des loyers", note: "Rent caps in tense zones (Paris, Lille)." },
+  ],
+  deposit: { cap: "1 month (unfurnished) / 2 (furnished), excl. charges.", protection: "Returned within 1-2 months of handover." },
+  checklist: ["Bail (lease)", "Etat des lieux", "Diagnostics (DDT)", "Deposit receipt"],
+  notices: [
+    { label: "Conge (notice to leave)", when: "Landlord ends at term", period: "6 months (unfurnished) / 3 (furnished)" },
+    { label: "Rent revision", when: "Annual indexation", period: "Per IRL index" },
+  ],
+  notes: ["Valid grounds needed to end an unfurnished lease.", "Declare under revenus fonciers."],
+};
+
+const NL: RegionRuleset = {
+  countryName: "Netherlands",
+  governingLaw: "Dutch Civil Code (BW Book 7)", tenancyTerm: "tenancy (huurovereenkomst)", depositTerm: "deposit (waarborgsom)",
+  taxLabel: "Box 3 / rental income",
+  tenancyTypes: [
+    { label: "Indefinite tenancy", description: "Open-ended; strong security of tenure." },
+    { label: "Temporary tenancy", description: "Limited since the 2024 reform." },
+  ],
+  compliance: [
+    { label: "Points system (WWS)", note: "Puntensysteem sets maximum rent for regulated homes." },
+    { label: "Affordable Rent Act", note: "Mid-market caps from 2024." },
+    { label: "Energy label", note: "Required; affects rent points." },
+  ],
+  deposit: { cap: "Typically 1-2 months' rent.", protection: "Returned within 14 days of handover." },
+  checklist: ["Huurovereenkomst", "Inspection report", "Energy label", "Deposit receipt"],
+  notices: [
+    { label: "Notice to end", when: "Landlord on legal ground", period: "3-6 months by length" },
+    { label: "Rent increase notice", when: "Annual increase", period: "Capped; Huurcommissie" },
+  ],
+  notes: ["Disputes: the Huurcommissie.", "Private landlords generally taxed under Box 3."],
+};
+
+const SG: RegionRuleset = {
+  countryName: "Singapore",
+  governingLaw: "Contract-based (no rent control)", tenancyTerm: "tenancy agreement", depositTerm: "security deposit",
+  taxLabel: "IRAS rental income",
+  tenancyTypes: [
+    { label: "Private residential lease", description: "Typically 1-2 year agreement." },
+    { label: "HDB lease", description: "Needs HDB subletting approval." },
+  ],
+  compliance: [
+    { label: "Stamp duty", note: "Tenancy stamped with IRAS." },
+    { label: "HDB approval", note: "Subletting an HDB flat needs approval + MOP." },
+    { label: "Occupancy limits", note: "Max occupants per URA/HDB rules." },
+  ],
+  deposit: { cap: "Commonly 1 month per year of lease.", protection: "Refunded at end less damages; no statutory scheme." },
+  checklist: ["Tenancy agreement", "Stamp duty certificate", "Inventory list", "Handover checklist"],
+  notices: [
+    { label: "Notice to terminate", when: "Per break/diplomatic clause", period: "Per agreement (often 2 months)" },
+    { label: "Renewal notice", when: "Renew the tenancy", period: "Per agreement" },
+  ],
+  notes: ["No rent control; terms are contractual.", "Declare rental income to IRAS."],
+};
+
 const UK_NAMES: Record<string, string> = { england: "England", wales: "Wales", scotland: "Scotland", northern_ireland: "Northern Ireland" };
 
 function uk(region?: string | null): RegionRuleset {
@@ -327,6 +393,9 @@ export function resolveRegion(country?: string | null, region?: string | null, r
   if (cc === "DE") return DE;
   if (cc === "ES") return ES;
   if (cc === "IN") return IN;
+  if (cc === "FR") return FR;
+  if (cc === "NL") return NL;
+  if (cc === "SG") return SG;
   return uk(region);
 }
 
