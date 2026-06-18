@@ -21,6 +21,7 @@ export const COUNTRY_CURRENCY: Record<string, string> = {
   DE: "EUR", ES: "EUR", IN: "INR",
   FR: "EUR", NL: "EUR", SG: "SGD",
   IT: "EUR", PT: "EUR", CH: "CHF", JP: "JPY", MX: "MXN", BR: "BRL",
+  BE: "EUR", AT: "EUR", PL: "PLN", HK: "HKD",
 };
 
 export function currencyForCountry(cc?: string | null): string {

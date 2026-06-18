@@ -17,6 +17,7 @@ export const COUNTRY_LANGUAGES: Record<string, string[]> = {
   CA: ["en", "fr"], IE: ["en"], DE: ["de", "en"], ES: ["es", "en"], IN: ["en", "hi"],
   FR: ["fr", "en"], NL: ["en"], SG: ["en"], IT: ["it", "en"], PT: ["pt", "en"],
   CH: ["de", "fr", "en"], JP: ["ja", "en"], MX: ["es", "en"], BR: ["pt", "en"],
+  BE: ["fr", "en"], AT: ["de", "en"], PL: ["en"], SA: ["ar", "en"], QA: ["ar", "en"], HK: ["en"],
 };
 
 export function availableLanguages(country?: string | null): string[] {
@@ -83,6 +84,18 @@ export const DICTIONARIES: Record<string, Dict> = {
   ja: { "nav.overview": "概要", "nav.properties": "物件", "nav.contacts": "連絡先", "nav.income": "収入と経費", "nav.invoices": "請求書", "nav.rent": "家賃台帳", "nav.court": "訴訟準備", "nav.maintenance": "メンテナンス", "nav.tasks": "タスク", "nav.notice": "通知ジェネレーター", "nav.compliance": "コンプライアンス", "nav.region": "地域ルール", "nav.documents": "書類", "nav.toolkit": "ツール", "nav.reports": "レポート", "nav.assistant": "アシスタント", "nav.tax": "税金", "nav.accountant": "会計士", "nav.settings": "設定" },
 };
 
+const DASH_DICT: Record<string, Record<string, string>> = {
+  en: { "dash.title": "Overview", "dash.getting_started": "Getting started", "dash.step_property": "Add a property", "dash.step_tenancy": "Add a tenancy", "dash.step_compliance": "Track compliance", "dash.step_documents": "Upload documents", "dash.stat_properties": "Properties", "dash.stat_income": "Income (year)", "dash.stat_expenses": "Expenses (year)", "dash.stat_arrears": "Arrears", "dash.compliance_due": "Compliance due soon", "dash.tasks": "Tasks" },
+  es: { "dash.title": "Resumen", "dash.getting_started": "Primeros pasos", "dash.step_property": "Añadir propiedad", "dash.step_tenancy": "Añadir contrato", "dash.step_compliance": "Seguir cumplimiento", "dash.step_documents": "Subir documentos", "dash.stat_properties": "Propiedades", "dash.stat_income": "Ingresos (año)", "dash.stat_expenses": "Gastos (año)", "dash.stat_arrears": "Atrasos", "dash.compliance_due": "Cumplimiento próximo", "dash.tasks": "Tareas" },
+  fr: { "dash.title": "Aperçu", "dash.getting_started": "Prise en main", "dash.step_property": "Ajouter un bien", "dash.step_tenancy": "Ajouter une location", "dash.step_compliance": "Suivre la conformité", "dash.step_documents": "Téléverser des documents", "dash.stat_properties": "Biens", "dash.stat_income": "Revenus (année)", "dash.stat_expenses": "Dépenses (année)", "dash.stat_arrears": "Impayés", "dash.compliance_due": "Conformité à échéance", "dash.tasks": "Tâches" },
+  de: { "dash.title": "Übersicht", "dash.getting_started": "Erste Schritte", "dash.step_property": "Immobilie hinzufügen", "dash.step_tenancy": "Mietverhältnis hinzufügen", "dash.step_compliance": "Compliance verfolgen", "dash.step_documents": "Dokumente hochladen", "dash.stat_properties": "Immobilien", "dash.stat_income": "Einnahmen (Jahr)", "dash.stat_expenses": "Ausgaben (Jahr)", "dash.stat_arrears": "Rückstände", "dash.compliance_due": "Compliance bald fällig", "dash.tasks": "Aufgaben" },
+  ar: { "dash.title": "نظرة عامة", "dash.getting_started": "البدء", "dash.step_property": "إضافة عقار", "dash.step_tenancy": "إضافة عقد إيجار", "dash.step_compliance": "متابعة الامتثال", "dash.step_documents": "رفع المستندات", "dash.stat_properties": "العقارات", "dash.stat_income": "الدخل (السنة)", "dash.stat_expenses": "المصروفات (السنة)", "dash.stat_arrears": "المتأخرات", "dash.compliance_due": "الامتثال المستحق قريبًا", "dash.tasks": "المهام" },
+  hi: { "dash.title": "अवलोकन", "dash.getting_started": "शुरूआत", "dash.step_property": "संपत्ति जोड़ें", "dash.step_tenancy": "किरायेदारी जोड़ें", "dash.step_compliance": "अनुपालन ट्रैक करें", "dash.step_documents": "दस्तावेज़ अपलोड करें", "dash.stat_properties": "संपत्तियाँ", "dash.stat_income": "आय (वर्ष)", "dash.stat_expenses": "व्यय (वर्ष)", "dash.stat_arrears": "बकाया", "dash.compliance_due": "शीघ्र देय अनुपालन", "dash.tasks": "कार्य" },
+  it: { "dash.title": "Panoramica", "dash.getting_started": "Per iniziare", "dash.step_property": "Aggiungi immobile", "dash.step_tenancy": "Aggiungi locazione", "dash.step_compliance": "Monitora la conformità", "dash.step_documents": "Carica documenti", "dash.stat_properties": "Immobili", "dash.stat_income": "Entrate (anno)", "dash.stat_expenses": "Spese (anno)", "dash.stat_arrears": "Morosità", "dash.compliance_due": "Conformità in scadenza", "dash.tasks": "Attività" },
+  pt: { "dash.title": "Visão geral", "dash.getting_started": "Primeiros passos", "dash.step_property": "Adicionar imóvel", "dash.step_tenancy": "Adicionar arrendamento", "dash.step_compliance": "Acompanhar conformidade", "dash.step_documents": "Carregar documentos", "dash.stat_properties": "Imóveis", "dash.stat_income": "Receitas (ano)", "dash.stat_expenses": "Despesas (ano)", "dash.stat_arrears": "Rendas em atraso", "dash.compliance_due": "Conformidade a vencer", "dash.tasks": "Tarefas" },
+  ja: { "dash.title": "概要", "dash.getting_started": "はじめに", "dash.step_property": "物件を追加", "dash.step_tenancy": "賃貸借を追加", "dash.step_compliance": "コンプライアンスを管理", "dash.step_documents": "書類をアップロード", "dash.stat_properties": "物件", "dash.stat_income": "収入（年）", "dash.stat_expenses": "経費（年）", "dash.stat_arrears": "滞納", "dash.compliance_due": "近く期限のコンプライアンス", "dash.tasks": "タスク" },
+};
+
 export function translate(lang: string, key: string): string {
-  return DICTIONARIES[lang]?.[key] ?? DICTIONARIES.en[key] ?? key;
+  return DICTIONARIES[lang]?.[key] ?? DASH_DICT[lang]?.[key] ?? DICTIONARIES.en[key] ?? DASH_DICT.en[key] ?? key;
 }

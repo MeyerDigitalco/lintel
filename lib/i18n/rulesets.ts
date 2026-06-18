@@ -409,6 +409,72 @@ const BR: RegionRuleset = {
   notes: ["Only one guarantee type may be required.", "Declare rent monthly via carnê-leão; annual IRPF."],
 };
 
+const BE: RegionRuleset = {
+  country: "BE", countryName: "Belgium", currency: "EUR",
+  governingLaw: "Regional housing codes (Brussels, Flanders, Wallonia)", tenancyTerm: "lease (bail / huurovereenkomst)", depositTerm: "deposit (garantie locative)", taxLabel: "Cadastral & rental income",
+  tenancyTypes: [{ label: "Main residence lease", description: "9-year lease is the default in most regions." }, { label: "Short lease", description: "3 years or less." }],
+  compliance: [{ label: "Lease registration", note: "Registration of the lease is mandatory (free)." }, { label: "Energy certificate (PEB/EPC)", note: "Required to let." }, { label: "Blocked deposit account", note: "Deposit in a blocked account in the tenant's name." }],
+  deposit: { cap: "Up to 2-3 months in a blocked account (region-dependent).", protection: "Released with both parties' agreement or a judge's order." },
+  checklist: ["Lease (bail)", "Lease registration", "Energy certificate", "Move-in inventory (état des lieux)"],
+  notices: [{ label: "Notice (congé)", when: "End the lease", period: "Region & ground dependent" }, { label: "Rent indexation", when: "Annual", period: "Per health index" }],
+  notes: ["Housing law differs by region (Brussels/Flanders/Wallonia).", "An entry inventory is strongly advised."],
+};
+
+const AT: RegionRuleset = {
+  country: "AT", countryName: "Austria", currency: "EUR",
+  governingLaw: "Mietrechtsgesetz (MRG)", tenancyTerm: "tenancy (Mietvertrag)", depositTerm: "deposit (Kaution)", taxLabel: "Einkünfte aus Vermietung (E1b)",
+  tenancyTypes: [{ label: "Unlimited tenancy", description: "Open-ended Mietvertrag." }, { label: "Fixed-term", description: "Min. 3 years for MRG-regulated flats." }],
+  compliance: [{ label: "Deposit invested", note: "Kaution (usually ~3 months) held with interest for the tenant." }, { label: "Richtwert / rent caps", note: "Reference-value caps for older buildings." }, { label: "Operating costs", note: "Betriebskosten statement required." }],
+  deposit: { cap: "Typically 3 months' rent.", protection: "Returned with interest, less justified claims." },
+  checklist: ["Mietvertrag", "Handover protocol", "Deposit confirmation", "Operating cost schedule"],
+  notices: [{ label: "Termination", when: "Landlord ends (MRG grounds)", period: "Court / statutory grounds" }, { label: "Rent increase", when: "Index/Richtwert", period: "Per index" }],
+  notes: ["MRG applies fully to many older buildings.", "Stamp duty (Gebühr) may apply to leases."],
+};
+
+const PL: RegionRuleset = {
+  country: "PL", countryName: "Poland", currency: "PLN",
+  governingLaw: "Civil Code & Tenant Protection Act", tenancyTerm: "lease (umowa najmu)", depositTerm: "deposit (kaucja)", taxLabel: "Ryczałt / PIT rental income",
+  tenancyTypes: [{ label: "Standard lease", description: "Civil-code lease with tenant protections." }, { label: "Occasional lease", description: "Najem okazjonalny with notarised submission." }],
+  compliance: [{ label: "Deposit cap", note: "Kaucja capped at up to 12 months (commonly 1)." }, { label: "Handover protocol", note: "Protokół zdawczo-odbiorczy at move-in." }, { label: "Occasional lease registration", note: "Notarial declaration + tax office notice." }],
+  deposit: { cap: "Up to 12 months (commonly 1 month).", protection: "Returned within 1 month of handover." },
+  checklist: ["Umowa najmu", "Handover protocol", "Deposit receipt", "Occasional-lease notarial act (if used)"],
+  notices: [{ label: "Termination", when: "End the lease", period: "Per Civil Code / contract" }, { label: "Rent increase", when: "Raise rent", period: "3 months' notice" }],
+  notes: ["Occasional lease gives faster eviction via a notarial act.", "Ryczałt flat tax (8.5%/12.5%) is a common option."],
+};
+
+const SA: RegionRuleset = {
+  country: "SA", countryName: "Saudi Arabia", currency: "SAR",
+  governingLaw: "Ejar network & tenancy regulations", tenancyTerm: "lease (Ejar contract)", depositTerm: "security deposit", taxLabel: "No personal income tax; VAT records",
+  tenancyTypes: [{ label: "Annual lease", description: "Standard 12-month Ejar-registered contract." }],
+  compliance: [{ label: "Ejar registration", note: "Contracts registered on the Ejar network (required for many services)." }, { label: "Utilities clearance", note: "SEC/water clearance at move-out." }],
+  deposit: { cap: "Commonly 1 month (negotiable).", protection: "Refunded at end of contract less damages." },
+  checklist: ["Ejar contract", "Tenant ID (Iqama/National ID)", "Utilities account", "Inventory"],
+  notices: [{ label: "Eviction", when: "Valid grounds", period: "Via Ejar / committee" }, { label: "Non-renewal", when: "End at term", period: "Per contract" }],
+  notes: ["Ejar registration underpins dispute resolution.", "No personal income tax; VAT applies to commercial leases."],
+};
+
+const QA: RegionRuleset = {
+  country: "QA", countryName: "Qatar", currency: "QAR",
+  governingLaw: "Law No. 4 of 2008 (rental)", tenancyTerm: "lease contract", depositTerm: "security deposit", taxLabel: "No personal income tax",
+  tenancyTypes: [{ label: "Annual lease", description: "Standard 12-month contract." }],
+  compliance: [{ label: "Lease registration", note: "Register the lease with the municipality." }, { label: "Kahramaa utilities", note: "Electricity/water account and clearance." }],
+  deposit: { cap: "Commonly 1-2 months.", protection: "Refunded at end of contract less damages." },
+  checklist: ["Lease contract", "Lease registration", "Kahramaa account", "Inventory"],
+  notices: [{ label: "Eviction", when: "Valid grounds", period: "Rental Dispute Committee" }, { label: "Rent increase", when: "Increase rent", period: "Per committee rules" }],
+  notes: ["Disputes: the Rental Dispute Settlement Committee.", "No personal income tax."],
+};
+
+const HK: RegionRuleset = {
+  country: "HK", countryName: "Hong Kong", currency: "HKD",
+  governingLaw: "Landlord and Tenant (Consolidation) Ordinance", tenancyTerm: "tenancy agreement", depositTerm: "deposit", taxLabel: "Property tax (IRD)",
+  tenancyTypes: [{ label: "Fixed-term tenancy", description: "Common 1+1 year (with break clause)." }, { label: "Periodic tenancy", description: "Rolling tenancy." }],
+  compliance: [{ label: "Stamp duty", note: "Tenancy must be stamped with the IRD." }, { label: "Property tax", note: "Property tax payable on rental income." }, { label: "Building management", note: "Deed of mutual covenant / management rules." }],
+  deposit: { cap: "Typically 2 months' rent.", protection: "Refunded at end of term less damages." },
+  checklist: ["Tenancy agreement", "Stamping (IRD)", "Inventory", "Handover checklist"],
+  notices: [{ label: "Notice to quit", when: "End the tenancy", period: "Per agreement / break clause" }, { label: "Rent review", when: "On renewal", period: "Per agreement" }],
+  notes: ["Stamp the tenancy promptly to avoid penalties.", "Property tax is charged on net assessable value."],
+};
+
 function ukToRuleset(j: JurisdictionRules, currency = "GBP"): RegionRuleset {
   return {
     country: "GB",
@@ -435,8 +501,8 @@ interface SubRule {
   name: string;
   depositCap?: string;
   depositReturn?: string;
-  extraCompliance: { label: string; note: string }[];
-  extraNotes: string[];
+  extraCompliance?: { label: string; note: string }[];
+  extraNotes?: string[];
 }
 
 const SUBREGION_RULES: Record<string, SubRule> = {
@@ -479,6 +545,22 @@ const SUBREGION_RULES: Record<string, SubRule> = {
   ca_bc: { name: "British Columbia", depositCap: "Deposit max half a month's rent (plus pet deposit).", depositReturn: "Return within 15 days of tenancy end or claim via RTB.", extraCompliance: [{ label: "Condition inspection", note: "Move-in and move-out inspection reports required." }], extraNotes: ["Disputes: Residential Tenancy Branch (RTB).", "Rent increase: annual cap + 3 months' notice."] },
   ca_ab: { name: "Alberta", depositCap: "Security deposit max 1 month's rent.", depositReturn: "Return within 10 days with a statement.", extraCompliance: [{ label: "Inspection report", note: "Move-in/out inspection reports required." }], extraNotes: ["Disputes: RTDRS.", "No rent control; notice rules apply."] },
   ca_qc: { name: "Quebec", depositCap: "Deposits are not permitted.", depositReturn: "Not applicable - no deposit allowed.", extraCompliance: [{ label: "Lease (TAL form)", note: "Use the mandatory TAL lease; disclose prior rent (Section G)." }], extraNotes: ["Disputes: Tribunal administratif du logement (TAL).", "Lease may be required in French."] },
+  // Italy (regions) - canone concordato local agreements
+  it_lazio: { name: "Lazio", extraCompliance: [{ label: "Rome local agreement", note: "Canone concordato accordo territoriale sets reduced rents with tax relief." }], extraNotes: ["High-demand area; check accordo territoriale rates."] },
+  it_lombardy: { name: "Lombardy", extraCompliance: [{ label: "Milan local agreement", note: "Canone concordato accordo territoriale applies in Milan." }], extraNotes: ["Strong rental market; agreed-rent leases common."] },
+  it_campania: { name: "Campania", extraCompliance: [{ label: "Naples local agreement", note: "Local accordo territoriale for agreed-rent leases." }], extraNotes: [] },
+  it_sicily: { name: "Sicily", extraNotes: ["National rules apply; check local agreed-rent agreements."] },
+  // Switzerland (cantons) - initial-rent form mandatory in several cantons
+  ch_zurich: { name: "Zurich", extraCompliance: [{ label: "Official rent form", note: "Initial rent must be notified on the official form (Formular)." }], extraNotes: ["Disputes: Schlichtungsbehörde (conciliation authority)."] },
+  ch_geneva: { name: "Geneva", extraCompliance: [{ label: "Formule officielle", note: "Initial rent on the official form is mandatory; LDTR limits conversions." }], extraNotes: ["Strong tenant protection; ASLOCA active."] },
+  ch_vaud: { name: "Vaud", extraCompliance: [{ label: "Formule officielle", note: "Initial rent on the official form is mandatory." }], extraNotes: ["Disputes via the commission de conciliation."] },
+  ch_ticino: { name: "Ticino", extraNotes: ["Official initial-rent form applies; conciliation authority handles disputes."] },
+  // Japan (prefectures)
+  jp_tokyo: { name: "Tokyo", extraCompliance: [{ label: "Key money & guarantor", note: "Reikin (1-2 months) and a guarantor company are standard." }], extraNotes: ["High demand; renewal fee (koshinryo) common."] },
+  jp_osaka: { name: "Osaka", extraCompliance: [{ label: "Shikibiki custom", note: "Kansai-style deposit deduction (shikibiki) may apply." }], extraNotes: ["Deposit customs differ from Tokyo."] },
+  // Brazil (states)
+  br_sao_paulo: { name: "São Paulo", extraCompliance: [{ label: "Seguro-fiança common", note: "Rental insurance widely used as the guarantee." }], extraNotes: ["High demand; Juizado handles smaller disputes."] },
+  br_rio_de_janeiro: { name: "Rio de Janeiro", extraNotes: ["National Lei do Inquilinato applies; state courts handle disputes."] },
 };
 
 function withSub(base: RegionRuleset, code?: string | null): RegionRuleset {
@@ -488,8 +570,8 @@ function withSub(base: RegionRuleset, code?: string | null): RegionRuleset {
     ...base,
     subregionName: r.name,
     deposit: r.depositCap ? { cap: r.depositCap, protection: r.depositReturn ?? base.deposit.protection } : base.deposit,
-    compliance: [...base.compliance, ...r.extraCompliance],
-    notes: [...r.extraNotes, ...base.notes],
+    compliance: [...base.compliance, ...(r.extraCompliance ?? [])],
+    notes: [...(r.extraNotes ?? []), ...base.notes],
   };
 }
 
@@ -508,14 +590,20 @@ export function resolveRegion(country?: string | null, region?: string | null, r
   if (cc === "FR") return FR;
   if (cc === "NL") return NL;
   if (cc === "SG") return SG;
-  if (cc === "IT") return IT;
+  if (cc === "IT") return withSub(IT, regionCode);
   if (cc === "PT") return PT;
-  if (cc === "CH") return CH;
-  if (cc === "JP") return JP;
+  if (cc === "CH") return withSub(CH, regionCode);
+  if (cc === "JP") return withSub(JP, regionCode);
   if (cc === "MX") return MX;
-  if (cc === "BR") return BR;
+  if (cc === "BR") return withSub(BR, regionCode);
+  if (cc === "BE") return BE;
+  if (cc === "AT") return AT;
+  if (cc === "PL") return PL;
+  if (cc === "SA") return SA;
+  if (cc === "QA") return QA;
+  if (cc === "HK") return HK;
   const key = (["england", "wales", "scotland", "northern_ireland"].includes(region ?? "") ? region : "england") as JurisdictionKey;
   return ukToRuleset(resolveJurisdiction(key));
 }
 
-export const INTERNATIONAL_RULESETS = { US, UAE, ZA, AU, NZ, CA, IE, DE, ES, IN, FR, NL, SG, IT, PT, CH, JP, MX, BR };
+export const INTERNATIONAL_RULESETS = { US, UAE, ZA, AU, NZ, CA, IE, DE, ES, IN, FR, NL, SG, IT, PT, CH, JP, MX, BR, BE, AT, PL, SA, QA, HK };

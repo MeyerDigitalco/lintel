@@ -29,6 +29,12 @@ const REGIONS = [
   { name: "Japan", detail: "All prefectures", note: "Shikikin/reikin handling, renewal rights and tax return.", status: "New" },
   { name: "Mexico", detail: "All states", note: "Arrendamiento contracts, fiador and CFDI invoicing.", status: "New" },
   { name: "Brazil", detail: "All states", note: "Lei do Inquilinato, guarantees and carnê-leão records.", status: "New" },
+  { name: "Belgium", detail: "All regions", note: "Registered leases, energy certificate and blocked-account deposits.", status: "New" },
+  { name: "Austria", detail: "All states", note: "MRG tenancies, Richtwert caps and interest-bearing deposits.", status: "New" },
+  { name: "Poland", detail: "All voivodeships", note: "Umowa najmu, occasional-lease option and ryczałt tax.", status: "New" },
+  { name: "Saudi Arabia", detail: "All regions", note: "Ejar-registered contracts and VAT-ready records.", status: "New" },
+  { name: "Qatar", detail: "Nationwide", note: "Registered leases and the Rental Dispute Committee.", status: "New" },
+  { name: "Hong Kong", detail: "Nationwide", note: "Stamped tenancies, deposits and IRD property tax.", status: "New" },
 ];
 
 const FEATURES = [

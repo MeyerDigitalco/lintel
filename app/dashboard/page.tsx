@@ -7,11 +7,15 @@ import { formatMoney } from "@/lib/i18n/currency";
 import { fmtDate, daysUntil, quarterlyPeriods, taxYearStartFor } from "@/lib/dates";
 import { mtdMandation } from "@/lib/calculators";
 import { cn } from "@/lib/cn";
+import { getLang } from "@/lib/i18n/lang";
+import { translate } from "@/lib/i18n/dictionaries";
 
 export const dynamic = "force-dynamic";
 
 export default async function DashboardOverview() {
-  const { orgId, currency } = await requireSession();
+  const { orgId, currency, country } = await requireSession();
+  const lang = getLang(country);
+  const t = (k: string) => translate(lang, k);
   const gbp = (n: number) => formatMoney(n, currency);
   const supabase = createClient();
 
@@ -56,23 +60,23 @@ export default async function DashboardOverview() {
   const mtd = mtdMandation(income);
 
   const steps = [
-    { label: "Add a property", done: (propertyCount ?? 0) > 0, href: "/dashboard/properties" },
-    { label: "Add a tenancy", done: (tenancyCount ?? 0) > 0, href: "/dashboard/properties" },
-    { label: "Track compliance", done: (compliance ?? []).length > 0, href: "/dashboard/compliance" },
-    { label: "Upload documents", done: (docCount ?? 0) > 0, href: "/dashboard/documents" },
+    { label: t("dash.step_property"), done: (propertyCount ?? 0) > 0, href: "/dashboard/properties" },
+    { label: t("dash.step_tenancy"), done: (tenancyCount ?? 0) > 0, href: "/dashboard/properties" },
+    { label: t("dash.step_compliance"), done: (compliance ?? []).length > 0, href: "/dashboard/compliance" },
+    { label: t("dash.step_documents"), done: (docCount ?? 0) > 0, href: "/dashboard/documents" },
   ];
   const doneCount = steps.filter((s) => s.done).length;
   const pct = Math.round((doneCount / steps.length) * 100);
 
   return (
     <div>
-      <PageHeader title="Overview" subtitle={`Tax year ${yStart}/${(yStart + 1) % 100}`} />
+      <PageHeader title={t("dash.title")} subtitle={`Tax year ${yStart}/${(yStart + 1) % 100}`} />
 
       {pct < 100 && (
         <Card className="mb-6 border-evergreen/30">
           <CardBody>
             <div className="flex items-center justify-between">
-              <h2 className="font-heading text-base font-semibold tracking-tight">Getting started</h2>
+              <h2 className="font-heading text-base font-semibold tracking-tight">{t("dash.getting_started")}</h2>
               <Badge tone="mint">{pct}% complete</Badge>
             </div>
             <p className="mt-1 text-sm text-slate">
@@ -100,10 +104,10 @@ export default async function DashboardOverview() {
       )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Stat label="Properties" value={String(propertyCount ?? 0)} />
-        <Stat label="Income (year)" value={gbp(income)} tone="evergreen" />
-        <Stat label="Expenses (year)" value={gbp(expenses)} />
-        <Stat label="Arrears" value={gbp(arrearsTotal)} tone={arrearsTotal > 0 ? "red" : "default"} hint={`${arrears.length} overdue`} />
+        <Stat label={t("dash.stat_properties")} value={String(propertyCount ?? 0)} />
+        <Stat label={t("dash.stat_income")} value={gbp(income)} tone="evergreen" />
+        <Stat label={t("dash.stat_expenses")} value={gbp(expenses)} />
+        <Stat label={t("dash.stat_arrears")} value={gbp(arrearsTotal)} tone={arrearsTotal > 0 ? "red" : "default"} hint={`${arrears.length} overdue`} />
       </div>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
@@ -145,7 +149,7 @@ export default async function DashboardOverview() {
         <Card>
           <CardBody>
             <div className="flex items-center justify-between">
-              <h2 className="font-heading text-base font-semibold tracking-tight">Tasks</h2>
+              <h2 className="font-heading text-base font-semibold tracking-tight">{t("dash.tasks")}</h2>
               <Link href="/dashboard/tasks" className="text-sm text-evergreen hover:underline">Open tasks →</Link>
             </div>
             {!openTasks || openTasks.length === 0 ? (

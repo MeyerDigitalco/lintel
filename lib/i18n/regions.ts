@@ -108,6 +108,13 @@ const BR_STATES: RegionOption[] = [
   "São Paulo","Rio de Janeiro","Minas Gerais","Bahia","Paraná","Rio Grande do Sul","Santa Catarina","Distrito Federal",
 ].map((n) => ({ value: `br_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
 
+const BE_REGIONS: RegionOption[] = ["Brussels","Antwerp","Flanders","Wallonia","Ghent","Liège","Bruges","Leuven"].map((n) => ({ value: `be_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
+const AT_STATES: RegionOption[] = ["Vienna","Lower Austria","Upper Austria","Styria","Tyrol","Salzburg","Carinthia","Vorarlberg"].map((n) => ({ value: `at_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
+const PL_VOIVODESHIPS: RegionOption[] = ["Mazovia","Lesser Poland","Silesia","Greater Poland","Lower Silesia","Pomerania","Łódź","Lublin"].map((n) => ({ value: `pl_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
+const SA_REGIONS: RegionOption[] = ["Riyadh","Makkah","Eastern Province","Madinah","Asir","Qassim"].map((n) => ({ value: `sa_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
+const QA_MUNICIPALITIES: RegionOption[] = ["Doha","Al Rayyan","Al Wakrah","Al Khor","Umm Salal"].map((n) => ({ value: `qa_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
+const HK_REGIONS: RegionOption[] = ["Hong Kong Island","Kowloon","New Territories"].map((n) => ({ value: `hk_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
+
 export const COUNTRIES: CountryInfo[] = [
   { code: "GB", name: "United Kingdom", currency: "GBP", taxLabel: "Self Assessment (SA105) / MTD", tenancyTerm: "tenancy", depositTerm: "deposit", regions: UK_NATIONS },
   { code: "US", name: "United States", currency: "USD", taxLabel: "Schedule E (Form 1040)", tenancyTerm: "lease", depositTerm: "security deposit", regions: US_STATES },
@@ -129,6 +136,12 @@ export const COUNTRIES: CountryInfo[] = [
   { code: "JP", name: "Japan", currency: "JPY", taxLabel: "Real estate income (kakutei shinkoku)", tenancyTerm: "lease (chintai)", depositTerm: "deposit (shikikin)", regions: JP_PREFECTURES },
   { code: "MX", name: "Mexico", currency: "MXN", taxLabel: "ISR arrendamiento (SAT)", tenancyTerm: "lease (contrato de arrendamiento)", depositTerm: "deposit (depósito)", regions: MX_STATES },
   { code: "BR", name: "Brazil", currency: "BRL", taxLabel: "IRPF aluguéis (carnê-leão)", tenancyTerm: "lease (contrato de locação)", depositTerm: "deposit (caução)", regions: BR_STATES },
+  { code: "BE", name: "Belgium", currency: "EUR", taxLabel: "Cadastral income / rental income", tenancyTerm: "lease (bail / huurovereenkomst)", depositTerm: "deposit (garantie locative)", regions: BE_REGIONS },
+  { code: "AT", name: "Austria", currency: "EUR", taxLabel: "Einkünfte aus Vermietung (Anlage E1b)", tenancyTerm: "tenancy (Mietvertrag)", depositTerm: "deposit (Kaution)", regions: AT_STATES },
+  { code: "PL", name: "Poland", currency: "PLN", taxLabel: "Ryczałt / PIT rental income", tenancyTerm: "lease (umowa najmu)", depositTerm: "deposit (kaucja)", regions: PL_VOIVODESHIPS },
+  { code: "SA", name: "Saudi Arabia", currency: "SAR", taxLabel: "No personal income tax; VAT records", tenancyTerm: "lease (Ejar contract)", depositTerm: "security deposit", regions: SA_REGIONS },
+  { code: "QA", name: "Qatar", currency: "QAR", taxLabel: "No personal income tax", tenancyTerm: "lease contract", depositTerm: "security deposit", regions: QA_MUNICIPALITIES },
+  { code: "HK", name: "Hong Kong", currency: "HKD", taxLabel: "Property tax (IRD)", tenancyTerm: "tenancy agreement", depositTerm: "deposit", regions: HK_REGIONS },
 ];
 
 export function countryByCode(code?: string | null): CountryInfo {
@@ -156,6 +169,12 @@ export function countryForRegion(region?: string | null): CountryInfo {
   if (region.startsWith("jp_")) return countryByCode("JP");
   if (region.startsWith("mx_")) return countryByCode("MX");
   if (region.startsWith("br_")) return countryByCode("BR");
+  if (region.startsWith("be_")) return countryByCode("BE");
+  if (region.startsWith("at_")) return countryByCode("AT");
+  if (region.startsWith("pl_")) return countryByCode("PL");
+  if (region.startsWith("sa_")) return countryByCode("SA");
+  if (region.startsWith("qa_")) return countryByCode("QA");
+  if (region.startsWith("hk_")) return countryByCode("HK");
   return countryByCode("GB");
 }
 

@@ -17,6 +17,7 @@ export const COUNTRY_LANGUAGES: Record<string, string[]> = {
   CA: ["en", "fr"], IE: ["en"], DE: ["de", "en"], ES: ["es", "en"], IN: ["en", "hi"],
   FR: ["fr", "en"], NL: ["en"], SG: ["en"], IT: ["it", "en"], PT: ["pt", "en"],
   CH: ["de", "fr", "en"], JP: ["ja", "en"], MX: ["es", "en"], BR: ["pt", "en"],
+  BE: ["fr", "en"], AT: ["de", "en"], PL: ["en"], SA: ["ar", "en"], QA: ["ar", "en"], HK: ["en"],
 };
 
 export function availableLanguages(country?: string | null): string[] {
