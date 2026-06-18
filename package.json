@@ -2,7 +2,7 @@
   "name": "lintel",
   "version": "0.1.0",
   "private": true,
-  "description": "Lintel — MTD-first property-management platform for UK landlords",
+  "description": "Lintel \u2014 MTD-first property-management platform for UK landlords",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -17,7 +17,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "stripe": "^16.12.0",
-    "tesseract.js": "^5.1.1"
+    "tesseract.js": "^5.1.1",
+    "pdf-parse": "^1.1.1"
   },
   "devDependencies": {
     "@types/node": "^20.14.10",

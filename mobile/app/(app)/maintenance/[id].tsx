@@ -3,6 +3,7 @@ import { View, Text, Image, Alert, TouchableOpacity, Modal, Dimensions, Pressabl
 import { useLocalSearchParams, useRouter, Stack } from "expo-router";
 import { Screen, Card, Badge, Button, Field, Row, SectionTitle, Loading, EmptyState, colors, font, radius } from "@/components/ui";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/providers/AuthProvider";
 import { fmtDate } from "@/lib/format";
 
 const STATUSES = ["raised", "triaged", "assigned", "scheduled", "in_progress", "completed", "closed"] as const;
@@ -13,10 +14,11 @@ const TONE: Record<string, "default" | "mint" | "amber" | "red" | "green"> = {
 export default function MaintenanceDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const { isWriter } = useAuth();
   const [loading, setLoading] = useState(true);
   const [req, setReq] = useState<any>(null);
   const [events, setEvents] = useState<any[]>([]);
-  const [photos, setPhotos] = useState<{ url: string | null }[]>([]);
+  const [photos, setPhotos] = useState<{ id: string; storage_path: string; url: string | null }[]>([]);
   const [note, setNote] = useState("");
   const [busy, setBusy] = useState(false);
   const [viewer, setViewer] = useState<string | null>(null);
@@ -26,18 +28,31 @@ export default function MaintenanceDetail() {
     const [{ data: r }, { data: ev }, { data: ph }] = await Promise.all([
       supabase.from("maintenance_requests").select("*, properties(label)").eq("id", id).maybeSingle(),
       supabase.from("maintenance_events").select("*").eq("request_id", id).order("created_at", { ascending: false }),
-      supabase.from("maintenance_photos").select("storage_path").eq("request_id", id),
+      supabase.from("maintenance_photos").select("id, storage_path").eq("request_id", id),
     ]);
     setReq(r); setEvents(ev ?? []);
     const urls = await Promise.all(((ph ?? []) as any[]).map(async (p) => {
       const { data } = await supabase.storage.from("maintenance").createSignedUrl(p.storage_path, 600);
-      return { url: data?.signedUrl ?? null };
+      return { id: p.id as string, storage_path: p.storage_path as string, url: data?.signedUrl ?? null };
     }));
     setPhotos(urls);
     setLoading(false);
   }, [id]);
 
   useEffect(() => { load(); }, [load]);
+
+  const removePhoto = (ph: { id: string; storage_path: string }) => {
+    Alert.alert("Delete photo", "Remove this photo?", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Delete", style: "destructive", onPress: async () => {
+          try {
+            if (ph.storage_path) await supabase.storage.from("maintenance").remove([ph.storage_path]);
+            await supabase.from("maintenance_photos").delete().eq("id", ph.id);
+            await load();
+          } catch (e: any) { Alert.alert("Could not delete", e.message); }
+        } },
+    ]);
+  };
 
   const setStatus = async (status: string) => {
     if (!req) return;
@@ -87,9 +102,16 @@ export default function MaintenanceDetail() {
           <SectionTitle>Photos</SectionTitle>
           <Row style={{ flexWrap: "wrap", justifyContent: "flex-start", gap: 8 }}>
             {photos.map((p, i) => p.url ? (
-              <TouchableOpacity key={i} onPress={() => setViewer(p.url)}>
-                <Image source={{ uri: p.url }} style={{ width: 100, height: 100, borderRadius: radius.md }} />
-              </TouchableOpacity>
+              <View key={p.id} style={{ width: 100 }}>
+                <TouchableOpacity onPress={() => setViewer(p.url)}>
+                  <Image source={{ uri: p.url }} style={{ width: 100, height: 100, borderRadius: radius.md }} />
+                </TouchableOpacity>
+                {isWriter ? (
+                  <TouchableOpacity onPress={() => removePhoto(p)} style={{ alignItems: "center", paddingVertical: 4 }}>
+                    <Text style={{ fontSize: font.tiny, color: colors.slate }}>Delete</Text>
+                  </TouchableOpacity>
+                ) : null}
+              </View>
             ) : null)}
           </Row>
         </View>

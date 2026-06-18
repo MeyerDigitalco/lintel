@@ -12,15 +12,29 @@ export async function extractDocFields(
   buffer: Buffer,
   contentType: string
 ): Promise<{ doc_type?: string; issued_at?: string; expires_at?: string }> {
-  if (!/^image\//.test(contentType || "")) return {}; // PDFs need conversion — skip for now
+  const ct = contentType || "";
   let text = "";
-  try {
-    const { createWorker } = await import("tesseract.js");
-    const worker = await createWorker("eng");
-    const { data } = await worker.recognize(buffer);
-    text = data?.text ?? "";
-    await worker.terminate();
-  } catch {
+  if (/^image\//.test(ct)) {
+    try {
+      const { createWorker } = await import("tesseract.js");
+      const worker = await createWorker("eng");
+      const { data } = await worker.recognize(buffer);
+      text = data?.text ?? "";
+      await worker.terminate();
+    } catch {
+      return {};
+    }
+  } else if (ct === "application/pdf") {
+    try {
+      // Variable specifier so tsc doesn't require the module to be present locally.
+      const pkg = "pdf-parse";
+      const pdf = ((await import(pkg)) as any).default;
+      const data = await pdf(buffer);
+      text = (data?.text as string) ?? "";
+    } catch {
+      return {}; // scanned (image-only) PDFs have no embedded text
+    }
+  } else {
     return {};
   }
   if (!text.trim()) return {};
