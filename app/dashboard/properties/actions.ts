@@ -1,7 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { requireSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { requireSession, isWriterRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import type { JurisdictionKey } from "@/lib/jurisdictions";
 import { resolveRegion } from "@/lib/i18n/rulesets";
@@ -51,6 +52,35 @@ export async function createProperty(formData: FormData) {
   }
 
   revalidatePath("/dashboard/properties");
+}
+
+export async function updateProperty(formData: FormData) {
+  const { orgId, role } = await requireSession();
+  if (!isWriterRole(role)) throw new Error("You don't have permission to edit properties.");
+  const supabase = createClient();
+  const id = String(formData.get("id"));
+  const { error } = await supabase.from("properties").update({
+    label: String(formData.get("label") ?? "").trim() || "Property",
+    address_line1: String(formData.get("address_line1") ?? "") || null,
+    city: String(formData.get("city") ?? "") || null,
+    postcode: String(formData.get("postcode") ?? "") || null,
+    is_hmo: formData.get("is_hmo") === "on",
+  }).eq("id", id).eq("org_id", orgId);
+  if (error) throw new Error(error.message);
+  revalidatePath(`/dashboard/properties/${id}`);
+  revalidatePath("/dashboard/properties");
+}
+
+export async function deleteProperty(formData: FormData) {
+  const { orgId, role } = await requireSession();
+  if (!isWriterRole(role)) throw new Error("You don't have permission to delete properties.");
+  const supabase = createClient();
+  const id = String(formData.get("id"));
+  // Cascades to tenancies, compliance, documents and registrations via FK.
+  const { error } = await supabase.from("properties").delete().eq("id", id).eq("org_id", orgId);
+  if (error) throw new Error(error.message);
+  revalidatePath("/dashboard/properties");
+  if (String(formData.get("redirect") ?? "") === "1") redirect("/dashboard/properties");
 }
 
 export async function createUnit(formData: FormData) {

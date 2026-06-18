@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { requireSession } from "@/lib/auth";
+import { requireSession, isWriterRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { PageHeader, Badge } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
@@ -8,11 +8,14 @@ import { AddUnitForm, AddRegistrationForm } from "@/components/app/PropertyDetai
 import { PropertyDocumentUpload } from "@/components/app/PropertyDocuments";
 import { resolveJurisdiction, type JurisdictionKey } from "@/lib/jurisdictions";
 import { fmtDate } from "@/lib/dates";
+import { updateProperty, deleteProperty } from "../actions";
+import { Button } from "@/components/ui/Button";
 
 export const dynamic = "force-dynamic";
 
 export default async function PropertyDetail({ params }: { params: { id: string } }) {
-  const { orgId } = await requireSession();
+  const { orgId, role } = await requireSession();
+  const canWrite = isWriterRole(role);
   const supabase = createClient();
 
   const { data: property } = await supabase
@@ -50,6 +53,32 @@ export default async function PropertyDetail({ params }: { params: { id: string 
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
+        {canWrite && (
+          <Card className="lg:col-span-2">
+            <CardBody>
+              <h2 className="font-heading text-base font-semibold tracking-tight">Edit property</h2>
+              <form action={updateProperty} className="mt-3 grid gap-3 sm:grid-cols-2">
+                <input type="hidden" name="id" value={property.id} />
+                <label className="block sm:col-span-2"><span className="mb-1 block text-xs font-medium text-slate">Name / label</span>
+                  <input name="label" defaultValue={property.label} className="h-10 w-full rounded-lintel border border-hairline bg-surface px-3 text-sm" /></label>
+                <label className="block"><span className="mb-1 block text-xs font-medium text-slate">Address line</span>
+                  <input name="address_line1" defaultValue={property.address_line1 ?? ""} className="h-10 w-full rounded-lintel border border-hairline bg-surface px-3 text-sm" /></label>
+                <label className="block"><span className="mb-1 block text-xs font-medium text-slate">Town / city</span>
+                  <input name="city" defaultValue={property.city ?? ""} className="h-10 w-full rounded-lintel border border-hairline bg-surface px-3 text-sm" /></label>
+                <label className="block"><span className="mb-1 block text-xs font-medium text-slate">Postcode</span>
+                  <input name="postcode" defaultValue={property.postcode ?? ""} className="h-10 w-full rounded-lintel border border-hairline bg-surface px-3 text-sm" /></label>
+                <label className="flex items-center gap-2 text-sm text-ink sm:col-span-2"><input type="checkbox" name="is_hmo" defaultChecked={property.is_hmo} className="h-4 w-4" /> House in multiple occupation (HMO)</label>
+                <div className="sm:col-span-2"><Button type="submit" size="sm">Save changes</Button></div>
+              </form>
+              <form action={deleteProperty} className="mt-4 border-t border-hairline pt-3">
+                <input type="hidden" name="id" value={property.id} />
+                <input type="hidden" name="redirect" value="1" />
+                <button type="submit" className="text-sm text-red hover:underline">Delete this property</button>
+                <p className="mt-1 text-xs text-slate">Removes the property and its tenancies, compliance items and documents. This can&apos;t be undone.</p>
+              </form>
+            </CardBody>
+          </Card>
+        )}
         <Card>
           <CardBody>
             <h2 className="font-heading text-base font-semibold tracking-tight">Jurisdiction rules</h2>

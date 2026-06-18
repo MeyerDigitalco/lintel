@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { requireSession } from "@/lib/auth";
+import { requireSession, isWriterRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { PageHeader, EmptyState, Badge } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
 import { AddPropertyForm } from "@/components/app/AddPropertyForm";
+import { deleteProperty } from "./actions";
 import { resolveJurisdiction } from "@/lib/jurisdictions";
 import type { JurisdictionKey } from "@/lib/jurisdictions";
 import { streetViewUrl } from "@/lib/street-view";
@@ -14,7 +15,8 @@ import { translate } from "@/lib/i18n/dictionaries";
 export const dynamic = "force-dynamic";
 
 export default async function PropertiesPage() {
-  const { orgId, region, country } = await requireSession();
+  const { orgId, region, country, role } = await requireSession();
+  const canWrite = isWriterRole(role);
   const lang = getLang(country);
   const t = (k: string) => translate(lang, k);
   const supabase = createClient();
@@ -58,11 +60,11 @@ export default async function PropertiesPage() {
             const m = meta(p.id, hasAddress);
             const img = streetViewUrl(p);
             return (
-              <Link key={p.id} href={`/dashboard/properties/${p.id}`}>
+              <div key={p.id} className="flex flex-col">
+                <Link href={`/dashboard/properties/${p.id}`}>
                 <Card className="h-full overflow-hidden transition-colors hover:border-evergreen/40">
                   {img && (
-                    /* eslint-disable-next-line @next/next/no-img-element */
-                    <img src={img} alt={p.label} className="h-36 w-full object-cover" />
+                    <div className="h-36 w-full bg-cover bg-center" style={{ backgroundImage: `url(${img})`, backgroundColor: "#eef1f6" }} />
                   )}
                   <CardBody>
                     <div className="flex items-start justify-between gap-2">
@@ -88,7 +90,17 @@ export default async function PropertiesPage() {
                     </div>
                   </CardBody>
                 </Card>
-              </Link>
+                </Link>
+                {canWrite && (
+                  <div className="mt-1 flex items-center gap-3 px-1 text-xs">
+                    <Link href={`/dashboard/properties/${p.id}`} className="text-slate hover:text-ink">Edit</Link>
+                    <form action={deleteProperty} className="inline">
+                      <input type="hidden" name="id" value={p.id} />
+                      <button type="submit" className="text-slate hover:text-red">Delete</button>
+                    </form>
+                  </div>
+                )}
+              </div>
             );
           })}
         </div>
