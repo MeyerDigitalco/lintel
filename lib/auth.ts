@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Feature } from "@/lib/stripe/config";
@@ -18,7 +19,7 @@ export interface SessionContext {
 export const WRITER_ROLES = ["owner", "admin", "landlord"];
 export const isWriterRole = (role: string) => WRITER_ROLES.includes(role);
 
-export async function requireSession(): Promise<SessionContext> {
+export const requireSession = cache(async (): Promise<SessionContext> => {
   const supabase = createClient();
   const {
     data: { user },
@@ -51,7 +52,7 @@ export async function requireSession(): Promise<SessionContext> {
     currency: ((org as any)?.currency as string) ?? "GBP",
     regionCode: ((org as any)?.region_code as string) ?? null,
   };
-}
+})
 
 /**
  * Like requireSession, but for write-capable pages. Read-only accountants are

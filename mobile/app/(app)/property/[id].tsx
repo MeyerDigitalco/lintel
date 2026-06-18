@@ -5,6 +5,7 @@ import { Screen, Card, Badge, Button, Field, Row, SectionTitle, Loading, EmptySt
 import { supabase, API_URL } from "@/lib/supabase";
 import { formatMoney, fmtDate, daysUntil, REGION_LABEL } from "@/lib/format";
 import { streetViewUrl } from "@/lib/streetview";
+import * as Crypto from "expo-crypto";
 import { useAuth } from "@/providers/AuthProvider";
 
 const SCHEME_LABEL: Record<string, string> = {
@@ -15,11 +16,8 @@ const SCHEME_LABEL: Record<string, string> = {
 };
 
 function genToken(): string {
-  return (
-    Math.random().toString(36).slice(2) +
-    Math.random().toString(36).slice(2) +
-    Date.now().toString(36)
-  ).slice(0, 32);
+  // Cryptographically strong, unguessable token (the tenant link is a secret).
+  return (Crypto.randomUUID() + Crypto.randomUUID()).replace(/-/g, "").slice(0, 32);
 }
 
 export default function PropertyDetail() {

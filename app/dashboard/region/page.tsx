@@ -34,28 +34,32 @@ export default async function RegionRulesPage() {
       <Card>
         <CardBody>
           <h2 className="font-heading text-base font-semibold tracking-tight">{r.tenancyTerm[0].toUpperCase() + r.tenancyTerm.slice(1)} types</h2>
-          <ul className="mt-3 space-y-3">
+          <div className="mt-3 divide-y divide-hairline">
             {r.tenancyTypes.map((t) => (
-              <li key={t.label}>
-                <p className="text-sm font-medium text-ink">{t.label}</p>
-                <p className="text-xs text-slate">{t.description}</p>
-              </li>
+              <details key={t.label} className="py-2">
+                <summary className="flex cursor-pointer items-center justify-between text-sm font-medium text-ink">
+                  <span>{t.label}</span><span className="text-xs font-normal text-slate">Details</span>
+                </summary>
+                <p className="mt-1 text-xs text-slate">{t.description}</p>
+              </details>
             ))}
-          </ul>
+          </div>
         </CardBody>
       </Card>
 
       <Card>
         <CardBody>
           <h2 className="font-heading text-base font-semibold tracking-tight">Compliance</h2>
-          <ul className="mt-3 space-y-3">
+          <div className="mt-3 divide-y divide-hairline">
             {r.compliance.map((c) => (
-              <li key={c.label}>
-                <p className="text-sm font-medium text-ink">{c.label}</p>
-                <p className="text-xs text-slate">{c.note}</p>
-              </li>
+              <details key={c.label} className="py-2">
+                <summary className="flex cursor-pointer items-center justify-between gap-3 text-sm font-medium text-ink">
+                  <span>{c.label}</span><span className="text-xs font-normal text-slate">Details</span>
+                </summary>
+                <p className="mt-1 text-xs text-slate">{(c as any).detail ?? c.note}</p>
+              </details>
             ))}
-          </ul>
+          </div>
         </CardBody>
       </Card>
 
@@ -82,15 +86,14 @@ export default async function RegionRulesPage() {
       <Card>
         <CardBody>
           <h2 className="font-heading text-base font-semibold tracking-tight">Notices &amp; deadlines</h2>
-          <div className="mt-3 space-y-3">
+          <div className="mt-3 divide-y divide-hairline">
             {r.notices.map((n) => (
-              <div key={n.label} className="flex items-start justify-between gap-3 border-b border-hairline pb-3 last:border-0 last:pb-0">
-                <div>
-                  <p className="text-sm font-medium text-ink">{n.label}</p>
-                  <p className="text-xs text-slate">{n.when}</p>
-                </div>
-                <Badge tone="amber">{n.period}</Badge>
-              </div>
+              <details key={n.label} className="py-2">
+                <summary className="flex cursor-pointer items-center justify-between gap-3 text-sm font-medium text-ink">
+                  <span>{n.label}</span><Badge tone="amber">{n.period}</Badge>
+                </summary>
+                <p className="mt-1 text-xs text-slate">{(n as any).detail ?? n.when}</p>
+              </details>
             ))}
           </div>
         </CardBody>

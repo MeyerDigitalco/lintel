@@ -14,10 +14,10 @@ export interface RegionRuleset {
   depositTerm: string;
   taxLabel: string;
   tenancyTypes: { label: string; description: string }[];
-  compliance: { label: string; note: string }[];
+  compliance: { label: string; note: string; detail?: string }[];
   deposit: { cap: string; protection: string };
   checklist: string[];
-  notices: { label: string; when: string; period: string }[];
+  notices: { label: string; when: string; period: string; detail?: string }[];
   notes: string[];
 }
 
@@ -475,6 +475,10 @@ const HK: RegionRuleset = {
   notes: ["Stamp the tenancy promptly to avoid penalties.", "Property tax is charged on net assessable value."],
 };
 
+function cadenceLabel(c: string): string {
+  return ({ annual: "every year", biennial: "every 2 years", three_yearly: "every 3 years", five_yearly: "every 5 years", once: "one-off", ongoing: "ongoing" } as Record<string, string>)[c] ?? c;
+}
+
 function ukToRuleset(j: JurisdictionRules, currency = "GBP"): RegionRuleset {
   return {
     country: "GB",
@@ -485,10 +489,24 @@ function ukToRuleset(j: JurisdictionRules, currency = "GBP"): RegionRuleset {
     depositTerm: "deposit",
     taxLabel: "Self Assessment (SA105) / Making Tax Digital",
     tenancyTypes: j.tenancyTypes.map((t) => ({ label: t.label, description: t.description })),
-    compliance: j.complianceItems.map((c) => ({ label: c.label, note: c.statutoryBasis })),
+    compliance: j.complianceItems.map((c) => ({
+      label: c.label,
+      note: c.statutoryBasis,
+      detail: [
+        `Statutory basis: ${c.statutoryBasis}.`,
+        `Renewal: ${cadenceLabel(c.cadence)}.`,
+        c.conditional ? "Applies only in certain cases (e.g. HMOs or where gas/electrics are present)." : "Applies to this tenancy.",
+        c.reminderDaysBefore && c.reminderDaysBefore.length ? `Lintel reminds you ${c.reminderDaysBefore.join(", ")} days before it expires.` : "Tracked in your compliance vault.",
+      ].join(" "),
+    })),
     deposit: { cap: j.depositRules.capDescription, protection: `Protect within ${j.depositRules.protectionDeadlineDays} ${j.depositRules.protectionDeadlineBasis} days (${j.depositRules.schemes.join(", ")}).` },
     checklist: j.documentChecklist.map((d) => d.label),
-    notices: j.noticeTemplates.map((n) => ({ label: n.label, when: n.statutoryBasis, period: n.noticePeriodDays ? `${n.noticePeriodDays} days` : "Grounds-dependent" })),
+    notices: j.noticeTemplates.map((n) => ({
+      label: n.label,
+      when: n.statutoryBasis,
+      period: n.noticePeriodDays ? `${n.noticePeriodDays} days` : "Grounds-dependent",
+      detail: `${n.description} Statutory basis: ${n.statutoryBasis}.${n.noticePeriodDays ? ` Minimum notice period: ${n.noticePeriodDays} days.` : " The notice period depends on the grounds relied upon."} Build and print this in the Notice generator.`,
+    })),
     notes: [
       j.landlordRegistrationScheme ? `Landlord registration: ${j.landlordRegistrationScheme}.` : "No landlord registration scheme.",
       `Disputes: ${j.disputeForum}.`,

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { requireSession, isWriterRole } from "@/lib/auth";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { generateText } from "@/lib/ai";
 import { extractDocFields } from "@/lib/doc-extract";
 
@@ -20,6 +20,18 @@ const TYPE_HINTS: [RegExp, string][] = [
 function guessDocType(name: string): string | null {
   for (const [re, key] of TYPE_HINTS) if (re.test(name)) return key;
   return null;
+}
+
+// Run work after the response is sent (Vercel waitUntil); fall back to inline in dev.
+async function runBackground(fn: () => Promise<void>) {
+  try {
+    const pkg = "@vercel/functions";
+    const mod: any = await import(pkg);
+    if (mod?.waitUntil) { mod.waitUntil(fn()); return; }
+  } catch {
+    // not on Vercel
+  }
+  await fn();
 }
 
 /** Upload a document to a property's vault. */
@@ -48,45 +60,60 @@ export async function uploadPropertyDocument(formData: FormData) {
 
   const label = String(formData.get("label") ?? file.name) || file.name;
   const chosenType = String(formData.get("doc_type") ?? "");
-  // Auto-fill: infer the document type from the filename if not chosen.
-  const docType = chosenType && chosenType !== "other" ? chosenType : (guessDocType(file.name) ?? (chosenType || null));
-  let issuedAt = String(formData.get("issued_at") ?? "") || null;
-  let expiresAt = String(formData.get("expires_at") ?? "") || null;
-  let finalType = docType;
-
-  // Content-OCR: read the document to fill type/dates the user didn't provide.
-  if (!finalType || !issuedAt || !expiresAt) {
-    try {
-      const extracted = await extractDocFields(buffer, file.type || "");
-      if (!finalType && extracted.doc_type) finalType = extracted.doc_type;
-      if (!issuedAt && extracted.issued_at) issuedAt = extracted.issued_at;
-      if (!expiresAt && extracted.expires_at) expiresAt = extracted.expires_at;
-    } catch {
-      // best-effort
-    }
-  }
-
-  // Auto-summary on upload (AI when configured, else a metadata description).
+  const filenameType = chosenType && chosenType !== "other" ? chosenType : (guessDocType(file.name) ?? (chosenType || null));
+  const issuedAt = String(formData.get("issued_at") ?? "") || null;
+  const expiresAt = String(formData.get("expires_at") ?? "") || null;
   const where = [prop.label, prop.city, prop.postcode].filter(Boolean).join(", ");
-  const meta = `Document: ${label}. Type: ${finalType ?? "unknown"}. Property: ${where || "unspecified"}.${issuedAt ? ` Issued ${issuedAt}.` : ""}${expiresAt ? ` Expires ${expiresAt}.` : ""}`;
-  const ai = await generateText(
-    `Write one concise, plain-English sentence describing this rental property document for a landlord's records. Be factual; do not invent details.\n\n${meta}`,
-    { system: "You summarise property documents tersely and factually.", maxTokens: 120 }
-  );
-  const summary = ai ?? `${(finalType ?? "Document").replace(/_/g, " ")} for ${where || "this property"}${expiresAt ? `, valid until ${expiresAt}` : ""}.`;
+  const basicSummary = `${(filenameType ?? "Document").replace(/_/g, " ")} for ${where || "this property"}${expiresAt ? `, valid until ${expiresAt}` : ""}.`;
+  const contentType = file.type || "";
 
-  const { error } = await supabase.from("property_documents").insert({
-    org_id: orgId,
-    property_id: propertyId,
-    label,
-    doc_type: finalType,
-    issued_at: issuedAt,
-    expires_at: expiresAt,
-    storage_path: path,
-    ai_summary: summary,
-    visible_to_tenant: formData.get("visible_to_tenant") === "on",
-  });
+  // Fast insert — the upload returns immediately with a filename-based type + basic summary.
+  const { data: created, error } = await supabase
+    .from("property_documents")
+    .insert({
+      org_id: orgId,
+      property_id: propertyId,
+      label,
+      doc_type: filenameType,
+      issued_at: issuedAt,
+      expires_at: expiresAt,
+      storage_path: path,
+      ai_summary: basicSummary,
+      visible_to_tenant: formData.get("visible_to_tenant") === "on",
+    })
+    .select("id")
+    .single();
   if (error) throw new Error(error.message);
+
+  // Background: content-OCR + AI summary, then patch the row. Never blocks the upload.
+  if (created?.id) {
+    const docId = created.id as string;
+    runBackground(async () => {
+      try {
+        const patch: Record<string, unknown> = {};
+        if (!filenameType || !issuedAt || !expiresAt) {
+          const ext = await extractDocFields(buffer, contentType);
+          if (!filenameType && ext.doc_type) patch.doc_type = ext.doc_type;
+          if (!issuedAt && ext.issued_at) patch.issued_at = ext.issued_at;
+          if (!expiresAt && ext.expires_at) patch.expires_at = ext.expires_at;
+        }
+        const effType = (patch.doc_type as string) ?? filenameType;
+        const effIssued = (patch.issued_at as string) ?? issuedAt;
+        const effExpiry = (patch.expires_at as string) ?? expiresAt;
+        const meta = `Document: ${label}. Type: ${effType ?? "unknown"}. Property: ${where || "unspecified"}.${effIssued ? ` Issued ${effIssued}.` : ""}${effExpiry ? ` Expires ${effExpiry}.` : ""}`;
+        const ai = await generateText(
+          `Write one concise, plain-English sentence describing this rental property document for a landlord's records. Be factual; do not invent details.\n\n${meta}`,
+          { system: "You summarise property documents tersely and factually.", maxTokens: 120 }
+        );
+        if (ai) patch.ai_summary = ai;
+        if (Object.keys(patch).length > 0) {
+          await createServiceClient().from("property_documents").update(patch).eq("id", docId);
+        }
+      } catch {
+        // best-effort background processing
+      }
+    });
+  }
 
   revalidatePath(`/dashboard/properties/${propertyId}`);
   revalidatePath("/dashboard/documents");

@@ -19,7 +19,7 @@ export function ContentColumn({
     backgroundRepeat: "no-repeat, no-repeat, no-repeat",
     backgroundSize: "cover, cover, cover",
     backgroundPosition: "center top, center 38%, center 38%",
-    backgroundAttachment: "fixed, fixed, fixed",
+    backgroundAttachment: "scroll, scroll, scroll",
   };
   return (
     <div className="flex min-w-0 flex-1 flex-col" style={style} dir={dir}>
