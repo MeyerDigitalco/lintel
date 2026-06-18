@@ -7,6 +7,8 @@ import { summarizeDocument } from "./actions";
 import { hasAi } from "@/lib/ai";
 import { fmtDate } from "@/lib/dates";
 import { docLabel, docStatus, type DocStatusKey } from "@/lib/doc-types";
+import { getLang } from "@/lib/i18n/lang";
+import { translate } from "@/lib/i18n/dictionaries";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +21,9 @@ export default async function DocumentsPage({
 }: {
   searchParams: { type?: string; property?: string; status?: string };
 }) {
-  const { orgId, role } = await requireSession();
+  const { orgId, role, country } = await requireSession();
+  const lang = getLang(country);
+  const t = (k: string) => translate(lang, k);
   const canWrite = isWriterRole(role);
   const supabase = createClient();
 
@@ -49,8 +53,8 @@ export default async function DocumentsPage({
   return (
     <div>
       <PageHeader
-        title="Documents"
-        subtitle="Every document across your portfolio — filter by type, property or status."
+        title={t("p.docs_title")}
+        subtitle={t("p.docs_sub")}
       />
 
       <DocumentsFilter properties={properties ?? []} />

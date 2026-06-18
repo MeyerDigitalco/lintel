@@ -7,12 +7,16 @@ import { Button } from "@/components/ui/Button";
 import { AddTenancyForm } from "@/components/app/RentForms";
 import { generateRentPeriods, confirmRent } from "@/app/dashboard/rent/actions";
 import { formatMoney } from "@/lib/i18n/currency";
+import { getLang } from "@/lib/i18n/lang";
+import { translate } from "@/lib/i18n/dictionaries";
 import { fmtDate, daysUntil } from "@/lib/dates";
 
 export const dynamic = "force-dynamic";
 
 export default async function RentPage() {
-  const { orgId, currency} = await requireWriter();
+  const { orgId, currency, country } = await requireWriter();
+  const lang = getLang(country);
+  const t = (k: string) => translate(lang, k);
   const gbp = (n: number, opts?: { decimals?: boolean }) => formatMoney(n, currency, opts);
   const supabase = createClient();
 
@@ -44,8 +48,8 @@ export default async function RentPage() {
   return (
     <div>
       <PageHeader
-        title="Rent ledger"
-        subtitle="Log rent due and received. No bank links, no payment processing."
+        title={t("p.rent_title")}
+        subtitle={t("p.rent_sub")}
       />
       <AddTenancyForm properties={properties ?? []} />
 

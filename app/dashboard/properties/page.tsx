@@ -8,11 +8,15 @@ import { resolveJurisdiction } from "@/lib/jurisdictions";
 import type { JurisdictionKey } from "@/lib/jurisdictions";
 import { streetViewUrl } from "@/lib/street-view";
 import { daysUntil } from "@/lib/dates";
+import { getLang } from "@/lib/i18n/lang";
+import { translate } from "@/lib/i18n/dictionaries";
 
 export const dynamic = "force-dynamic";
 
 export default async function PropertiesPage() {
-  const { orgId, region } = await requireSession();
+  const { orgId, region, country } = await requireSession();
+  const lang = getLang(country);
+  const t = (k: string) => translate(lang, k);
   const supabase = createClient();
 
   const [{ data: properties }, { data: tenancies }, { data: compliance }, { data: docs }] = await Promise.all([
