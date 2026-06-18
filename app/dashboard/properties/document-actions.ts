@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { requireSession, isWriterRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { generateText } from "@/lib/ai";
+import { extractDocFields } from "@/lib/doc-extract";
 
 
 // Best-effort document type from the filename when the user didn't pick one.
@@ -38,33 +39,47 @@ export async function uploadPropertyDocument(formData: FormData) {
   const file = formData.get("file");
   if (!(file instanceof File) || file.size === 0) return;
 
+  const buffer = Buffer.from(await file.arrayBuffer());
   const path = `${propertyId}/${Date.now()}-${file.name}`;
   const { error: upErr } = await supabase.storage
     .from("property-docs")
-    .upload(path, file, { upsert: false });
+    .upload(path, buffer, { contentType: file.type || "application/octet-stream", upsert: false });
   if (upErr) throw new Error(upErr.message);
 
   const label = String(formData.get("label") ?? file.name) || file.name;
   const chosenType = String(formData.get("doc_type") ?? "");
   // Auto-fill: infer the document type from the filename if not chosen.
   const docType = chosenType && chosenType !== "other" ? chosenType : (guessDocType(file.name) ?? (chosenType || null));
-  const issuedAt = String(formData.get("issued_at") ?? "") || null;
-  const expiresAt = String(formData.get("expires_at") ?? "") || null;
+  let issuedAt = String(formData.get("issued_at") ?? "") || null;
+  let expiresAt = String(formData.get("expires_at") ?? "") || null;
+  let finalType = docType;
+
+  // Content-OCR: read the document to fill type/dates the user didn't provide.
+  if (!finalType || !issuedAt || !expiresAt) {
+    try {
+      const extracted = await extractDocFields(buffer, file.type || "");
+      if (!finalType && extracted.doc_type) finalType = extracted.doc_type;
+      if (!issuedAt && extracted.issued_at) issuedAt = extracted.issued_at;
+      if (!expiresAt && extracted.expires_at) expiresAt = extracted.expires_at;
+    } catch {
+      // best-effort
+    }
+  }
 
   // Auto-summary on upload (AI when configured, else a metadata description).
   const where = [prop.label, prop.city, prop.postcode].filter(Boolean).join(", ");
-  const meta = `Document: ${label}. Type: ${docType ?? "unknown"}. Property: ${where || "unspecified"}.${issuedAt ? ` Issued ${issuedAt}.` : ""}${expiresAt ? ` Expires ${expiresAt}.` : ""}`;
+  const meta = `Document: ${label}. Type: ${finalType ?? "unknown"}. Property: ${where || "unspecified"}.${issuedAt ? ` Issued ${issuedAt}.` : ""}${expiresAt ? ` Expires ${expiresAt}.` : ""}`;
   const ai = await generateText(
     `Write one concise, plain-English sentence describing this rental property document for a landlord's records. Be factual; do not invent details.\n\n${meta}`,
     { system: "You summarise property documents tersely and factually.", maxTokens: 120 }
   );
-  const summary = ai ?? `${(docType ?? "Document").replace(/_/g, " ")} for ${where || "this property"}${expiresAt ? `, valid until ${expiresAt}` : ""}.`;
+  const summary = ai ?? `${(finalType ?? "Document").replace(/_/g, " ")} for ${where || "this property"}${expiresAt ? `, valid until ${expiresAt}` : ""}.`;
 
   const { error } = await supabase.from("property_documents").insert({
     org_id: orgId,
     property_id: propertyId,
     label,
-    doc_type: docType,
+    doc_type: finalType,
     issued_at: issuedAt,
     expires_at: expiresAt,
     storage_path: path,

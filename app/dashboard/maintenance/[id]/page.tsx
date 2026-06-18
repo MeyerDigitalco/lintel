@@ -6,7 +6,7 @@ import { PageHeader, Badge } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { StatusBadge, SlaBadge, Timeline, humanAge } from "@/components/app/maintenance/ui";
-import { updateStatus, assignContractor, recordCost } from "@/app/dashboard/maintenance/actions";
+import { updateStatus, assignContractor, recordCost, deletePhoto } from "@/app/dashboard/maintenance/actions";
 import { STATUS_FLOW } from "@/lib/maintenance";
 import { formatMoney } from "@/lib/i18n/currency";
 
@@ -33,6 +33,17 @@ export default async function ManageRequest({ params }: { params: { id: string }
     .select("id, actor_role, kind, body, new_status, created_at")
     .eq("request_id", req.id)
     .order("created_at", { ascending: true });
+
+  const { data: photos } = await supabase
+    .from("maintenance_photos")
+    .select("id, storage_path")
+    .eq("request_id", req.id);
+  const photoUrls = await Promise.all(
+    (photos ?? []).map(async (ph) => {
+      const { data } = await supabase.storage.from("maintenance").createSignedUrl(ph.storage_path, 600);
+      return { id: ph.id, url: data?.signedUrl ?? null };
+    })
+  );
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
   const contractorLink = req.contractor_token
@@ -122,6 +133,29 @@ export default async function ManageRequest({ params }: { params: { id: string }
             </div>
           </CardBody>
         </Card>
+
+        {photoUrls.length > 0 && (
+          <Card className="lg:col-span-2">
+            <CardBody>
+              <h2 className="mb-3 font-heading text-base font-semibold tracking-tight">Photos</h2>
+              <div className="flex flex-wrap gap-3">
+                {photoUrls.map((ph) => ph.url ? (
+                  <div key={ph.id} className="w-28">
+                    <a href={ph.url} target="_blank" rel="noopener noreferrer">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={ph.url} alt="Maintenance photo" className="h-28 w-28 rounded-lintel border border-hairline object-cover" />
+                    </a>
+                    <form action={deletePhoto} className="mt-1 text-center">
+                      <input type="hidden" name="id" value={ph.id} />
+                      <input type="hidden" name="request_id" value={req.id} />
+                      <button type="submit" className="text-xs text-slate hover:text-red">Delete</button>
+                    </form>
+                  </div>
+                ) : null)}
+              </div>
+            </CardBody>
+          </Card>
+        )}
 
         <Card className="lg:col-span-2">
           <CardBody>

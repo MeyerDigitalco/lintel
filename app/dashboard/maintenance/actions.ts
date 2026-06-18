@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { requireSession } from "@/lib/auth";
+import { requireSession, isWriterRole } from "@/lib/auth";
 import { requireEntitlement } from "@/lib/entitlements";
 import { createClient } from "@/lib/supabase/server";
 import { newContractorToken, type RequestStatus } from "@/lib/maintenance";
@@ -145,5 +145,26 @@ export async function recordCost(formData: FormData) {
     kind: "note",
     body: `Cost recorded (£${cost.toFixed(2)}) and posted to expenses.`,
   });
+  revalidatePath(`/dashboard/maintenance/${requestId}`);
+}
+
+/** Delete a maintenance photo (record + stored file). Writers only. */
+export async function deletePhoto(formData: FormData) {
+  const { role } = await requireSession();
+  if (!isWriterRole(role)) throw new Error("You don't have permission to delete photos.");
+  const requestId = String(formData.get("request_id"));
+  await assertRequestOwner(requestId);
+  const supabase = createClient();
+  const id = String(formData.get("id"));
+  const { data: photo } = await supabase
+    .from("maintenance_photos")
+    .select("storage_path")
+    .eq("id", id)
+    .eq("request_id", requestId)
+    .maybeSingle();
+  if (photo?.storage_path) {
+    await supabase.storage.from("maintenance").remove([photo.storage_path]);
+  }
+  await supabase.from("maintenance_photos").delete().eq("id", id);
   revalidatePath(`/dashboard/maintenance/${requestId}`);
 }
