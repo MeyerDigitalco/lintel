@@ -67,17 +67,17 @@ const ZA: RegionRuleset = {
     { label: "Month-to-month", description: "Rolling lease, one month's notice." },
   ],
   compliance: [
-    { label: "Written lease on request", note: "Must be in writing if the tenant asks." },
-    { label: "Deposit in interest-bearing account", note: "Interest accrues to the tenant." },
-    { label: "Incoming & outgoing inspections", note: "Joint inspections required; defects recorded." },
-    { label: "Consumer Protection Act", note: "Fair terms, cancellation rights, disclosures." },
+    { label: "Written lease on request", note: "Must be in writing if the tenant asks.", detail: "The lease must be put in writing if the tenant requests it (Rental Housing Act)." },
+    { label: "Deposit in interest-bearing account", note: "Interest accrues to the tenant.", detail: "The deposit must be invested in an interest-bearing account, with interest accruing to the tenant." },
+    { label: "Incoming & outgoing inspections", note: "Joint inspections required; defects recorded.", detail: "Joint incoming and outgoing inspections are required; the outgoing inspection supports any deductions." },
+    { label: "Consumer Protection Act", note: "Fair terms, cancellation rights, disclosures.", detail: "The Consumer Protection Act governs most leases (fair terms, 20-business-day cancellation, disclosures)." },
   ],
   deposit: { cap: "No statutory cap (commonly 1–2 months' rent).", protection: "Held in interest-bearing account; returned with interest within 7–14 days after outgoing inspection." },
   checklist: ["Written lease", "Incoming inspection report", "Deposit receipt", "House rules"],
   notices: [
-    { label: "Breach notice", when: "Tenant breach", period: "20 business days to remedy" },
-    { label: "Cancellation (CPA)", when: "Early cancellation", period: "20 business days notice" },
-    { label: "Notice to vacate", when: "End a month-to-month", period: "1 month" },
+    { label: "Breach notice", when: "Tenant breach", period: "20 business days to remedy", detail: "A breach notice gives the tenant 20 business days to remedy (e.g. arrears) before cancellation." },
+    { label: "Cancellation (CPA)", when: "Early cancellation", period: "20 business days notice", detail: "Under the CPA a tenant may cancel early on 20 business days' notice (a reasonable penalty may apply)." },
+    { label: "Notice to vacate", when: "End a month-to-month", period: "1 month", detail: "To end a month-to-month tenancy, one month's notice is required." },
   ],
   notes: ["Deductions supported by the outgoing inspection.", "Declare income on ITR12; provisional tax twice yearly."],
 };
@@ -115,17 +115,17 @@ const NZ: RegionRuleset = {
     { label: "Fixed-term tenancy", description: "Set term; becomes periodic unless agreed." },
   ],
   compliance: [
-    { label: "Healthy Homes Standards", note: "Heating, insulation, ventilation, moisture, draughts." },
-    { label: "Smoke alarms", note: "Working smoke alarms required." },
-    { label: "Insulation statement", note: "Ceiling & underfloor insulation disclosed." },
-    { label: "Bond lodged with Tenancy Services", note: "Lodged within 23 working days." },
+    { label: "Healthy Homes Standards", note: "Heating, insulation, ventilation, moisture, draughts.", detail: "The tenancy must meet the Healthy Homes Standards (heating, insulation, ventilation, moisture, draught stopping)." },
+    { label: "Smoke alarms", note: "Working smoke alarms required.", detail: "Working smoke alarms are required throughout the tenancy." },
+    { label: "Insulation statement", note: "Ceiling & underfloor insulation disclosed.", detail: "Ceiling and underfloor insulation is required and must be disclosed in the agreement." },
+    { label: "Bond lodged with Tenancy Services", note: "Lodged within 23 working days.", detail: "Lodge the bond with Tenancy Services (MBIE) within 23 working days." },
   ],
   deposit: { cap: "Bond max 4 weeks' rent.", protection: "Lodged with Tenancy Services (MBIE) within 23 working days." },
   checklist: ["Tenancy agreement", "Healthy Homes compliance statement", "Insulation statement", "Bond lodgement form"],
   notices: [
-    { label: "14-day notice to remedy", when: "Tenant breach", period: "14 days" },
-    { label: "Termination notice", when: "Landlord ends periodic tenancy", period: "90 days (42 on set grounds)" },
-    { label: "Rent increase notice", when: "Increase rent", period: "60 days; once per 12 months" },
+    { label: "14-day notice to remedy", when: "Tenant breach", period: "14 days", detail: "A 14-day notice to remedy is served for a breach such as arrears before applying to the Tribunal." },
+    { label: "Termination notice", when: "Landlord ends periodic tenancy", period: "90 days (42 on set grounds)", detail: "A landlord ending a periodic tenancy gives 90 days (or 42 on specified grounds such as sale or owner move-in)." },
+    { label: "Rent increase notice", when: "Increase rent", period: "60 days; once per 12 months", detail: "Rent increases need 60 days' notice and may only occur once every 12 months." },
   ],
   notes: ["Healthy Homes compliance is mandatory.", "Declare income on IR3; ring-fencing limits loss offset."],
 };
@@ -163,16 +163,16 @@ const IE: RegionRuleset = {
     { label: "Fixed-term tenancy", description: "Set term with Part 4 protections." },
   ],
   compliance: [
-    { label: "RTB registration", note: "Register with the Residential Tenancies Board (annual)." },
-    { label: "Minimum standards", note: "S.I. No. 17/2019 minimum standards." },
-    { label: "BER certificate", note: "Valid Building Energy Rating required." },
-    { label: "Rent Pressure Zone caps", note: "In RPZs, rent increases are capped." },
+    { label: "RTB registration", note: "Register with the Residential Tenancies Board (annual).", detail: "Register the tenancy with the Residential Tenancies Board within one month and renew annually; registration is required to serve valid notices." },
+    { label: "Minimum standards", note: "S.I. No. 17/2019 minimum standards.", detail: "The dwelling must meet the S.I. No. 17/2019 minimum standards (heating, ventilation, sanitary facilities, fire safety)." },
+    { label: "BER certificate", note: "Valid Building Energy Rating required.", detail: "A valid Building Energy Rating certificate must be provided to the tenant and shown in any advertisement." },
+    { label: "Rent Pressure Zone caps", note: "In RPZs, rent increases are capped.", detail: "In a Rent Pressure Zone, rent increases are capped by the statutory formula and limited in frequency." },
   ],
   deposit: { cap: "Typically 1 month's rent.", protection: "Returned less arrears/damage; RTB adjudicates." },
   checklist: ["Written tenancy agreement", "RTB registration", "BER certificate", "Rent book"],
   notices: [
-    { label: "Notice of termination", when: "End the tenancy", period: "By tenancy length (90-224 days)" },
-    { label: "Rent review notice", when: "Review rent (max once/yr)", period: "90 days; RPZ caps" },
+    { label: "Notice of termination", when: "End the tenancy", period: "By tenancy length (90-224 days)", detail: "Notice periods scale with length of tenancy (from 90 up to 224 days) and must use the prescribed form with a valid reason." },
+    { label: "Rent review notice", when: "Review rent (max once/yr)", period: "90 days; RPZ caps", detail: "Rent may be reviewed at most once a year with 90 days' notice, using the RTB rent-review form (and RPZ caps where they apply)." },
   ],
   notes: ["RTB registration is mandatory and annual.", "Declare income on Form 11."],
 };
@@ -209,16 +209,16 @@ const ES: RegionRuleset = {
     { label: "Temporary lease", description: "Non-residential / seasonal." },
   ],
   compliance: [
-    { label: "Fianza deposit lodged", note: "1 month lodged with the regional housing authority." },
-    { label: "Energy certificate", note: "Certificado de eficiencia energetica required." },
-    { label: "Stressed-area caps", note: "Rent caps in declared stressed areas." },
-    { label: "Habitability certificate", note: "Cedula de habitabilidad in several regions." },
+    { label: "Fianza deposit lodged", note: "1 month lodged with the regional housing authority.", detail: "Lodge one month's fianza with the autonomous community's housing body; failure can bar you from claiming arrears." },
+    { label: "Energy certificate", note: "Certificado de eficiencia energetica required.", detail: "A certificado de eficiencia energetica is required to advertise and let the property." },
+    { label: "Stressed-area caps", note: "Rent caps in declared stressed areas.", detail: "In declared stressed areas, rent indexation and caps on new contracts apply." },
+    { label: "Habitability certificate", note: "Cedula de habitabilidad in several regions.", detail: "Several regions require a cedula de habitabilidad confirming the dwelling is fit to live in." },
   ],
   deposit: { cap: "1 month (residential); extra guarantee max 2 months.", protection: "Fianza lodged with the autonomous community." },
   checklist: ["Contrato de arrendamiento", "Energy certificate", "Fianza lodgement", "Inventory"],
   notices: [
-    { label: "Notice not to renew", when: "End at statutory term", period: "4 months (landlord) / 2 (tenant)" },
-    { label: "Rent update notice", when: "Annual update", period: "Per index; caps in stressed areas" },
+    { label: "Notice not to renew", when: "End at statutory term", period: "4 months (landlord) / 2 (tenant)", detail: "To end at the statutory term, give 4 months' notice (landlord) or 2 months' (tenant); tenants enjoy renewal up to 5 years (7 if the landlord is a company)." },
+    { label: "Rent update notice", when: "Annual update", period: "Per index; caps in stressed areas", detail: "Annual rent updates follow the official reference index; caps apply in stressed areas." },
   ],
   notes: ["Strong renewal rights up to 5-7 years.", "Declare on IRPF; reductions for habitual residence."],
 };
@@ -232,16 +232,16 @@ const IN: RegionRuleset = {
     { label: "Lease", description: "Longer term; registration over set durations." },
   ],
   compliance: [
-    { label: "Agreement registration", note: "Register and lodge with the Rent Authority (MTA)." },
-    { label: "Police verification", note: "Tenant verification required in many cities." },
-    { label: "Security deposit cap", note: "MTA caps residential deposits at 2 months." },
-    { label: "TDS on rent", note: "Tenants deduct TDS over thresholds." },
+    { label: "Agreement registration", note: "Register and lodge with the Rent Authority (MTA).", detail: "Register the rent agreement and lodge it with the Rent Authority under the Model Tenancy Act; unregistered long leases are hard to enforce." },
+    { label: "Police verification", note: "Tenant verification required in many cities.", detail: "Tenant police verification is required by many states and cities before occupation." },
+    { label: "Security deposit cap", note: "MTA caps residential deposits at 2 months.", detail: "The Model Tenancy Act caps the residential security deposit at two months' rent (higher in some states)." },
+    { label: "TDS on rent", note: "Tenants deduct TDS over thresholds.", detail: "Tenants must deduct TDS where monthly rent exceeds the statutory threshold and deposit it with the tax department." },
   ],
   deposit: { cap: "Max 2 months (MTA); higher in some states.", protection: "Refunded within 1 month of vacating, less dues." },
   checklist: ["Rent agreement", "Agreement registration", "Police verification", "Deposit receipt"],
   notices: [
-    { label: "Notice to vacate", when: "End the tenancy", period: "Per agreement (often 1-2 months)" },
-    { label: "Eviction (Rent Authority)", when: "Default / breach", period: "Via the Rent Court" },
+    { label: "Notice to vacate", when: "End the tenancy", period: "Per agreement (often 1-2 months)", detail: "Notice to vacate follows the agreement (commonly one to two months) and must be in writing." },
+    { label: "Eviction (Rent Authority)", when: "Default / breach", period: "Via the Rent Court", detail: "Disputes and eviction for default or breach are handled by the Rent Court / Rent Authority, not by self-help." },
   ],
   notes: ["MTA is adopted state-by-state; check your state.", "Claim 30% standard deduction on house property income."],
 };
@@ -255,15 +255,15 @@ const FR: RegionRuleset = {
     { label: "Bail meuble (furnished)", description: "1-year lease (9 months students)." },
   ],
   compliance: [
-    { label: "Diagnostics (DDT)", note: "DPE, lead, asbestos and risk diagnostics attached." },
-    { label: "Decent housing standard", note: "Logement decent required." },
-    { label: "Encadrement des loyers", note: "Rent caps in tense zones (Paris, Lille)." },
+    { label: "Diagnostics (DDT)", note: "DPE, lead, asbestos and risk diagnostics attached.", detail: "Attach the dossier de diagnostic technique (DPE, lead, asbestos, gas/electrical, risk) to the lease." },
+    { label: "Decent housing standard", note: "Logement decent required.", detail: "The home must meet the 'logement decent' standard (minimum surface, safety, energy performance)." },
+    { label: "Encadrement des loyers", note: "Rent caps in tense zones (Paris, Lille).", detail: "In tense zones (encadrement des loyers), the rent must not exceed the reference rent plus the permitted margin." },
   ],
   deposit: { cap: "1 month (unfurnished) / 2 (furnished), excl. charges.", protection: "Returned within 1-2 months of handover." },
   checklist: ["Bail (lease)", "Etat des lieux", "Diagnostics (DDT)", "Deposit receipt"],
   notices: [
-    { label: "Conge (notice to leave)", when: "Landlord ends at term", period: "6 months (unfurnished) / 3 (furnished)" },
-    { label: "Rent revision", when: "Annual indexation", period: "Per IRL index" },
+    { label: "Conge (notice to leave)", when: "Landlord ends at term", period: "6 months (unfurnished) / 3 (furnished)", detail: "To end an unfurnished lease at term the landlord gives 6 months' notice (3 for furnished) with a valid ground (sale, own use, serious breach)." },
+    { label: "Rent revision", when: "Annual indexation", period: "Per IRL index", detail: "Annual rent revision follows the IRL index and only if the lease contains a revision clause." },
   ],
   notes: ["Valid grounds needed to end an unfurnished lease.", "Declare under revenus fonciers."],
 };
@@ -277,15 +277,15 @@ const NL: RegionRuleset = {
     { label: "Temporary tenancy", description: "Limited since the 2024 reform." },
   ],
   compliance: [
-    { label: "Points system (WWS)", note: "Puntensysteem sets maximum rent for regulated homes." },
-    { label: "Affordable Rent Act", note: "Mid-market caps from 2024." },
-    { label: "Energy label", note: "Required; affects rent points." },
+    { label: "Points system (WWS)", note: "Puntensysteem sets maximum rent for regulated homes.", detail: "The points system (WWS) sets the maximum lawful rent for regulated and (from 2024) mid-market homes." },
+    { label: "Affordable Rent Act", note: "Mid-market caps from 2024.", detail: "The Affordable Rent Act extends rent caps and limits increases for mid-market tenancies." },
+    { label: "Energy label", note: "Required; affects rent points.", detail: "A valid energy label is required and feeds into the rent points." },
   ],
   deposit: { cap: "Typically 1-2 months' rent.", protection: "Returned within 14 days of handover." },
   checklist: ["Huurovereenkomst", "Inspection report", "Energy label", "Deposit receipt"],
   notices: [
-    { label: "Notice to end", when: "Landlord on legal ground", period: "3-6 months by length" },
-    { label: "Rent increase notice", when: "Annual increase", period: "Capped; Huurcommissie" },
+    { label: "Notice to end", when: "Landlord on legal ground", period: "3-6 months by length", detail: "Indefinite tenancies have strong protection: the landlord can only end on legal grounds with 3 to 6 months' notice." },
+    { label: "Rent increase notice", when: "Annual increase", period: "Capped; Huurcommissie", detail: "Annual increases are capped; the tenant can challenge an excessive rent or increase at the Huurcommissie." },
   ],
   notes: ["Disputes: the Huurcommissie.", "Private landlords generally taxed under Box 3."],
 };
@@ -299,15 +299,15 @@ const SG: RegionRuleset = {
     { label: "HDB lease", description: "Needs HDB subletting approval." },
   ],
   compliance: [
-    { label: "Stamp duty", note: "Tenancy stamped with IRAS." },
-    { label: "HDB approval", note: "Subletting an HDB flat needs approval + MOP." },
-    { label: "Occupancy limits", note: "Max occupants per URA/HDB rules." },
+    { label: "Stamp duty", note: "Tenancy stamped with IRAS.", detail: "The tenancy agreement must be stamped with IRAS (the tenant usually pays); stamping is needed to enforce it." },
+    { label: "HDB approval", note: "Subletting an HDB flat needs approval + MOP.", detail: "Subletting an HDB flat requires HDB approval and the owner meeting the minimum occupation period." },
+    { label: "Occupancy limits", note: "Max occupants per URA/HDB rules.", detail: "Occupancy is limited by URA/HDB caps on the number of unrelated occupants." },
   ],
   deposit: { cap: "Commonly 1 month per year of lease.", protection: "Refunded at end less damages; no statutory scheme." },
   checklist: ["Tenancy agreement", "Stamp duty certificate", "Inventory list", "Handover checklist"],
   notices: [
-    { label: "Notice to terminate", when: "Per break/diplomatic clause", period: "Per agreement (often 2 months)" },
-    { label: "Renewal notice", when: "Renew the tenancy", period: "Per agreement" },
+    { label: "Notice to terminate", when: "Per break/diplomatic clause", period: "Per agreement (often 2 months)", detail: "Termination follows the agreement's break/diplomatic clause (often a 2-month notice after a minimum period)." },
+    { label: "Renewal notice", when: "Renew the tenancy", period: "Per agreement", detail: "Renewal terms are contractual; agree the new rent and term before expiry." },
   ],
   notes: ["No rent control; terms are contractual.", "Declare rental income to IRAS."],
 };
@@ -316,10 +316,10 @@ const IT: RegionRuleset = {
   countryName: "Italy",
   governingLaw: "Legge 392/1978 & 431/1998", tenancyTerm: "lease (contratto)", depositTerm: "deposit (deposito cauzionale)", taxLabel: "Redditi da locazione (cedolare secca / IRPEF)",
   tenancyTypes: [{ label: "4+4 free-market lease", description: "4 years + 4 renewal." }, { label: "3+2 agreed-rent", description: "Canone concordato with tax relief." }],
-  compliance: [{ label: "Lease registration", note: "Register with Agenzia Entrate or opt for cedolare secca." }, { label: "APE certificate", note: "Energy certificate required." }, { label: "Habitability", note: "Certificato di agibilità." }],
+  compliance: [{ label: "Lease registration", note: "Register with Agenzia Entrate or opt for cedolare secca.", detail: "Register the lease with the Agenzia delle Entrate within 30 days, or opt into the flat-rate cedolare secca regime." }, { label: "APE certificate", note: "Energy certificate required.", detail: "An Attestato di Prestazione Energetica (APE) must be attached to the lease." }, { label: "Habitability", note: "Certificato di agibilità.", detail: "A certificato di agibilita confirms the dwelling is habitable." }],
   deposit: { cap: "Up to 3 months' rent.", protection: "Returned with legal interest." },
   checklist: ["Contratto di locazione", "Lease registration", "APE certificate", "Inventory"],
-  notices: [{ label: "Disdetta", when: "End at term", period: "6 months" }, { label: "Rent update", when: "Annual ISTAT", period: "Per ISTAT" }],
+  notices: [{ label: "Disdetta", when: "End at term", period: "6 months", detail: "Disdetta to end at term generally requires 6 months' notice; the 4+4 lease renews automatically otherwise." }, { label: "Rent update", when: "Annual ISTAT", period: "Per ISTAT", detail: "Annual rent updates follow the ISTAT index and do not apply under cedolare secca." }],
   notes: ["Cedolare secca is a flat-tax option.", "Register within 30 days."],
 };
 
@@ -327,10 +327,10 @@ const PT: RegionRuleset = {
   countryName: "Portugal",
   governingLaw: "Novo Regime do Arrendamento Urbano (NRAU)", tenancyTerm: "lease (contrato)", depositTerm: "deposit (caução)", taxLabel: "IRS Categoria F",
   tenancyTypes: [{ label: "Contrato de arrendamento", description: "Standard urban lease." }, { label: "Short-term", description: "Limited-purpose lease." }],
-  compliance: [{ label: "Lease reported to AT", note: "Report the lease to Finanças." }, { label: "Energy certificate", note: "Certificado energético required." }, { label: "Habitation licence", note: "Licença de utilização." }],
+  compliance: [{ label: "Lease reported to AT", note: "Report the lease to Finanças.", detail: "Report the lease to the tax authority (AT) and issue electronic rent receipts (recibos)." }, { label: "Energy certificate", note: "Certificado energético required.", detail: "A certificado energetico is required to advertise and let the property." }, { label: "Habitation licence", note: "Licença de utilização.", detail: "A licenca de utilizacao (habitation licence) must exist for the dwelling." }],
   deposit: { cap: "Commonly 1-2 months' rent.", protection: "Returned at end less amounts owed." },
   checklist: ["Contrato de arrendamento", "Energy certificate", "Habitation licence", "Rent receipts"],
-  notices: [{ label: "Denúncia", when: "End the lease", period: "Per term" }, { label: "Rent update", when: "Annual coefficient", period: "Per coefficient" }],
+  notices: [{ label: "Denúncia", when: "End the lease", period: "Per term", detail: "Denuncia (notice to end) follows the contract type and minimum terms set by the NRAU." }, { label: "Rent update", when: "Annual coefficient", period: "Per coefficient", detail: "Annual rent updates use the official coefficient published each year." }],
   notes: ["Issue electronic rent receipts.", "Category F taxed at 25%."],
 };
 
@@ -338,10 +338,10 @@ const CH: RegionRuleset = {
   countryName: "Switzerland",
   governingLaw: "Swiss Code of Obligations (CO) art. 253ff", tenancyTerm: "tenancy (Mietvertrag / bail)", depositTerm: "deposit (Mietkaution)", taxLabel: "Rental income (federal & cantonal)",
   tenancyTypes: [{ label: "Open-ended tenancy", description: "Standard ongoing lease." }, { label: "Fixed-term", description: "Ends without notice at the date." }],
-  compliance: [{ label: "Blocked deposit account", note: "Max 3 months in a tenant-named blocked account." }, { label: "Official rent form", note: "Initial rent on cantonal form." }, { label: "Handover protocol", note: "At move-in and out." }],
+  compliance: [{ label: "Blocked deposit account", note: "Max 3 months in a tenant-named blocked account.", detail: "The Kaution (max 3 months' rent) must sit in a blocked bank account in the tenant's name, released only by joint consent or court order." }, { label: "Official rent form", note: "Initial rent on cantonal form.", detail: "In several cantons the initial rent must be notified on the official form (formule officielle)." }, { label: "Handover protocol", note: "At move-in and out.", detail: "A joint handover protocol (Ubergabeprotokoll) at move-in and move-out underpins any deposit claim." }],
   deposit: { cap: "Max 3 months' rent, blocked account.", protection: "Released with both parties' consent or court order." },
   checklist: ["Mietvertrag / bail", "Handover protocol", "Blocked deposit account", "House rules"],
-  notices: [{ label: "Termination (form)", when: "Landlord ends", period: "3 months, official form" }, { label: "Rent increase", when: "Reference-rate change", period: "Official form" }],
+  notices: [{ label: "Termination (form)", when: "Landlord ends", period: "3 months, official form", detail: "Termination must use the official cantonal form; the ordinary notice for homes is 3 months and can be challenged at the conciliation authority." }, { label: "Rent increase", when: "Reference-rate change", period: "Official form", detail: "Rent increases (typically on a reference-rate change) use the official form and are contestable within 30 days." }],
   notes: ["Rent can be challenged via conciliation.", "Deposit sits in a blocked account."],
 };
 
@@ -349,10 +349,10 @@ const JP: RegionRuleset = {
   countryName: "Japan",
   governingLaw: "Act on Land and Building Leases", tenancyTerm: "lease (chintai)", depositTerm: "deposit (shikikin)", taxLabel: "Real estate income (kakutei shinkoku)",
   tenancyTypes: [{ label: "Ordinary lease", description: "Strong renewal rights." }, { label: "Fixed-term lease", description: "Ends at term; no renewal." }],
-  compliance: [{ label: "Building safety", note: "Fire/earthquake standards." }, { label: "Important matters explanation", note: "Juyo jiko setsumei before signing." }, { label: "Renewal fee", note: "Koshinryo often applies." }],
+  compliance: [{ label: "Building safety", note: "Fire/earthquake standards.", detail: "The building must meet fire and earthquake safety codes for rented dwellings." }, { label: "Important matters explanation", note: "Juyo jiko setsumei before signing.", detail: "A licensed agent must give the 'important matters explanation' (juyo jiko setsumei) before signing." }, { label: "Renewal fee", note: "Koshinryo often applies.", detail: "A renewal fee (koshinryo), often one month's rent, is customary at renewal in many regions." }],
   deposit: { cap: "Shikikin 1-2 months; reikin in some areas.", protection: "Refunded less restoration (genjo kaifuku)." },
   checklist: ["Lease agreement", "Important matters explanation", "Guarantor / guarantee company", "Inventory"],
-  notices: [{ label: "Termination", when: "End the lease", period: "~1 month (tenant)" }, { label: "Non-renewal", when: "Landlord refuses", period: "6 months + just cause" }],
+  notices: [{ label: "Termination", when: "End the lease", period: "~1 month (tenant)", detail: "Tenants typically give about one month's notice; check the contract." }, { label: "Non-renewal", when: "Landlord refuses", period: "6 months + just cause", detail: "A landlord refusing renewal of an ordinary lease needs just cause and around 6 months' notice." }],
   notes: ["Just cause needed to refuse renewal.", "Declare via kakutei shinkoku."],
 };
 
@@ -360,10 +360,10 @@ const MX: RegionRuleset = {
   countryName: "Mexico",
   governingLaw: "State Civil Codes", tenancyTerm: "lease (contrato de arrendamiento)", depositTerm: "deposit (depósito)", taxLabel: "ISR arrendamiento (SAT)",
   tenancyTypes: [{ label: "Contrato de arrendamiento", description: "Residential lease, often 1 year." }, { label: "Renewable", description: "Tácita reconducción." }],
-  compliance: [{ label: "Registration (some states)", note: "Ratification required in some states." }, { label: "Fiador / guarantee", note: "Fiador or póliza jurídica common." }, { label: "CFDI invoicing", note: "Issue CFDI invoices via SAT." }],
+  compliance: [{ label: "Registration (some states)", note: "Ratification required in some states.", detail: "Some states require the lease to be ratified or registered to be enforceable." }, { label: "Fiador / guarantee", note: "Fiador or póliza jurídica common.", detail: "A fiador (guarantor) or poliza juridica is commonly required as security." }, { label: "CFDI invoicing", note: "Issue CFDI invoices via SAT.", detail: "Issue CFDI electronic invoices for rent through the SAT." }],
   deposit: { cap: "Commonly 1 month's deposit.", protection: "Refunded less damages/arrears." },
   checklist: ["Contrato de arrendamiento", "Fiador / guarantee", "CFDI rent invoices", "Inventario"],
-  notices: [{ label: "Aviso", when: "End the lease", period: "Per contract/state" }, { label: "Rent update", when: "Annual", period: "Per contract/inflation" }],
+  notices: [{ label: "Aviso", when: "End the lease", period: "Per contract/state", detail: "Aviso (notice to end) follows the contract and the relevant state civil code." }, { label: "Rent update", when: "Annual", period: "Per contract/inflation", detail: "Annual rent updates follow the contract, often tied to inflation." }],
   notes: ["Rules vary by state code.", "Issue CFDI; declare ISR."],
 };
 
@@ -371,10 +371,10 @@ const BR: RegionRuleset = {
   countryName: "Brazil",
   governingLaw: "Lei do Inquilinato (8.245/1991)", tenancyTerm: "lease (contrato de locação)", depositTerm: "deposit (caução)", taxLabel: "IRPF aluguéis (carnê-leão)",
   tenancyTypes: [{ label: "Residential 30 months+", description: "Allows end at term." }, { label: "Shorter lease", description: "Renews; limits end without cause." }],
-  compliance: [{ label: "Guarantee", note: "Caução, fiador or seguro-fiança - one only." }, { label: "Vistoria", note: "Entry and exit inspections." }, { label: "Condominium rules", note: "Convenção de condomínio." }],
+  compliance: [{ label: "Guarantee", note: "Caução, fiador or seguro-fiança - one only.", detail: "Only one guarantee may be required: caucao, fiador or seguro-fianca (Lei do Inquilinato)." }, { label: "Vistoria", note: "Entry and exit inspections.", detail: "Entry and exit vistoria (inspection) reports support the return of the deposit." }, { label: "Condominium rules", note: "Convenção de condomínio.", detail: "Where applicable, the convencao de condominio rules bind the tenant." }],
   deposit: { cap: "Caução up to 3 months' rent.", protection: "Returned with savings interest." },
   checklist: ["Contrato de locação", "Vistoria de entrada", "Guarantee document", "Rent receipts"],
-  notices: [{ label: "Notificação", when: "End the lease", period: "30 days / per contract" }, { label: "Reajuste", when: "Annual", period: "Per IGP-M / IPCA" }],
+  notices: [{ label: "Notificação", when: "End the lease", period: "30 days / per contract", detail: "Notificacao to end: 30 days after the term, or as the contract provides for fixed terms." }, { label: "Reajuste", when: "Annual", period: "Per IGP-M / IPCA", detail: "Annual reajuste follows the contractual index (commonly IGP-M or IPCA)." }],
   notes: ["Only one guarantee type allowed.", "Declare via carnê-leão; annual IRPF."],
 };
 
@@ -382,10 +382,10 @@ const BE: RegionRuleset = {
   countryName: "Belgium",
   governingLaw: "Regional housing codes", tenancyTerm: "lease (bail)", depositTerm: "deposit (garantie locative)", taxLabel: "Cadastral & rental income",
   tenancyTypes: [{ label: "Main residence lease", description: "9-year default in most regions." }, { label: "Short lease", description: "3 years or less." }],
-  compliance: [{ label: "Lease registration", note: "Mandatory (free)." }, { label: "Energy certificate", note: "PEB/EPC required." }, { label: "Blocked deposit", note: "Tenant-named blocked account." }],
+  compliance: [{ label: "Lease registration", note: "Mandatory (free).", detail: "Registration of the lease is mandatory and free; an unregistered main-residence lease lets the tenant leave without notice." }, { label: "Energy certificate", note: "PEB/EPC required.", detail: "A valid PEB/EPC energy certificate is required to let." }, { label: "Blocked deposit", note: "Tenant-named blocked account.", detail: "The deposit (up to 2-3 months by region) must sit in a blocked account in the tenant's name." }],
   deposit: { cap: "2-3 months in a blocked account.", protection: "Released with both parties or a judge." },
   checklist: ["Lease", "Lease registration", "Energy certificate", "Inventory"],
-  notices: [{ label: "Congé", when: "End the lease", period: "Region/ground dependent" }, { label: "Indexation", when: "Annual", period: "Per health index" }],
+  notices: [{ label: "Congé", when: "End the lease", period: "Region/ground dependent", detail: "Notice (conge) periods and grounds differ by region (Brussels, Flanders, Wallonia)." }, { label: "Indexation", when: "Annual", period: "Per health index", detail: "Annual indexation follows the health index and only if the lease allows it." }],
   notes: ["Law differs by region.", "Entry inventory advised."],
 };
 
@@ -393,10 +393,10 @@ const AT: RegionRuleset = {
   countryName: "Austria",
   governingLaw: "Mietrechtsgesetz (MRG)", tenancyTerm: "tenancy (Mietvertrag)", depositTerm: "deposit (Kaution)", taxLabel: "Einkünfte aus Vermietung (E1b)",
   tenancyTypes: [{ label: "Unlimited tenancy", description: "Open-ended." }, { label: "Fixed-term", description: "Min. 3 years for MRG flats." }],
-  compliance: [{ label: "Deposit invested", note: "~3 months held with interest." }, { label: "Richtwert caps", note: "Reference-value caps for old buildings." }, { label: "Operating costs", note: "Betriebskosten statement." }],
+  compliance: [{ label: "Deposit invested", note: "~3 months held with interest.", detail: "The Kaution (usually about 3 months) must be invested and returned with interest, less justified claims." }, { label: "Richtwert caps", note: "Reference-value caps for old buildings.", detail: "For MRG-regulated older buildings, rent is capped by the Richtwert/reference value." }, { label: "Operating costs", note: "Betriebskosten statement.", detail: "An annual Betriebskosten (operating costs) statement is required where advance payments are taken." }],
   deposit: { cap: "Typically 3 months.", protection: "Returned with interest less claims." },
   checklist: ["Mietvertrag", "Handover protocol", "Deposit confirmation", "Operating costs"],
-  notices: [{ label: "Termination", when: "MRG grounds", period: "Court/statutory" }, { label: "Rent increase", when: "Index/Richtwert", period: "Per index" }],
+  notices: [{ label: "Termination", when: "MRG grounds", period: "Court/statutory", detail: "Ending an MRG tenancy needs statutory grounds, usually through the court." }, { label: "Rent increase", when: "Index/Richtwert", period: "Per index", detail: "Rent increases follow the agreed index or Richtwert adjustments." }],
   notes: ["MRG applies to many old buildings.", "Stamp duty may apply."],
 };
 
@@ -404,10 +404,10 @@ const PL: RegionRuleset = {
   countryName: "Poland",
   governingLaw: "Civil Code & Tenant Protection Act", tenancyTerm: "lease (umowa najmu)", depositTerm: "deposit (kaucja)", taxLabel: "Ryczałt / PIT",
   tenancyTypes: [{ label: "Standard lease", description: "Civil-code lease." }, { label: "Occasional lease", description: "Najem okazjonalny with notary." }],
-  compliance: [{ label: "Deposit cap", note: "Up to 12 months (commonly 1)." }, { label: "Handover protocol", note: "Protokół at move-in." }, { label: "Occasional registration", note: "Notarial + tax office." }],
+  compliance: [{ label: "Deposit cap", note: "Up to 12 months (commonly 1).", detail: "The kaucja is capped (up to 12 months, commonly one) and returned within a month of handover." }, { label: "Handover protocol", note: "Protokół at move-in.", detail: "A move-in handover protocol (protokol) records the condition of the flat." }, { label: "Occasional registration", note: "Notarial + tax office.", detail: "An occasional lease (najem okazjonalny) needs a notarial submission and a tax-office notice for faster eviction." }],
   deposit: { cap: "Up to 12 months (commonly 1).", protection: "Returned within 1 month." },
   checklist: ["Umowa najmu", "Handover protocol", "Deposit receipt", "Notarial act (if used)"],
-  notices: [{ label: "Termination", when: "End lease", period: "Per code/contract" }, { label: "Rent increase", when: "Raise rent", period: "3 months' notice" }],
+  notices: [{ label: "Termination", when: "End lease", period: "Per code/contract", detail: "Termination follows the Civil Code or the contract; occasional leases allow faster repossession." }, { label: "Rent increase", when: "Raise rent", period: "3 months' notice", detail: "Rent increases require 3 months' written notice." }],
   notes: ["Occasional lease eases eviction.", "Ryczałt flat tax common."],
 };
 
@@ -415,10 +415,10 @@ const SA: RegionRuleset = {
   countryName: "Saudi Arabia",
   governingLaw: "Ejar network & tenancy rules", tenancyTerm: "lease (Ejar contract)", depositTerm: "security deposit", taxLabel: "No income tax; VAT records",
   tenancyTypes: [{ label: "Annual lease", description: "12-month Ejar contract." }],
-  compliance: [{ label: "Ejar registration", note: "Register on the Ejar network." }, { label: "Utilities clearance", note: "SEC/water at move-out." }],
+  compliance: [{ label: "Ejar registration", note: "Register on the Ejar network.", detail: "Register the contract on the Ejar network; registration underpins many services and dispute resolution." }, { label: "Utilities clearance", note: "SEC/water at move-out.", detail: "Settle SEC electricity and water and obtain clearance at move-out." }],
   deposit: { cap: "Commonly 1 month.", protection: "Refunded less damages." },
   checklist: ["Ejar contract", "Tenant ID", "Utilities account", "Inventory"],
-  notices: [{ label: "Eviction", when: "Valid grounds", period: "Via Ejar/committee" }, { label: "Non-renewal", when: "End at term", period: "Per contract" }],
+  notices: [{ label: "Eviction", when: "Valid grounds", period: "Via Ejar/committee", detail: "Eviction on valid grounds is handled via Ejar and the rental dispute committee." }, { label: "Non-renewal", when: "End at term", period: "Per contract", detail: "Non-renewal follows the contract terms." }],
   notes: ["Ejar underpins disputes.", "No personal income tax."],
 };
 
@@ -426,10 +426,10 @@ const QA: RegionRuleset = {
   countryName: "Qatar",
   governingLaw: "Law No. 4 of 2008", tenancyTerm: "lease contract", depositTerm: "security deposit", taxLabel: "No income tax",
   tenancyTypes: [{ label: "Annual lease", description: "12-month contract." }],
-  compliance: [{ label: "Lease registration", note: "Register with the municipality." }, { label: "Kahramaa utilities", note: "Account and clearance." }],
+  compliance: [{ label: "Lease registration", note: "Register with the municipality.", detail: "Register the lease with the municipality (Law No. 4 of 2008)." }, { label: "Kahramaa utilities", note: "Account and clearance.", detail: "Open and clear the Kahramaa electricity and water account." }],
   deposit: { cap: "Commonly 1-2 months.", protection: "Refunded less damages." },
   checklist: ["Lease contract", "Lease registration", "Kahramaa account", "Inventory"],
-  notices: [{ label: "Eviction", when: "Valid grounds", period: "Rental Dispute Committee" }, { label: "Rent increase", when: "Increase rent", period: "Per committee" }],
+  notices: [{ label: "Eviction", when: "Valid grounds", period: "Rental Dispute Committee", detail: "Eviction on valid grounds is decided by the Rental Dispute Settlement Committee." }, { label: "Rent increase", when: "Increase rent", period: "Per committee", detail: "Rent increases follow the committee's rules." }],
   notes: ["Disputes: Rental Dispute Committee.", "No personal income tax."],
 };
 
@@ -437,10 +437,10 @@ const HK: RegionRuleset = {
   countryName: "Hong Kong",
   governingLaw: "Landlord and Tenant (Consolidation) Ordinance", tenancyTerm: "tenancy agreement", depositTerm: "deposit", taxLabel: "Property tax (IRD)",
   tenancyTypes: [{ label: "Fixed-term tenancy", description: "Common 1+1 year." }, { label: "Periodic tenancy", description: "Rolling." }],
-  compliance: [{ label: "Stamp duty", note: "Stamp the tenancy with IRD." }, { label: "Property tax", note: "On rental income." }, { label: "Building management", note: "DMC / management rules." }],
+  compliance: [{ label: "Stamp duty", note: "Stamp the tenancy with IRD.", detail: "Stamp the tenancy with the IRD promptly to avoid penalties and keep it enforceable." }, { label: "Property tax", note: "On rental income.", detail: "Property tax is charged on the net assessable value of the rental income." }, { label: "Building management", note: "DMC / management rules.", detail: "The Deed of Mutual Covenant and building management rules apply." }],
   deposit: { cap: "Typically 2 months.", protection: "Refunded less damages." },
   checklist: ["Tenancy agreement", "Stamping (IRD)", "Inventory", "Handover checklist"],
-  notices: [{ label: "Notice to quit", when: "End tenancy", period: "Per agreement" }, { label: "Rent review", when: "On renewal", period: "Per agreement" }],
+  notices: [{ label: "Notice to quit", when: "End tenancy", period: "Per agreement", detail: "Notice to quit follows the agreement and any break clause." }, { label: "Rent review", when: "On renewal", period: "Per agreement", detail: "Rent is reviewed on renewal per the agreement; no statutory rent control applies." }],
   notes: ["Stamp promptly to avoid penalties.", "Property tax on net assessable value."],
 };
 
