@@ -4,21 +4,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { uploadPropertyDocument } from "@/app/dashboard/properties/document-actions";
 import { useReadOnly } from "@/components/app/RoleProvider";
+import { DOC_TYPES, DOC_CATEGORIES } from "@/lib/doc-types";
 
 const inputCls =
   "h-10 w-full rounded-lintel border border-hairline bg-surface px-3 text-sm outline-none focus:ring-2 focus:ring-evergreen/30";
 
-const DOC_TYPES = [
-  ["epc", "EPC"],
-  ["gas_safety", "Gas safety certificate"],
-  ["eicr", "Electrical (EICR)"],
-  ["deposit_cert", "Deposit protection certificate"],
-  ["inventory", "Inventory"],
-  ["tenancy_agreement", "Tenancy agreement"],
-  ["correspondence", "Correspondence"],
-  ["e_signature", "E-signature"],
-  ["other", "Other"],
-];
+
 
 export function PropertyDocumentUpload({ propertyId }: { propertyId: string }) {
   const readOnly = useReadOnly();
@@ -32,7 +23,13 @@ export function PropertyDocumentUpload({ propertyId }: { propertyId: string }) {
       <input type="hidden" name="property_id" value={propertyId} />
       <input name="label" placeholder="Label (e.g. EPC 2026)" className={inputCls} />
       <select name="doc_type" className={inputCls} defaultValue="other">
-        {DOC_TYPES.map(([v, l]) => (<option key={v} value={v}>{l}</option>))}
+        {DOC_CATEGORIES.map((cat) => (
+          <optgroup key={cat} label={cat}>
+            {DOC_TYPES.filter((d) => d.category === cat).map((d) => (
+              <option key={d.key} value={d.key}>{d.label}</option>
+            ))}
+          </optgroup>
+        ))}
       </select>
       <label className="text-xs text-slate">Issued<input name="issued_at" type="date" className={inputCls} /></label>
       <label className="text-xs text-slate">Expires<input name="expires_at" type="date" className={inputCls} /></label>

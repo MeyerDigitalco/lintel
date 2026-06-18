@@ -1,0 +1,56 @@
+{
+  "expo": {
+    "name": "Lintel",
+    "slug": "lintel",
+    "version": "1.0.0",
+    "scheme": "lintel",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": false,
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#16233A"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.meyerdigital.lintel",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Lintel uses the camera to photograph receipts and document property maintenance.",
+        "NSPhotoLibraryUsageDescription": "Lintel attaches photos to expenses, documents and maintenance reports."
+      }
+    },
+    "android": {
+      "package": "com.meyerdigital.lintel",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#16233A"
+      },
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Lintel to attach photos from your library."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "icon": "./assets/images/icon.png",
+    "web": {
+      "favicon": "./assets/images/favicon.png",
+      "bundler": "metro"
+    }
+  }
+}

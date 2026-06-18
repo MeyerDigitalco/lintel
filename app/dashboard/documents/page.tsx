@@ -1,45 +1,43 @@
-import Link from "next/link";
 import { requireSession, isWriterRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { PageHeader, Badge, EmptyState } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
+import { DocumentsFilter } from "@/components/app/DocumentsFilter";
 import { summarizeDocument } from "./actions";
 import { hasAi } from "@/lib/ai";
 import { fmtDate } from "@/lib/dates";
-import { cn } from "@/lib/cn";
+import { docLabel, docStatus, type DocStatusKey } from "@/lib/doc-types";
 
 export const dynamic = "force-dynamic";
 
-const FILTERS: { key: string; label: string; types?: string[] }[] = [
-  { key: "all", label: "All" },
-  { key: "lease", label: "Leases", types: ["tenancy_agreement"] },
-  { key: "certificate", label: "Certificates", types: ["epc", "gas_safety", "eicr"] },
-  { key: "deposit", label: "Deposit", types: ["deposit_cert"] },
-  { key: "inventory", label: "Inventory", types: ["inventory"] },
-  { key: "esign", label: "E-signatures", types: ["e_signature"] },
-  { key: "correspondence", label: "Correspondence", types: ["correspondence"] },
-  { key: "other", label: "Other", types: ["other"] },
-];
+const STATUS_TONE: Record<DocStatusKey, "default" | "mint" | "amber" | "red" | "evergreen"> = {
+  valid: "evergreen", expiring: "amber", expired: "red", filed: "default",
+};
 
 export default async function DocumentsPage({
   searchParams,
 }: {
-  searchParams: { filter?: string };
+  searchParams: { type?: string; property?: string; status?: string };
 }) {
   const { orgId, role } = await requireSession();
   const canWrite = isWriterRole(role);
   const supabase = createClient();
 
-  const { data: docs } = await supabase
-    .from("property_documents")
-    .select("id, label, doc_type, ai_summary, storage_path, expires_at, created_at, properties(label)")
-    .eq("org_id", orgId)
-    .order("created_at", { ascending: false });
+  const [{ data: docs }, { data: properties }] = await Promise.all([
+    supabase
+      .from("property_documents")
+      .select("id, label, doc_type, ai_summary, storage_path, expires_at, created_at, property_id, properties(label)")
+      .eq("org_id", orgId)
+      .order("created_at", { ascending: false }),
+    supabase.from("properties").select("id, label").eq("org_id", orgId).order("label"),
+  ]);
 
-  const active = searchParams.filter ?? "all";
-  const activeTypes = FILTERS.find((f) => f.key === active)?.types;
-  const filtered = (docs ?? []).filter((d) => !activeTypes || activeTypes.includes(d.doc_type ?? "other"));
+  const filtered = (docs ?? []).filter((d) => {
+    if (searchParams.type && d.doc_type !== searchParams.type) return false;
+    if (searchParams.property && d.property_id !== searchParams.property) return false;
+    if (searchParams.status && docStatus(d.expires_at).key !== searchParams.status) return false;
+    return true;
+  });
 
   const withUrls = await Promise.all(
     filtered.map(async (d) => {
@@ -52,74 +50,57 @@ export default async function DocumentsPage({
     <div>
       <PageHeader
         title="Documents"
-        subtitle="Every document across your portfolio, searchable and summarised."
+        subtitle="Every document across your portfolio — filter by type, property or status."
       />
 
-      <div className="mb-6 flex flex-wrap gap-2">
-        {FILTERS.map((f) => (
-          <Link
-            key={f.key}
-            href={`/dashboard/documents?filter=${f.key}`}
-            className={cn(
-              "rounded-full border px-3 py-1 text-xs",
-              active === f.key
-                ? "border-evergreen bg-evergreen/8 text-evergreen"
-                : "border-hairline text-slate hover:text-ink"
-            )}
-          >
-            {f.label}
-          </Link>
-        ))}
-      </div>
+      <DocumentsFilter properties={properties ?? []} />
 
       {withUrls.length === 0 ? (
         <EmptyState
           title="No documents"
-          body="Upload documents on each property (EPC, certificates, deposit, inventory, correspondence) to see them here."
+          body="Upload documents on each property (EPC, certificates, deposit, inventory, insurance, correspondence) to see them here."
         />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {withUrls.map((d) => (
-            <Card key={d.id}>
-              <CardBody>
-                <div className="flex items-start justify-between gap-2">
-                  <span className="text-sm font-medium text-ink">{d.label}</span>
-                  {d.doc_type && <Badge>{d.doc_type.replace(/_/g, " ")}</Badge>}
-                </div>
-                <p className="mt-0.5 text-xs text-slate">
-                  {(d as any).properties?.label} · {fmtDate(d.created_at)}
-                  {d.expires_at && ` · expires ${fmtDate(d.expires_at)}`}
-                </p>
-                {d.ai_summary && (
-                  <p className="mt-2 rounded-lintel bg-paper px-2 py-1.5 text-xs text-slate">
-                    ✨ {d.ai_summary}
+          {withUrls.map((d) => {
+            const st = docStatus(d.expires_at);
+            return (
+              <Card key={d.id}>
+                <CardBody>
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="text-sm font-medium text-ink">{d.label}</span>
+                    <Badge tone={STATUS_TONE[st.key]}>{st.label}</Badge>
+                  </div>
+                  <p className="mt-0.5 text-xs text-slate">
+                    {docLabel(d.doc_type)} · {(d as any).properties?.label}
                   </p>
-                )}
-                <div className="mt-3 flex items-center gap-3">
-                  {d.url && (
-                    <a href={d.url} target="_blank" rel="noopener noreferrer" className="text-sm text-evergreen hover:underline">
-                      Download
-                    </a>
+                  <p className="mt-0.5 text-xs text-slate">
+                    Added {fmtDate(d.created_at)}{d.expires_at && ` · expires ${fmtDate(d.expires_at)}`}
+                  </p>
+                  {d.ai_summary && (
+                    <p className="mt-2 rounded-lintel bg-paper px-2 py-1.5 text-xs text-slate">✨ {d.ai_summary}</p>
                   )}
-                  {canWrite && !d.ai_summary && (
-                    <form action={summarizeDocument}>
-                      <input type="hidden" name="id" value={d.id} />
-                      <button type="submit" className="text-sm text-slate hover:text-ink">
-                        Summarise
-                      </button>
-                    </form>
-                  )}
-                </div>
-              </CardBody>
-            </Card>
-          ))}
+                  <div className="mt-3 flex items-center gap-3">
+                    {d.url && (
+                      <a href={d.url} target="_blank" rel="noopener noreferrer" className="text-sm text-evergreen hover:underline">Download</a>
+                    )}
+                    {canWrite && !d.ai_summary && (
+                      <form action={summarizeDocument}>
+                        <input type="hidden" name="id" value={d.id} />
+                        <button type="submit" className="text-sm text-slate hover:text-ink">Summarise</button>
+                      </form>
+                    )}
+                  </div>
+                </CardBody>
+              </Card>
+            );
+          })}
         </div>
       )}
 
       {!hasAi() && (
         <p className="mt-6 text-xs text-slate">
-          Tip: set ANTHROPIC_API_KEY to generate AI summaries from document
-          details. Without it, &quot;Summarise&quot; writes a basic description.
+          Tip: set ANTHROPIC_API_KEY to generate AI summaries from document details.
         </p>
       )}
     </div>

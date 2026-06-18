@@ -1,13 +1,12 @@
-import { requireWriter } from "@/lib/auth";
-import { loadEntitlements } from "@/lib/auth";
+import { requireWriter, loadEntitlements } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { PageHeader, Badge } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { PLAN, FULLY_LOADED_PRICE } from "@/lib/stripe/config";
+import { PLAN, FULLY_LOADED_PRICE, TRIAL_PERIOD_DAYS, priceIdFor } from "@/lib/stripe/config";
 import { gbp } from "@/lib/format";
 import { fmtDate } from "@/lib/dates";
-import { toggleAddon } from "../actions";
+import { toggleAddon, startCheckout, openBillingPortal } from "../actions";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +18,11 @@ const BLURB: Record<string, string> = {
   maintenance_portal: "Triage repairs, assign contractors and track SLAs from the dashboard.",
 };
 
-export default async function BillingPage() {
+export default async function BillingPage({
+  searchParams,
+}: {
+  searchParams: { checkout?: string };
+}) {
   const { orgId, role } = await requireWriter();
   const isAdmin = role === "owner" || role === "admin";
   const ent = await loadEntitlements(orgId);
@@ -27,20 +30,34 @@ export default async function BillingPage() {
   const supabase = createClient();
   const { data: sub } = await supabase
     .from("subscriptions")
-    .select("status, trial_ends_at, current_period_end")
+    .select("status, trial_ends_at, current_period_end, stripe_subscription_id")
     .eq("org_id", orgId)
     .maybeSingle();
 
-  const activeAddons = ADDONS.filter((f) => ent[f]).length;
-  const monthly = PLAN.core.pricePerMonth + ADDONS.reduce((s, f) => s + (ent[f] ? PLAN[f].pricePerMonth : 0), 0);
+  const stripeConfigured = Boolean(process.env.STRIPE_SECRET_KEY && priceIdFor("core"));
+  const subscribed = Boolean(sub?.stripe_subscription_id);
+  const monthly =
+    PLAN.core.pricePerMonth +
+    ADDONS.reduce((s, f) => s + (ent[f] ? PLAN[f].pricePerMonth : 0), 0);
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Plan & add-ons"
-        subtitle="Switch features on or off. Changes apply immediately."
+        subtitle={stripeConfigured ? "Manage your subscription and add-ons." : "Switch features on or off. Changes apply immediately."}
         action={<Badge tone="mint">{gbp(monthly, { decimals: true })}/mo</Badge>}
       />
+
+      {searchParams?.checkout === "success" && (
+        <Card className="border-mint/40">
+          <CardBody><p className="text-sm text-evergreen">Subscription started — it can take a few seconds for add-ons to switch on.</p></CardBody>
+        </Card>
+      )}
+      {searchParams?.checkout === "cancelled" && (
+        <Card className="border-amber/40">
+          <CardBody><p className="text-sm text-slate">Checkout cancelled — nothing was charged.</p></CardBody>
+        </Card>
+      )}
 
       <Card className="border-evergreen/30">
         <CardBody>
@@ -64,47 +81,87 @@ export default async function BillingPage() {
         </CardBody>
       </Card>
 
-      <div>
-        <h2 className="mb-3 font-heading text-sm font-semibold tracking-tight text-ink">Add-ons</h2>
-        <div className="space-y-3">
-          {ADDONS.map((f) => {
-            const on = ent[f];
-            return (
+      {stripeConfigured && subscribed && isAdmin && (
+        <Card>
+          <CardBody className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 className="font-heading text-sm font-semibold tracking-tight">Manage billing</h3>
+              <p className="mt-1 text-xs text-slate">Update your card, add or remove add-ons, view invoices or cancel — in the secure Stripe portal.</p>
+            </div>
+            <form action={openBillingPortal}><Button type="submit">Manage billing &amp; add-ons</Button></form>
+          </CardBody>
+        </Card>
+      )}
+
+      {stripeConfigured && !subscribed && isAdmin ? (
+        <form action={startCheckout}>
+          <h2 className="mb-3 font-heading text-sm font-semibold tracking-tight text-ink">Choose add-ons & start your {TRIAL_PERIOD_DAYS}-day free trial</h2>
+          <div className="space-y-3">
+            {ADDONS.map((f) => (
               <Card key={f}>
                 <CardBody>
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-heading text-sm font-semibold tracking-tight">{PLAN[f].label}</h3>
-                        {on ? <Badge tone="mint">On</Badge> : <Badge>Off</Badge>}
-                      </div>
-                      <p className="mt-1 text-xs text-slate">{BLURB[f]}</p>
-                    </div>
-                    <div className="shrink-0 text-right">
-                      <p className="font-heading text-sm font-semibold tnum">+{gbp(PLAN[f].pricePerMonth, { decimals: true })}<span className="text-xs font-normal text-slate">/mo</span></p>
-                      {isAdmin && (
-                        <form action={toggleAddon} className="mt-2">
-                          <input type="hidden" name="feature" value={f} />
-                          <input type="hidden" name="active" value={(!on).toString()} />
-                          <Button type="submit" variant={on ? "outline" : "primary"} size="sm">
-                            {on ? "Turn off" : "Turn on"}
-                          </Button>
-                        </form>
-                      )}
-                    </div>
-                  </div>
+                  <label className="flex cursor-pointer items-start gap-3">
+                    <input type="checkbox" name="addon" value={f} className="mt-1 h-4 w-4 rounded border-hairline text-evergreen focus:ring-evergreen/30" />
+                    <span className="min-w-0 flex-1">
+                      <span className="flex items-center justify-between gap-2">
+                        <span className="font-heading text-sm font-semibold tracking-tight">{PLAN[f].label}</span>
+                        <span className="font-heading text-sm font-semibold tnum">+{gbp(PLAN[f].pricePerMonth, { decimals: true })}<span className="text-xs font-normal text-slate">/mo</span></span>
+                      </span>
+                      <span className="mt-1 block text-xs text-slate">{BLURB[f]}</span>
+                    </span>
+                  </label>
                 </CardBody>
               </Card>
-            );
-          })}
+            ))}
+          </div>
+          <div className="mt-4 flex items-center gap-3">
+            <Button type="submit">Start {TRIAL_PERIOD_DAYS}-day free trial</Button>
+            <span className="text-xs text-slate">Card captured, no charge until day {TRIAL_PERIOD_DAYS + 1}. Cancel anytime.</span>
+          </div>
+        </form>
+      ) : (
+        <div>
+          <h2 className="mb-3 font-heading text-sm font-semibold tracking-tight text-ink">Add-ons</h2>
+          <div className="space-y-3">
+            {ADDONS.map((f) => {
+              const on = ent[f];
+              const portalManaged = stripeConfigured && subscribed;
+              return (
+                <Card key={f}>
+                  <CardBody>
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-heading text-sm font-semibold tracking-tight">{PLAN[f].label}</h3>
+                          {on ? <Badge tone="mint">On</Badge> : <Badge>Off</Badge>}
+                        </div>
+                        <p className="mt-1 text-xs text-slate">{BLURB[f]}</p>
+                      </div>
+                      <div className="shrink-0 text-right">
+                        <p className="font-heading text-sm font-semibold tnum">+{gbp(PLAN[f].pricePerMonth, { decimals: true })}<span className="text-xs font-normal text-slate">/mo</span></p>
+                        {isAdmin && !portalManaged && (
+                          <form action={toggleAddon} className="mt-2">
+                            <input type="hidden" name="feature" value={f} />
+                            <input type="hidden" name="active" value={(!on).toString()} />
+                            <Button type="submit" variant={on ? "outline" : "primary"} size="sm">{on ? "Turn off" : "Turn on"}</Button>
+                          </form>
+                        )}
+                        {portalManaged && <p className="mt-2 text-xs text-slate">via Stripe</p>}
+                      </div>
+                    </div>
+                  </CardBody>
+                </Card>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
       <p className="text-xs text-slate">
-        {activeAddons === ADDONS.length
-          ? `Fully loaded — ${gbp(FULLY_LOADED_PRICE, { decimals: true })}/mo.`
-          : `Fully loaded would be ${gbp(FULLY_LOADED_PRICE, { decimals: true })}/mo.`}
-        {" "}Card billing through Stripe connects later; for now add-ons toggle instantly.
+        Fully loaded is {gbp(FULLY_LOADED_PRICE, { decimals: true })}/mo.{" "}
+        {stripeConfigured
+          ? "Add-ons are billed monthly with proration through Stripe."
+          : "Card billing through Stripe connects once the STRIPE_* env vars are set; for now add-ons toggle instantly."}
         {!isAdmin && " Only an owner or admin can change the plan."}
       </p>
     </div>

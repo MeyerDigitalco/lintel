@@ -3,7 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { requireSession } from "@/lib/auth";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
-import type { Feature } from "@/lib/stripe/config";
+import { redirect } from "next/navigation";
+import { stripe } from "@/lib/stripe/client";
+import { priceIdFor, TRIAL_PERIOD_DAYS, type Feature } from "@/lib/stripe/config";
 
 const ADMIN_ROLES = ["owner", "admin"];
 function assertAdmin(role: string) {
@@ -163,4 +165,83 @@ export async function removeMember(formData: FormData) {
     .eq("org_id", orgId)
     .eq("user_id", targetUser);
   revalidatePath("/dashboard/settings/team");
+}
+
+/* --------------------------- Stripe billing ------------------------- */
+
+export async function startCheckout(formData: FormData) {
+  const { orgId, role, email } = await requireSession();
+  assertAdmin(role);
+  const corePrice = priceIdFor("core");
+  if (!process.env.STRIPE_SECRET_KEY || !corePrice) {
+    throw new Error("Stripe is not configured yet. Add the STRIPE_* env vars first.");
+  }
+
+  const chosen = (formData.getAll("addon") as string[]).filter((a) =>
+    TOGGLEABLE.includes(a as Feature)
+  );
+  const line_items: { price: string; quantity: number }[] = [{ price: corePrice, quantity: 1 }];
+  for (const a of chosen) {
+    const pid = priceIdFor(a as Feature);
+    if (pid) line_items.push({ price: pid, quantity: 1 });
+  }
+
+  const service = createServiceClient();
+  const { data: sub } = await service
+    .from("subscriptions")
+    .select("stripe_customer_id")
+    .eq("org_id", orgId)
+    .maybeSingle();
+
+  let customer = sub?.stripe_customer_id ?? undefined;
+  if (!customer) {
+    const c = await stripe.customers.create({
+      email: email ?? undefined,
+      metadata: { org_id: orgId },
+    });
+    customer = c.id;
+    await service.from("subscriptions").upsert(
+      { org_id: orgId, stripe_customer_id: customer, status: "incomplete", updated_at: new Date().toISOString() },
+      { onConflict: "org_id" }
+    );
+  }
+
+  const base = process.env.NEXT_PUBLIC_APP_URL ?? "";
+  const session = await stripe.checkout.sessions.create({
+    mode: "subscription",
+    customer,
+    line_items,
+    allow_promotion_codes: true,
+    subscription_data: {
+      trial_period_days: TRIAL_PERIOD_DAYS,
+      metadata: { org_id: orgId },
+    },
+    success_url: `${base}/dashboard/settings/billing?checkout=success`,
+    cancel_url: `${base}/dashboard/settings/billing?checkout=cancelled`,
+  });
+  if (!session.url) throw new Error("Could not start checkout.");
+  redirect(session.url);
+}
+
+export async function openBillingPortal() {
+  const { orgId, role } = await requireSession();
+  assertAdmin(role);
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error("Stripe is not configured yet.");
+  }
+  const service = createServiceClient();
+  const { data: sub } = await service
+    .from("subscriptions")
+    .select("stripe_customer_id")
+    .eq("org_id", orgId)
+    .maybeSingle();
+  if (!sub?.stripe_customer_id) {
+    throw new Error("No billing account yet — start a subscription first.");
+  }
+  const base = process.env.NEXT_PUBLIC_APP_URL ?? "";
+  const session = await stripe.billingPortal.sessions.create({
+    customer: sub.stripe_customer_id,
+    return_url: `${base}/dashboard/settings/billing`,
+  });
+  redirect(session.url);
 }

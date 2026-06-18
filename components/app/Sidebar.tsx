@@ -14,6 +14,7 @@ const NAV = [
   { href: "/dashboard/rent", label: "Rent ledger", writerOnly: true },
   { href: "/dashboard/court-readiness", label: "Court-readiness" },
   { href: "/dashboard/maintenance", label: "Maintenance", writerOnly: true },
+  { href: "/dashboard/tasks", label: "Tasks" },
   { href: "/dashboard/compliance", label: "Compliance" },
   { href: "/dashboard/documents", label: "Documents" },
   { href: "/dashboard/toolkit", label: "Toolkit", writerOnly: true },
