@@ -84,6 +84,30 @@ const SG_REGIONS: RegionOption[] = [
   "Central","East","North","North-East","West",
 ].map((n) => ({ value: `sg_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
 
+const IT_REGIONS: RegionOption[] = [
+  "Lazio","Lombardy","Campania","Sicily","Veneto","Piedmont","Tuscany","Emilia-Romagna",
+].map((n) => ({ value: `it_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
+
+const PT_DISTRICTS: RegionOption[] = [
+  "Lisbon","Porto","Braga","Faro","Coimbra","Aveiro","Setúbal","Leiria",
+].map((n) => ({ value: `pt_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
+
+const CH_CANTONS: RegionOption[] = [
+  "Zurich","Geneva","Vaud","Bern","Basel-Stadt","Ticino","Zug","Lucerne",
+].map((n) => ({ value: `ch_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
+
+const JP_PREFECTURES: RegionOption[] = [
+  "Tokyo","Osaka","Kanagawa","Aichi","Fukuoka","Hokkaido","Kyoto","Hyogo",
+].map((n) => ({ value: `jp_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
+
+const MX_STATES: RegionOption[] = [
+  "Mexico City","Jalisco","Nuevo León","State of Mexico","Puebla","Querétaro","Quintana Roo","Guanajuato",
+].map((n) => ({ value: `mx_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
+
+const BR_STATES: RegionOption[] = [
+  "São Paulo","Rio de Janeiro","Minas Gerais","Bahia","Paraná","Rio Grande do Sul","Santa Catarina","Distrito Federal",
+].map((n) => ({ value: `br_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
+
 export const COUNTRIES: CountryInfo[] = [
   { code: "GB", name: "United Kingdom", currency: "GBP", taxLabel: "Self Assessment (SA105) / MTD", tenancyTerm: "tenancy", depositTerm: "deposit", regions: UK_NATIONS },
   { code: "US", name: "United States", currency: "USD", taxLabel: "Schedule E (Form 1040)", tenancyTerm: "lease", depositTerm: "security deposit", regions: US_STATES },
@@ -99,6 +123,12 @@ export const COUNTRIES: CountryInfo[] = [
   { code: "FR", name: "France", currency: "EUR", taxLabel: "Revenus fonciers (micro-foncier / réel)", tenancyTerm: "lease (bail)", depositTerm: "deposit (dépôt de garantie)", regions: FR_REGIONS },
   { code: "NL", name: "Netherlands", currency: "EUR", taxLabel: "Box 3 / rental income", tenancyTerm: "tenancy (huurovereenkomst)", depositTerm: "deposit (waarborgsom)", regions: NL_PROVINCES },
   { code: "SG", name: "Singapore", currency: "SGD", taxLabel: "IRAS rental income", tenancyTerm: "tenancy agreement", depositTerm: "security deposit", regions: SG_REGIONS },
+  { code: "IT", name: "Italy", currency: "EUR", taxLabel: "Redditi da locazione (cedolare secca / IRPEF)", tenancyTerm: "lease (contratto di locazione)", depositTerm: "deposit (deposito cauzionale)", regions: IT_REGIONS },
+  { code: "PT", name: "Portugal", currency: "EUR", taxLabel: "IRS Categoria F (rental income)", tenancyTerm: "lease (contrato de arrendamento)", depositTerm: "deposit (caução)", regions: PT_DISTRICTS },
+  { code: "CH", name: "Switzerland", currency: "CHF", taxLabel: "Rental income (federal & cantonal tax)", tenancyTerm: "tenancy (Mietvertrag / bail)", depositTerm: "deposit (Mietkaution)", regions: CH_CANTONS },
+  { code: "JP", name: "Japan", currency: "JPY", taxLabel: "Real estate income (kakutei shinkoku)", tenancyTerm: "lease (chintai)", depositTerm: "deposit (shikikin)", regions: JP_PREFECTURES },
+  { code: "MX", name: "Mexico", currency: "MXN", taxLabel: "ISR arrendamiento (SAT)", tenancyTerm: "lease (contrato de arrendamiento)", depositTerm: "deposit (depósito)", regions: MX_STATES },
+  { code: "BR", name: "Brazil", currency: "BRL", taxLabel: "IRPF aluguéis (carnê-leão)", tenancyTerm: "lease (contrato de locação)", depositTerm: "deposit (caução)", regions: BR_STATES },
 ];
 
 export function countryByCode(code?: string | null): CountryInfo {
@@ -120,6 +150,12 @@ export function countryForRegion(region?: string | null): CountryInfo {
   if (region.startsWith("fr_")) return countryByCode("FR");
   if (region.startsWith("nl_")) return countryByCode("NL");
   if (region.startsWith("sg_")) return countryByCode("SG");
+  if (region.startsWith("it_")) return countryByCode("IT");
+  if (region.startsWith("pt_")) return countryByCode("PT");
+  if (region.startsWith("ch_")) return countryByCode("CH");
+  if (region.startsWith("jp_")) return countryByCode("JP");
+  if (region.startsWith("mx_")) return countryByCode("MX");
+  if (region.startsWith("br_")) return countryByCode("BR");
   return countryByCode("GB");
 }
 

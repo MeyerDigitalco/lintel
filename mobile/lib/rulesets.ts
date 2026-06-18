@@ -312,6 +312,72 @@ const SG: RegionRuleset = {
   notes: ["No rent control; terms are contractual.", "Declare rental income to IRAS."],
 };
 
+const IT: RegionRuleset = {
+  countryName: "Italy",
+  governingLaw: "Legge 392/1978 & 431/1998", tenancyTerm: "lease (contratto)", depositTerm: "deposit (deposito cauzionale)", taxLabel: "Redditi da locazione (cedolare secca / IRPEF)",
+  tenancyTypes: [{ label: "4+4 free-market lease", description: "4 years + 4 renewal." }, { label: "3+2 agreed-rent", description: "Canone concordato with tax relief." }],
+  compliance: [{ label: "Lease registration", note: "Register with Agenzia Entrate or opt for cedolare secca." }, { label: "APE certificate", note: "Energy certificate required." }, { label: "Habitability", note: "Certificato di agibilità." }],
+  deposit: { cap: "Up to 3 months' rent.", protection: "Returned with legal interest." },
+  checklist: ["Contratto di locazione", "Lease registration", "APE certificate", "Inventory"],
+  notices: [{ label: "Disdetta", when: "End at term", period: "6 months" }, { label: "Rent update", when: "Annual ISTAT", period: "Per ISTAT" }],
+  notes: ["Cedolare secca is a flat-tax option.", "Register within 30 days."],
+};
+
+const PT: RegionRuleset = {
+  countryName: "Portugal",
+  governingLaw: "Novo Regime do Arrendamento Urbano (NRAU)", tenancyTerm: "lease (contrato)", depositTerm: "deposit (caução)", taxLabel: "IRS Categoria F",
+  tenancyTypes: [{ label: "Contrato de arrendamento", description: "Standard urban lease." }, { label: "Short-term", description: "Limited-purpose lease." }],
+  compliance: [{ label: "Lease reported to AT", note: "Report the lease to Finanças." }, { label: "Energy certificate", note: "Certificado energético required." }, { label: "Habitation licence", note: "Licença de utilização." }],
+  deposit: { cap: "Commonly 1-2 months' rent.", protection: "Returned at end less amounts owed." },
+  checklist: ["Contrato de arrendamento", "Energy certificate", "Habitation licence", "Rent receipts"],
+  notices: [{ label: "Denúncia", when: "End the lease", period: "Per term" }, { label: "Rent update", when: "Annual coefficient", period: "Per coefficient" }],
+  notes: ["Issue electronic rent receipts.", "Category F taxed at 25%."],
+};
+
+const CH: RegionRuleset = {
+  countryName: "Switzerland",
+  governingLaw: "Swiss Code of Obligations (CO) art. 253ff", tenancyTerm: "tenancy (Mietvertrag / bail)", depositTerm: "deposit (Mietkaution)", taxLabel: "Rental income (federal & cantonal)",
+  tenancyTypes: [{ label: "Open-ended tenancy", description: "Standard ongoing lease." }, { label: "Fixed-term", description: "Ends without notice at the date." }],
+  compliance: [{ label: "Blocked deposit account", note: "Max 3 months in a tenant-named blocked account." }, { label: "Official rent form", note: "Initial rent on cantonal form." }, { label: "Handover protocol", note: "At move-in and out." }],
+  deposit: { cap: "Max 3 months' rent, blocked account.", protection: "Released with both parties' consent or court order." },
+  checklist: ["Mietvertrag / bail", "Handover protocol", "Blocked deposit account", "House rules"],
+  notices: [{ label: "Termination (form)", when: "Landlord ends", period: "3 months, official form" }, { label: "Rent increase", when: "Reference-rate change", period: "Official form" }],
+  notes: ["Rent can be challenged via conciliation.", "Deposit sits in a blocked account."],
+};
+
+const JP: RegionRuleset = {
+  countryName: "Japan",
+  governingLaw: "Act on Land and Building Leases", tenancyTerm: "lease (chintai)", depositTerm: "deposit (shikikin)", taxLabel: "Real estate income (kakutei shinkoku)",
+  tenancyTypes: [{ label: "Ordinary lease", description: "Strong renewal rights." }, { label: "Fixed-term lease", description: "Ends at term; no renewal." }],
+  compliance: [{ label: "Building safety", note: "Fire/earthquake standards." }, { label: "Important matters explanation", note: "Juyo jiko setsumei before signing." }, { label: "Renewal fee", note: "Koshinryo often applies." }],
+  deposit: { cap: "Shikikin 1-2 months; reikin in some areas.", protection: "Refunded less restoration (genjo kaifuku)." },
+  checklist: ["Lease agreement", "Important matters explanation", "Guarantor / guarantee company", "Inventory"],
+  notices: [{ label: "Termination", when: "End the lease", period: "~1 month (tenant)" }, { label: "Non-renewal", when: "Landlord refuses", period: "6 months + just cause" }],
+  notes: ["Just cause needed to refuse renewal.", "Declare via kakutei shinkoku."],
+};
+
+const MX: RegionRuleset = {
+  countryName: "Mexico",
+  governingLaw: "State Civil Codes", tenancyTerm: "lease (contrato de arrendamiento)", depositTerm: "deposit (depósito)", taxLabel: "ISR arrendamiento (SAT)",
+  tenancyTypes: [{ label: "Contrato de arrendamiento", description: "Residential lease, often 1 year." }, { label: "Renewable", description: "Tácita reconducción." }],
+  compliance: [{ label: "Registration (some states)", note: "Ratification required in some states." }, { label: "Fiador / guarantee", note: "Fiador or póliza jurídica common." }, { label: "CFDI invoicing", note: "Issue CFDI invoices via SAT." }],
+  deposit: { cap: "Commonly 1 month's deposit.", protection: "Refunded less damages/arrears." },
+  checklist: ["Contrato de arrendamiento", "Fiador / guarantee", "CFDI rent invoices", "Inventario"],
+  notices: [{ label: "Aviso", when: "End the lease", period: "Per contract/state" }, { label: "Rent update", when: "Annual", period: "Per contract/inflation" }],
+  notes: ["Rules vary by state code.", "Issue CFDI; declare ISR."],
+};
+
+const BR: RegionRuleset = {
+  countryName: "Brazil",
+  governingLaw: "Lei do Inquilinato (8.245/1991)", tenancyTerm: "lease (contrato de locação)", depositTerm: "deposit (caução)", taxLabel: "IRPF aluguéis (carnê-leão)",
+  tenancyTypes: [{ label: "Residential 30 months+", description: "Allows end at term." }, { label: "Shorter lease", description: "Renews; limits end without cause." }],
+  compliance: [{ label: "Guarantee", note: "Caução, fiador or seguro-fiança - one only." }, { label: "Vistoria", note: "Entry and exit inspections." }, { label: "Condominium rules", note: "Convenção de condomínio." }],
+  deposit: { cap: "Caução up to 3 months' rent.", protection: "Returned with savings interest." },
+  checklist: ["Contrato de locação", "Vistoria de entrada", "Guarantee document", "Rent receipts"],
+  notices: [{ label: "Notificação", when: "End the lease", period: "30 days / per contract" }, { label: "Reajuste", when: "Annual", period: "Per IGP-M / IPCA" }],
+  notes: ["Only one guarantee type allowed.", "Declare via carnê-leão; annual IRPF."],
+};
+
 const UK_NAMES: Record<string, string> = { england: "England", wales: "Wales", scotland: "Scotland", northern_ireland: "Northern Ireland" };
 
 function uk(region?: string | null): RegionRuleset {
@@ -396,6 +462,12 @@ export function resolveRegion(country?: string | null, region?: string | null, r
   if (cc === "FR") return FR;
   if (cc === "NL") return NL;
   if (cc === "SG") return SG;
+  if (cc === "IT") return IT;
+  if (cc === "PT") return PT;
+  if (cc === "CH") return CH;
+  if (cc === "JP") return JP;
+  if (cc === "MX") return MX;
+  if (cc === "BR") return BR;
   return uk(region);
 }
 

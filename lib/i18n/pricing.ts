@@ -14,9 +14,13 @@ export const LOCAL_PRICES: Record<string, Prices> = {
   NZD: { core: 19.99, voice: 3.99, tenant_portal: 8.99, maintenance_portal: 8.99 },
   INR: { core: 799, voice: 149, tenant_portal: 399, maintenance_portal: 399 },
   SGD: { core: 16.99, voice: 3.49, tenant_portal: 7.49, maintenance_portal: 7.49 },
+  CHF: { core: 12.99, voice: 2.49, tenant_portal: 5.99, maintenance_portal: 5.99 },
+  JPY: { core: 1500, voice: 300, tenant_portal: 700, maintenance_portal: 700 },
+  MXN: { core: 199, voice: 39, tenant_portal: 89, maintenance_portal: 89 },
+  BRL: { core: 49, voice: 9.9, tenant_portal: 24.9, maintenance_portal: 24.9 },
 };
 
-const WHOLE = ["AED", "ZAR", "SAR", "QAR", "KWD", "INR"];
+const WHOLE = ["AED", "ZAR", "SAR", "QAR", "KWD", "INR", "JPY"];
 
 export function priceDecimals(currency: string): boolean {
   return !WHOLE.includes(currency);

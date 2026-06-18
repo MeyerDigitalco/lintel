@@ -7,12 +7,16 @@ export const LANGUAGES: Record<string, Language> = {
   de: { code: "de", name: "German", nativeName: "Deutsch" },
   ar: { code: "ar", name: "Arabic", nativeName: "العربية", rtl: true },
   hi: { code: "hi", name: "Hindi", nativeName: "हिन्दी" },
+  it: { code: "it", name: "Italian", nativeName: "Italiano" },
+  pt: { code: "pt", name: "Portuguese", nativeName: "Português" },
+  ja: { code: "ja", name: "Japanese", nativeName: "日本語" },
 };
 
 export const COUNTRY_LANGUAGES: Record<string, string[]> = {
   GB: ["en"], US: ["en", "es"], AE: ["en", "ar"], ZA: ["en"], AU: ["en"], NZ: ["en"],
   CA: ["en", "fr"], IE: ["en"], DE: ["de", "en"], ES: ["es", "en"], IN: ["en", "hi"],
-  FR: ["fr", "en"], NL: ["en"], SG: ["en"], IT: ["en"], PT: ["en"],
+  FR: ["fr", "en"], NL: ["en"], SG: ["en"], IT: ["it", "en"], PT: ["pt", "en"],
+  CH: ["de", "fr", "en"], JP: ["ja", "en"], MX: ["es", "en"], BR: ["pt", "en"],
 };
 
 export function availableLanguages(country?: string | null): string[] {
@@ -74,6 +78,9 @@ export const DICTIONARIES: Record<string, Dict> = {
     "nav.documents": "दस्तावेज़", "nav.toolkit": "टूलकिट", "nav.reports": "रिपोर्ट",
     "nav.assistant": "सहायक", "nav.tax": "कर", "nav.accountant": "लेखाकार", "nav.settings": "सेटिंग्स",
   },
+  it: { "nav.overview": "Panoramica", "nav.properties": "Immobili", "nav.contacts": "Contatti", "nav.income": "Entrate e spese", "nav.invoices": "Fatture", "nav.rent": "Registro affitti", "nav.court": "Pronto per il tribunale", "nav.maintenance": "Manutenzione", "nav.tasks": "Attività", "nav.notice": "Generatore di avvisi", "nav.compliance": "Conformità", "nav.region": "Regole regionali", "nav.documents": "Documenti", "nav.toolkit": "Strumenti", "nav.reports": "Report", "nav.assistant": "Assistente", "nav.tax": "Tasse", "nav.accountant": "Commercialista", "nav.settings": "Impostazioni" },
+  pt: { "nav.overview": "Visão geral", "nav.properties": "Imóveis", "nav.contacts": "Contactos", "nav.income": "Receitas e despesas", "nav.invoices": "Faturas", "nav.rent": "Registo de rendas", "nav.court": "Preparação judicial", "nav.maintenance": "Manutenção", "nav.tasks": "Tarefas", "nav.notice": "Gerador de notificações", "nav.compliance": "Conformidade", "nav.region": "Regras regionais", "nav.documents": "Documentos", "nav.toolkit": "Ferramentas", "nav.reports": "Relatórios", "nav.assistant": "Assistente", "nav.tax": "Impostos", "nav.accountant": "Contabilista", "nav.settings": "Definições" },
+  ja: { "nav.overview": "概要", "nav.properties": "物件", "nav.contacts": "連絡先", "nav.income": "収入と経費", "nav.invoices": "請求書", "nav.rent": "家賃台帳", "nav.court": "訴訟準備", "nav.maintenance": "メンテナンス", "nav.tasks": "タスク", "nav.notice": "通知ジェネレーター", "nav.compliance": "コンプライアンス", "nav.region": "地域ルール", "nav.documents": "書類", "nav.toolkit": "ツール", "nav.reports": "レポート", "nav.assistant": "アシスタント", "nav.tax": "税金", "nav.accountant": "会計士", "nav.settings": "設定" },
 };
 
 export function translate(lang: string, key: string): string {

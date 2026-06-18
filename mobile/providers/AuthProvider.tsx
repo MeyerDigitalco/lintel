@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import type { Session, User } from "@supabase/supabase-js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "@/lib/supabase";
+import { availableLanguages } from "@/lib/i18n";
 
 export type Region = "england" | "wales" | "scotland" | "northern_ireland";
 
@@ -15,6 +17,8 @@ interface Ctx {
   currency: string;
   country: string;
   regionCode: string | null;
+  lang: string;
+  setLang: (l: string) => void;
   isWriter: boolean;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
@@ -35,6 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [currency, setCurrency] = useState<string>("GBP");
   const [country, setCountry] = useState<string>("GB");
   const [regionCode, setRegionCode] = useState<string | null>(null);
+  const [lang, setLangState] = useState<string>("en");
 
   const loadContext = useCallback(async (s: Session | null) => {
     if (!s?.user) {
@@ -60,6 +65,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setCurrency(((org as any)?.currency as string) ?? "GBP");
       setCountry(((org as any)?.country as string) ?? "GB");
       setRegionCode(((org as any)?.region_code as string) ?? null);
+      const availLangs = availableLanguages(((org as any)?.country as string) ?? "GB");
+      setLangState((cur) => (availLangs.includes(cur) ? cur : availLangs[0]));
     }
   }, []);
 
@@ -78,6 +85,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
     return () => { active = false; sub.subscription.unsubscribe(); };
   }, [loadContext]);
+
+  useEffect(() => {
+    AsyncStorage.getItem("lintel_lang").then((v) => { if (v) setLangState(v); });
+  }, []);
+
+  const setLang = useCallback((l: string) => {
+    setLangState(l);
+    AsyncStorage.setItem("lintel_lang", l).catch(() => {});
+  }, []);
 
   const signIn = useCallback(async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });

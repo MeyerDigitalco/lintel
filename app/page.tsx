@@ -23,6 +23,12 @@ const REGIONS = [
   { name: "France", detail: "All régions", note: "Loi 1989 baux, dépôt de garantie and DPE diagnostics.", status: "New" },
   { name: "Netherlands", detail: "All provinces", note: "WWS points system, energy label and Huurcommissie oversight.", status: "New" },
   { name: "Singapore", detail: "Nationwide", note: "Stamped tenancy agreements, HDB rules and IRAS-ready records.", status: "New" },
+  { name: "Italy", detail: "All regions", note: "4+4 leases, lease registration, APE and cedolare secca.", status: "New" },
+  { name: "Portugal", detail: "All districts", note: "NRAU leases, energy certificate and IRS Category F records.", status: "New" },
+  { name: "Switzerland", detail: "All cantons", note: "Blocked-account deposits, official forms and conciliation.", status: "New" },
+  { name: "Japan", detail: "All prefectures", note: "Shikikin/reikin handling, renewal rights and tax return.", status: "New" },
+  { name: "Mexico", detail: "All states", note: "Arrendamiento contracts, fiador and CFDI invoicing.", status: "New" },
+  { name: "Brazil", detail: "All states", note: "Lei do Inquilinato, guarantees and carnê-leão records.", status: "New" },
 ];
 
 const FEATURES = [
