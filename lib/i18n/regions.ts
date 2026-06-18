@@ -51,6 +51,15 @@ const NZ_REGIONS: RegionOption[] = [
   "Auckland","Wellington","Canterbury","Waikato","Bay of Plenty","Otago","Manawatū-Whanganui","Northland",
 ].map((n) => ({ value: `nz_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
 
+const CA_PROVINCES: RegionOption[] = [
+  ["on","Ontario"],["bc","British Columbia"],["ab","Alberta"],["qc","Quebec"],["mb","Manitoba"],
+  ["sk","Saskatchewan"],["ns","Nova Scotia"],["nb","New Brunswick"],["nl","Newfoundland & Labrador"],["pe","Prince Edward Island"],
+].map(([value, label]) => ({ value: `ca_${value}`, label }));
+
+const IE_REGIONS: RegionOption[] = [
+  "Leinster","Munster","Connacht","Ulster",
+].map((n) => ({ value: `ie_${n.toLowerCase()}`, label: n }));
+
 export const COUNTRIES: CountryInfo[] = [
   { code: "GB", name: "United Kingdom", currency: "GBP", taxLabel: "Self Assessment (SA105) / MTD", tenancyTerm: "tenancy", depositTerm: "deposit", regions: UK_NATIONS },
   { code: "US", name: "United States", currency: "USD", taxLabel: "Schedule E (Form 1040)", tenancyTerm: "lease", depositTerm: "security deposit", regions: US_STATES },
@@ -58,6 +67,8 @@ export const COUNTRIES: CountryInfo[] = [
   { code: "ZA", name: "South Africa", currency: "ZAR", taxLabel: "ITR12 / provisional tax", tenancyTerm: "lease", depositTerm: "deposit", regions: ZA_PROVINCES },
   { code: "AU", name: "Australia", currency: "AUD", taxLabel: "ATO rental schedule", tenancyTerm: "tenancy", depositTerm: "bond", regions: AU_STATES },
   { code: "NZ", name: "New Zealand", currency: "NZD", taxLabel: "IR3 rental income", tenancyTerm: "tenancy", depositTerm: "bond", regions: NZ_REGIONS },
+  { code: "CA", name: "Canada", currency: "CAD", taxLabel: "T776 — Statement of Real Estate Rentals", tenancyTerm: "tenancy", depositTerm: "deposit", regions: CA_PROVINCES },
+  { code: "IE", name: "Ireland", currency: "EUR", taxLabel: "Form 11 rental income (Revenue)", tenancyTerm: "tenancy", depositTerm: "deposit", regions: IE_REGIONS },
 ];
 
 export function countryByCode(code?: string | null): CountryInfo {
@@ -71,6 +82,8 @@ export function countryForRegion(region?: string | null): CountryInfo {
   if (region.startsWith("za_")) return countryByCode("ZA");
   if (region.startsWith("au_")) return countryByCode("AU");
   if (region.startsWith("nz_")) return countryByCode("NZ");
+  if (region.startsWith("ca_")) return countryByCode("CA");
+  if (region.startsWith("ie_")) return countryByCode("IE");
   return countryByCode("GB");
 }
 

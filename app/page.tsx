@@ -15,6 +15,8 @@ const REGIONS = [
   { name: "South Africa", detail: "All provinces", note: "Lease and deposit tracking aligned to the Rental Housing Act.", status: "New" },
   { name: "Australia", detail: "All states & territories", note: "State bond authorities, condition reports and ATO-ready records.", status: "New" },
   { name: "New Zealand", detail: "Nationwide", note: "Healthy Homes Standards, Tenancy Services bonds and IR3 records.", status: "New" },
+  { name: "Canada", detail: "All provinces", note: "Provincial tenancy boards, deposit rules and T776 records.", status: "New" },
+  { name: "Ireland", detail: "Nationwide", note: "RTB registration, minimum standards and Rent Pressure Zone caps.", status: "New" },
 ];
 
 const FEATURES = [

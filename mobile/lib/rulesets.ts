@@ -130,6 +130,53 @@ const NZ: RegionRuleset = {
   notes: ["Healthy Homes compliance is mandatory.", "Declare income on IR3; ring-fencing limits loss offset."],
 };
 
+const CA: RegionRuleset = {
+  countryName: "Canada",
+  governingLaw: "Provincial Residential Tenancies Acts", tenancyTerm: "tenancy", depositTerm: "deposit",
+  taxLabel: "T776 - Statement of Real Estate Rentals",
+  tenancyTypes: [
+    { label: "Fixed-term tenancy", description: "Set term, then continues month-to-month." },
+    { label: "Periodic (month-to-month)", description: "Rolling tenancy on provincial notice." },
+  ],
+  compliance: [
+    { label: "Provincial maintenance standards", note: "Each province sets health & safety standards." },
+    { label: "Smoke & CO alarms", note: "Working smoke and CO alarms required." },
+    { label: "Condition inspection report", note: "Move-in/out inspection where required." },
+    { label: "Deposit handling", note: "Deposit rules vary by province (some allow none)." },
+  ],
+  deposit: { cap: "Varies by province - Ontario last-month only; BC up to half a month.", protection: "Held per provincial rules; interest payable in several provinces." },
+  checklist: ["Tenancy agreement", "Condition inspection report", "Deposit receipt", "Provincial tenant information"],
+  notices: [
+    { label: "Notice to end for cause", when: "Tenant breach", period: "Varies by province" },
+    { label: "Notice to end (no fault)", when: "Owner use / sale", period: "Often 60 days" },
+    { label: "Rent increase notice", when: "Increase rent", period: "90 days (most provinces)" },
+  ],
+  notes: ["Tribunals differ by province (LTB, RTB, TAL).", "Report rental income on T776."],
+};
+
+const IE: RegionRuleset = {
+  countryName: "Ireland",
+  governingLaw: "Residential Tenancies Acts 2004-2022", tenancyTerm: "tenancy", depositTerm: "deposit",
+  taxLabel: "Form 11 rental income (Revenue)",
+  tenancyTypes: [
+    { label: "Tenancy of unlimited duration", description: "Open-ended after 6 months (2022 reform)." },
+    { label: "Fixed-term tenancy", description: "Set term with Part 4 protections." },
+  ],
+  compliance: [
+    { label: "RTB registration", note: "Register with the Residential Tenancies Board (annual)." },
+    { label: "Minimum standards", note: "S.I. No. 17/2019 minimum standards." },
+    { label: "BER certificate", note: "Valid Building Energy Rating required." },
+    { label: "Rent Pressure Zone caps", note: "In RPZs, rent increases are capped." },
+  ],
+  deposit: { cap: "Typically 1 month's rent.", protection: "Returned less arrears/damage; RTB adjudicates." },
+  checklist: ["Written tenancy agreement", "RTB registration", "BER certificate", "Rent book"],
+  notices: [
+    { label: "Notice of termination", when: "End the tenancy", period: "By tenancy length (90-224 days)" },
+    { label: "Rent review notice", when: "Review rent (max once/yr)", period: "90 days; RPZ caps" },
+  ],
+  notes: ["RTB registration is mandatory and annual.", "Declare income on Form 11."],
+};
+
 const UK_NAMES: Record<string, string> = { england: "England", wales: "Wales", scotland: "Scotland", northern_ireland: "Northern Ireland" };
 
 function uk(region?: string | null): RegionRuleset {
@@ -187,6 +234,10 @@ const SUBREGION_RULES: Record<string, { name: string; depositCap?: string; depos
   au_qld: { name: "Queensland", depositCap: "Bond max 4 weeks' rent.", depositReturn: "Lodged with the RTA.", extra: [{ label: "QLD minimum housing standards", note: "RTRA Act 2008." }], notes: ["Rent increase: 2 months; once per 12 months."] },
   au_wa: { name: "Western Australia", depositCap: "Bond max 4 weeks' rent.", depositReturn: "Lodged with the Bond Administrator.", extra: [{ label: "WA standards", note: "Residential Tenancies Act 1987." }], notes: ["Rent increase: 60 days; not within 6 months."] },
 
+  ca_on: { name: "Ontario", depositCap: "No security deposit; last-month-rent only.", depositReturn: "Applied to final month; interest payable.", extra: [{ label: "Standard lease form", note: "Ontario standard lease mandatory for most tenancies." }], notes: ["Disputes: Landlord and Tenant Board (LTB).", "Rent increase: guideline + 90 days."] },
+  ca_bc: { name: "British Columbia", depositCap: "Max half a month's rent (+ pet deposit).", depositReturn: "Within 15 days or claim via RTB.", extra: [{ label: "Condition inspection", note: "Move-in/out inspection reports required." }], notes: ["Disputes: Residential Tenancy Branch (RTB).", "Rent increase: annual cap + 3 months."] },
+  ca_ab: { name: "Alberta", depositCap: "Max 1 month's rent.", depositReturn: "Within 10 days with a statement.", extra: [{ label: "Inspection report", note: "Move-in/out reports required." }], notes: ["Disputes: RTDRS.", "No rent control."] },
+  ca_qc: { name: "Quebec", depositCap: "Deposits not permitted.", depositReturn: "Not applicable.", extra: [{ label: "Lease (TAL form)", note: "Mandatory TAL lease; disclose prior rent (Section G)." }], notes: ["Disputes: Tribunal administratif du logement (TAL).", "Lease may be in French."] },
 };
 
 function withSub(base: RegionRuleset, code?: string | null): RegionRuleset {
@@ -202,6 +253,8 @@ export function resolveRegion(country?: string | null, region?: string | null, r
   if (cc === "ZA") return withSub(ZA, regionCode);
   if (cc === "AU") return withSub(AU, regionCode);
   if (cc === "NZ") return NZ;
+  if (cc === "CA") return withSub(CA, regionCode);
+  if (cc === "IE") return IE;
   return uk(region);
 }
 
