@@ -4,130 +4,92 @@ import { SiteFooter } from "@/components/site/Footer";
 import { Button } from "@/components/ui/Button";
 import { Card, CardBody } from "@/components/ui/Card";
 import { PLAN, TRIAL_PERIOD_DAYS } from "@/lib/stripe/config";
-import { detectCurrency } from "@/lib/i18n/geo";
-import { formatMoney } from "@/lib/i18n/currency";
+import { detectCurrency, detectCountry } from "@/lib/i18n/geo";
+import { formatMoney, CURRENCIES } from "@/lib/i18n/currency";
 import { localPrice, priceDecimals } from "@/lib/i18n/pricing";
-
-const REGIONS = [
-  { name: "United Kingdom", detail: "England · Wales · Scotland · Northern Ireland", note: "MTD-ready records, SA105 mapping and jurisdiction-correct compliance.", status: "Live" },
-  { name: "United States", detail: "All 50 states", note: "State-aware leases and deposits, Schedule E-ready income & expense records.", status: "New" },
-  { name: "Middle East", detail: "UAE · Dubai · GCC", note: "Ejari-friendly tenancy records, cheque rent schedules and VAT-ready expenses.", status: "New" },
-  { name: "South Africa", detail: "All provinces", note: "Lease and deposit tracking aligned to the Rental Housing Act.", status: "New" },
-  { name: "Australia", detail: "All states & territories", note: "State bond authorities, condition reports and ATO-ready records.", status: "New" },
-  { name: "New Zealand", detail: "Nationwide", note: "Healthy Homes Standards, Tenancy Services bonds and IR3 records.", status: "New" },
-  { name: "Canada", detail: "All provinces", note: "Provincial tenancy boards, deposit rules and T776 records.", status: "New" },
-  { name: "Ireland", detail: "Nationwide", note: "RTB registration, minimum standards and Rent Pressure Zone caps.", status: "New" },
-  { name: "Germany", detail: "All Bundesländer", note: "BGB tenancy, Kaution in a separate account and Mietspiegel rent index.", status: "New" },
-  { name: "Spain", detail: "All regions", note: "LAU leases, fianza lodgement and IRPF-ready records.", status: "New" },
-  { name: "India", detail: "Major states", note: "Model Tenancy Act agreements, registration and TDS-ready records.", status: "New" },
-  { name: "France", detail: "All régions", note: "Loi 1989 baux, dépôt de garantie and DPE diagnostics.", status: "New" },
-  { name: "Netherlands", detail: "All provinces", note: "WWS points system, energy label and Huurcommissie oversight.", status: "New" },
-  { name: "Singapore", detail: "Nationwide", note: "Stamped tenancy agreements, HDB rules and IRAS-ready records.", status: "New" },
-  { name: "Italy", detail: "All regions", note: "4+4 leases, lease registration, APE and cedolare secca.", status: "New" },
-  { name: "Portugal", detail: "All districts", note: "NRAU leases, energy certificate and IRS Category F records.", status: "New" },
-  { name: "Switzerland", detail: "All cantons", note: "Blocked-account deposits, official forms and conciliation.", status: "New" },
-  { name: "Japan", detail: "All prefectures", note: "Shikikin/reikin handling, renewal rights and tax return.", status: "New" },
-  { name: "Mexico", detail: "All states", note: "Arrendamiento contracts, fiador and CFDI invoicing.", status: "New" },
-  { name: "Brazil", detail: "All states", note: "Lei do Inquilinato, guarantees and carnê-leão records.", status: "New" },
-  { name: "Belgium", detail: "All regions", note: "Registered leases, energy certificate and blocked-account deposits.", status: "New" },
-  { name: "Austria", detail: "All states", note: "MRG tenancies, Richtwert caps and interest-bearing deposits.", status: "New" },
-  { name: "Poland", detail: "All voivodeships", note: "Umowa najmu, occasional-lease option and ryczałt tax.", status: "New" },
-  { name: "Saudi Arabia", detail: "All regions", note: "Ejar-registered contracts and VAT-ready records.", status: "New" },
-  { name: "Qatar", detail: "Nationwide", note: "Registered leases and the Rental Dispute Committee.", status: "New" },
-  { name: "Hong Kong", detail: "Nationwide", note: "Stamped tenancies, deposits and IRD property tax.", status: "New" },
-];
+import { COUNTRIES } from "@/lib/i18n/regions";
+import { LANGUAGES } from "@/lib/i18n/dictionaries";
 
 const FEATURES = [
-  {
-    title: "Tax-ready record-keeping",
-    body: "Income, expenses, receipts and mileage — organised and export-ready for your accountant or tax filing. SA105 in the UK, Schedule E in the US, VAT-ready in the Gulf.",
-  },
-  {
-    title: "Rent, arrears & documents",
-    body: "Log rent and flag arrears by age, then keep every certificate, lease and receipt in one searchable vault with expiry reminders before anything lapses.",
-  },
-  {
-    title: "Compliance, localised",
-    body: "Lintel tracks exactly what your country and region require — and a landlord in one place never sees a field meant for another.",
-  },
+  { title: "Tax-ready record-keeping", body: "Income, expenses, receipts and mileage — organised and export-ready for your accountant or filing. SA105, Schedule E, VAT, ITR12 and more, by country." },
+  { title: "Rent & arrears tracking", body: "Log rent due and received, generate receipts, and auto-flag arrears by age. No bank links, no card processing — your data stays simple and yours." },
+  { title: "Compliance, on autopilot", body: "The right certificates for your country are auto-added to each property, with reminders at 60, 30 and 7 days before anything expires." },
+  { title: "Court-readiness score", body: "See exactly how evidence-ready each tenancy is — deposit, certificates, notices, registration — and a checklist of what to fix before it matters." },
+  { title: "Documents vault + AI", body: "Every lease, certificate and receipt in one searchable place. Uploads are auto-summarised and auto-filed — even the expiry dates are read for you." },
+  { title: "Tenant portal & maintenance", body: "Give tenants a private link or login to see rent and documents and report repairs with photos — straight into your maintenance queue." },
+  { title: "Voice & receipt scanning", body: "Snap a receipt to log an expense, or just say what happened. Always with a confirm step — never autonomous." },
+  { title: "iPhone & Android app", body: "A native mobile app for life on the go: report repairs, scan receipts, check compliance and rent from your pocket." },
+];
+
+const FAQ = [
+  { q: "Do I need a card to start?", a: `You start a ${TRIAL_PERIOD_DAYS}-day free trial with everything switched on. No charge until day ${TRIAL_PERIOD_DAYS + 1}, and you can cancel anytime.` },
+  { q: "Which countries do you support?", a: `${COUNTRIES.length}+ countries across the UK, US, Europe, the Middle East, Africa, Asia and Oceania — each with the correct currency, tenancy rules, compliance items and tax framing.` },
+  { q: "Is my data private?", a: "Yes. Every account is isolated with row-level security, and your portfolio data is never shared or sold." },
+  { q: "What happens after the free month?", a: "Keep the always-on core and switch off any add-ons you don't use. One screen, no surprises — you only pay for what you keep." },
+  { q: "Can my accountant get involved?", a: "Yes — invite them to a read-only seat with an accountant pack and export, so they see exactly what they need and nothing they shouldn't." },
 ];
 
 export default function HomePage() {
   const currency = detectCurrency();
+  const country = detectCountry();
   const dec = priceDecimals(currency);
   const money = (n: number) => formatMoney(n, currency, { decimals: dec });
+  const corePrice = money(localPrice("core", currency));
+  const currencyCount = Object.keys(CURRENCIES).length;
+  const langCount = Object.keys(LANGUAGES).length;
+
   return (
     <div className="min-h-screen bg-paper">
       <SiteHeader />
 
       {/* Hero */}
-      <section className="mx-auto max-w-6xl px-5 pb-16 pt-16 md:pt-24">
-        <div className="max-w-3xl">
+      <section className="relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-mint/8 via-paper to-paper" />
+        <div className="relative mx-auto max-w-6xl px-5 pb-20 pt-16 text-center md:pt-24">
           <span className="inline-flex items-center gap-2 rounded-full border border-hairline bg-surface px-3 py-1 text-xs text-slate">
             <span className="h-1.5 w-1.5 rounded-full bg-mint" />
-            Landlord software for the UK, USA, Middle East &amp; South Africa
+            Now in {COUNTRIES.length}+ countries · {currencyCount} currencies · {langCount} languages
           </span>
-          <h1 className="mt-6 font-heading text-4xl font-semibold leading-[1.05] tracking-tight text-ink md:text-6xl">
-            Your whole rental portfolio, in one calm place.
+          <h1 className="mx-auto mt-6 max-w-4xl font-heading text-4xl font-semibold leading-[1.04] tracking-tight text-ink md:text-6xl">
+            Run your rentals like a pro — anywhere in the world.
           </h1>
-          <p className="mt-5 max-w-2xl text-lg text-slate">
-            Lintel keeps your tax records, compliance, rent and documents organised —
-            tuned to your country&apos;s rules. Start with every tool switched on, free for{" "}
-            {TRIAL_PERIOD_DAYS} days. After that, keep only what you love.
+          <p className="mx-auto mt-5 max-w-2xl text-lg text-slate">
+            Lintel keeps your tax records, compliance, rent, documents and tenants in one calm place —
+            tuned to your country&apos;s rules. Try every feature free for {TRIAL_PERIOD_DAYS} days, then keep only what you love.
           </p>
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Link href="/signup">
-              <Button size="lg">Start your {TRIAL_PERIOD_DAYS}-day free trial</Button>
-            </Link>
-            <Link href="/calculators">
-              <Button variant="outline" size="lg">Try the calculators</Button>
-            </Link>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Link href="/signup"><Button size="lg">Start your {TRIAL_PERIOD_DAYS}-day free trial</Button></Link>
+            <Link href="#pricing"><Button variant="outline" size="lg">See pricing</Button></Link>
           </div>
-          <p className="mt-3 text-xs text-slate">
-            Everything included free for {TRIAL_PERIOD_DAYS} days. No charge until day {TRIAL_PERIOD_DAYS + 1}. Cancel anytime.
-          </p>
-        </div>
-      </section>
+          <p className="mt-3 text-xs text-slate">Everything included free for {TRIAL_PERIOD_DAYS} days · no charge until day {TRIAL_PERIOD_DAYS + 1} · cancel anytime</p>
 
-      {/* Free month band */}
-      <section className="border-y border-hairline bg-surface">
-        <div className="mx-auto grid max-w-6xl gap-6 px-5 py-12 md:grid-cols-[1.2fr_1fr] md:items-center">
-          <div>
-            <h2 className="font-heading text-2xl font-semibold tracking-tight text-ink">
-              One free month. Everything switched on.
-            </h2>
-            <p className="mt-2 max-w-xl text-sm text-slate">
-              No tiers to choose on day one. Every feature — voice assistant, tenant portal,
-              maintenance, documents, reports — is on from the moment you sign up. When your
-              {" "}{TRIAL_PERIOD_DAYS} days are up, a single screen lets you keep what you use and switch off the rest.
-              Most landlords keep the lean core and a couple of add-ons.
-            </p>
+          <div className="mx-auto mt-12 grid max-w-3xl grid-cols-2 gap-px overflow-hidden rounded-lintel border border-hairline bg-hairline text-center sm:grid-cols-4">
+            {[
+              [`${COUNTRIES.length}+`, "Countries"],
+              [`${currencyCount}`, "Currencies"],
+              [`${langCount}`, "Languages"],
+              [`${TRIAL_PERIOD_DAYS} days`, "Free, all-in"],
+            ].map(([n, l]) => (
+              <div key={l} className="bg-surface px-4 py-5">
+                <p className="font-heading text-2xl font-semibold text-evergreen">{n}</p>
+                <p className="mt-1 text-xs text-slate">{l}</p>
+              </div>
+            ))}
           </div>
-          <Card className="border-evergreen/30">
-            <CardBody>
-              <p className="text-xs uppercase tracking-wide text-slate">During your free month</p>
-              <ul className="mt-3 space-y-2 text-sm text-ink">
-                <li className="flex items-center gap-2"><span className="text-evergreen">✓</span> Tax records, rent ledger &amp; arrears</li>
-                <li className="flex items-center gap-2"><span className="text-evergreen">✓</span> Compliance vault &amp; document storage</li>
-                <li className="flex items-center gap-2"><span className="text-evergreen">✓</span> Voice assistant &amp; receipt scanning</li>
-                <li className="flex items-center gap-2"><span className="text-evergreen">✓</span> Tenant portal &amp; maintenance</li>
-                <li className="flex items-center gap-2"><span className="text-evergreen">✓</span> Reports, tasks &amp; court-readiness</li>
-              </ul>
-            </CardBody>
-          </Card>
         </div>
       </section>
 
       {/* Features */}
       <section id="features" className="mx-auto max-w-6xl px-5 py-16">
-        <h2 className="font-heading text-2xl font-semibold tracking-tight text-ink">
-          Honest, modular, low-cost.
-        </h2>
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
+        <div className="max-w-2xl">
+          <h2 className="font-heading text-3xl font-semibold tracking-tight text-ink">Everything a landlord needs. Nothing they don&apos;t.</h2>
+          <p className="mt-3 text-slate">One workspace replaces the spreadsheets, the folder of certificates, the chasing and the guesswork — and it speaks your jurisdiction, not a generic one.</p>
+        </div>
+        <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {FEATURES.map((f) => (
-            <Card key={f.title}>
+            <Card key={f.title} className="h-full">
               <CardBody>
-                <h3 className="font-heading text-lg font-semibold tracking-tight">{f.title}</h3>
+                <h3 className="font-heading text-base font-semibold tracking-tight">{f.title}</h3>
                 <p className="mt-2 text-sm text-slate">{f.body}</p>
               </CardBody>
             </Card>
@@ -135,54 +97,83 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Regions */}
-      <section id="regions" className="mx-auto max-w-6xl px-5 py-12">
-        <h2 className="font-heading text-2xl font-semibold tracking-tight text-ink">
-          Correct in every market.
-        </h2>
-        <p className="mt-2 max-w-2xl text-sm text-slate">
-          Pick your country and region per property. Lintel loads the right currency, tenancy
-          type, compliance items and tax framing — so the app speaks your jurisdiction, not a generic one.
-        </p>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {REGIONS.map((r) => (
-            <Card key={r.name}>
-              <CardBody>
-                <div className="flex items-center justify-between">
-                  <h3 className="font-heading text-base font-semibold tracking-tight">{r.name}</h3>
-                  <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${r.status === "Live" ? "bg-mint/15 text-evergreen" : "bg-ink/5 text-slate"}`}>
-                    {r.status}
-                  </span>
-                </div>
-                <p className="mt-1 text-xs text-slate">{r.detail}</p>
-                <p className="mt-3 text-xs text-slate">{r.note}</p>
-              </CardBody>
-            </Card>
-          ))}
+      {/* Free month */}
+      <section className="border-y border-hairline bg-surface">
+        <div className="mx-auto grid max-w-6xl items-center gap-8 px-5 py-16 md:grid-cols-[1.2fr_1fr]">
+          <div>
+            <h2 className="font-heading text-3xl font-semibold tracking-tight text-ink">One free month. Everything switched on.</h2>
+            <p className="mt-3 max-w-xl text-slate">
+              No tiers to puzzle over on day one. Voice assistant, tenant portal, maintenance, documents, reports —
+              all on the moment you sign up. When your {TRIAL_PERIOD_DAYS} days are up, a single screen lets you keep what you use and switch off the rest.
+            </p>
+            <div className="mt-6"><Link href="/signup"><Button>Get started — it&apos;s free</Button></Link></div>
+          </div>
+          <Card className="border-evergreen/30">
+            <CardBody>
+              <p className="text-xs uppercase tracking-wide text-slate">During your free month</p>
+              <ul className="mt-3 space-y-2 text-sm text-ink">
+                {["Tax records, rent & arrears", "Compliance vault & reminders", "Voice assistant & receipt scanning", "Tenant portal & maintenance", "Reports, tasks & court-readiness", "iPhone & Android app"].map((x) => (
+                  <li key={x} className="flex items-center gap-2"><span className="text-mint">✓</span> {x}</li>
+                ))}
+              </ul>
+            </CardBody>
+          </Card>
+        </div>
+      </section>
+
+      {/* Court-readiness differentiator */}
+      <section className="mx-auto max-w-6xl px-5 py-16">
+        <Card>
+          <CardBody>
+            <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+              <div className="max-w-2xl">
+                <span className="text-xs font-semibold uppercase tracking-wide text-mint">The Lintel difference</span>
+                <h2 className="mt-2 font-heading text-2xl font-semibold tracking-tight text-ink">Always know if you&apos;d win in court.</h2>
+                <p className="mt-3 text-slate">
+                  Most tools tell you a certificate expired. Lintel scores every tenancy on how evidence-ready it is —
+                  deposit protected in time, prescribed documents served, certificates in date, registration valid —
+                  and hands you the exact checklist to fix, before it ever matters.
+                </p>
+              </div>
+              <div className="shrink-0 rounded-lintel border border-hairline bg-paper p-6 text-center">
+                <p className="text-xs uppercase tracking-wide text-slate">Court-readiness</p>
+                <p className="mt-1 font-heading text-5xl font-semibold tabular-nums text-evergreen">92</p>
+                <p className="mt-1 text-xs text-slate">/ 100 · Strong</p>
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+      </section>
+
+      {/* Global */}
+      <section id="regions" className="border-y border-hairline bg-surface">
+        <div className="mx-auto max-w-6xl px-5 py-16">
+          <h2 className="font-heading text-3xl font-semibold tracking-tight text-ink">Correct in every market.</h2>
+          <p className="mt-3 max-w-2xl text-slate">
+            Pick your country and region per property. Lintel loads the right currency, tenancy type, compliance items,
+            notice templates and tax framing — from {COUNTRIES.length}+ countries and counting.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-2">
+            {COUNTRIES.map((c) => (
+              <span key={c.code} className="rounded-full border border-hairline bg-paper px-3 py-1 text-sm text-slate">{c.name}</span>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Pricing */}
       <section id="pricing" className="mx-auto max-w-6xl px-5 py-16">
-        <h2 className="font-heading text-2xl font-semibold tracking-tight text-ink">
-          Free for a month. Then only what you keep.
-        </h2>
-        <p className="mt-2 max-w-2xl text-sm text-slate">
-          Every tool is included free for {TRIAL_PERIOD_DAYS} days. After that, keep the always-on core and
-          add only the modules you actually use. Prices shown in your local currency.
-        </p>
+        <div className="max-w-2xl">
+          <h2 className="font-heading text-3xl font-semibold tracking-tight text-ink">Free for a month. Then only what you keep.</h2>
+          <p className="mt-3 text-slate">Every tool is included free for {TRIAL_PERIOD_DAYS} days. After that, keep the always-on core and add only the modules you use. Shown in your local currency.</p>
+        </div>
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           <Card className="border-evergreen/30">
             <CardBody>
               <p className="text-sm text-slate">Core — always on after your trial</p>
-              <p className="mt-1 font-heading text-3xl font-semibold tracking-tight">
-                {money(localPrice("core", currency))}
-                <span className="text-base font-normal text-slate">/mo</span>
-              </p>
+              <p className="mt-1 font-heading text-4xl font-semibold tracking-tight">{corePrice}<span className="text-base font-normal text-slate">/mo</span></p>
               <p className="mt-2 text-sm text-slate">{PLAN.core.label}</p>
-              <Link href="/signup" className="mt-5 inline-block">
-                <Button>Start free trial</Button>
-              </Link>
+              <Link href="/signup" className="mt-6 inline-block"><Button size="lg">Start free trial</Button></Link>
             </CardBody>
           </Card>
           <Card>
@@ -199,6 +190,31 @@ export default function HomePage() {
               <p className="mt-4 text-sm text-slate">Keep, drop or re-add any add-on at any time.</p>
             </CardBody>
           </Card>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="border-t border-hairline bg-surface">
+        <div className="mx-auto max-w-3xl px-5 py-16">
+          <h2 className="font-heading text-3xl font-semibold tracking-tight text-ink">Questions, answered.</h2>
+          <div className="mt-8 divide-y divide-hairline">
+            {FAQ.map((f) => (
+              <details key={f.q} className="group py-4">
+                <summary className="cursor-pointer list-none font-medium text-ink">{f.q}</summary>
+                <p className="mt-2 text-sm text-slate">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="mx-auto max-w-6xl px-5 py-20 text-center">
+        <h2 className="mx-auto max-w-2xl font-heading text-3xl font-semibold tracking-tight text-ink md:text-4xl">Your whole portfolio, finally in one calm place.</h2>
+        <p className="mx-auto mt-4 max-w-xl text-slate">Start free today. Set up your first property in minutes, with everything switched on.</p>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <Link href="/signup"><Button size="lg">Start your {TRIAL_PERIOD_DAYS}-day free trial</Button></Link>
+          <Link href="/calculators"><Button variant="outline" size="lg">Try the calculators</Button></Link>
         </div>
       </section>
 
