@@ -119,71 +119,55 @@ function ukToRuleset(j: JurisdictionRules, currency = "GBP"): RegionRuleset {
 }
 
 
-interface StateRule {
+interface SubRule {
   name: string;
-  depositCap: string;
-  depositReturn: string;
+  depositCap?: string;
+  depositReturn?: string;
   extraCompliance: { label: string; note: string }[];
   extraNotes: string[];
 }
 
-const US_STATE_RULES: Record<string, StateRule> = {
-  us_ca: {
-    name: "California",
-    depositCap: "Max 1 month's rent (2 months for small landlords) — AB 12, from July 2024.",
-    depositReturn: "Itemised return within 21 days.",
-    extraCompliance: [
-      { label: "Just-cause eviction & rent cap", note: "AB 1482: increases capped at 5% + CPI (max 10%); just cause required for many units." },
-      { label: "State disclosures", note: "Lead paint, Megan's Law, mold, bed bugs, flood zone, Prop 65." },
-    ],
-    extraNotes: ["Month-to-month notice: 30 days (<1 yr), 60 days (≥1 yr).", "Cities like LA & SF add local rent control."],
-  },
-  us_tx: {
-    name: "Texas",
-    depositCap: "No statutory cap.",
-    depositReturn: "Itemised return within 30 days.",
-    extraCompliance: [
-      { label: "Security devices", note: "Landlord must provide statutory locks and smoke detectors." },
-      { label: "Repair & remedy", note: "Tenant remedies under Texas Property Code §92 if repairs are ignored." },
-    ],
-    extraNotes: ["Month-to-month notice: 30 days.", "No state rent control (locally preempted)."],
-  },
-  us_ny: {
-    name: "New York",
-    depositCap: "Max 1 month's rent — HSTPA 2019.",
-    depositReturn: "Itemised return within 14 days.",
-    extraCompliance: [
-      { label: "Rent stabilization", note: "NYC and some areas: stabilized units have renewal and increase limits." },
-      { label: "State disclosures", note: "Lead paint, bedbug history (NYC), sprinkler, allergen (NYC)." },
-    ],
-    extraNotes: ["Notice to end: 30 / 60 / 90 days by length of tenancy.", "Good-cause eviction applies in NYC and opt-in localities."],
-  },
-  us_fl: {
-    name: "Florida",
-    depositCap: "No statutory cap.",
-    depositReturn: "15 days (no deductions) or 30 days with itemised notice.",
-    extraCompliance: [{ label: "Deposit holding disclosure", note: "Must disclose where the deposit is held within 30 days." }],
-    extraNotes: ["Month-to-month notice: 30 days (15 for weekly).", "No state rent control."],
-  },
+const SUBREGION_RULES: Record<string, SubRule> = {
+  // United States
+  us_ca: { name: "California", depositCap: "Max 1 month's rent (2 for small landlords) — AB 12, from July 2024.", depositReturn: "Itemised return within 21 days.", extraCompliance: [{ label: "Just-cause eviction & rent cap", note: "AB 1482: increases capped at 5% + CPI (max 10%); just cause for many units." }, { label: "State disclosures", note: "Lead paint, Megan's Law, mold, bed bugs, flood zone, Prop 65." }], extraNotes: ["Month-to-month notice: 30 days (<1 yr), 60 days (≥1 yr).", "LA & SF add local rent control."] },
+  us_tx: { name: "Texas", depositCap: "No statutory cap.", depositReturn: "Itemised return within 30 days.", extraCompliance: [{ label: "Security devices", note: "Statutory locks and smoke detectors required." }, { label: "Repair & remedy", note: "Tenant remedies under Texas Property Code §92." }], extraNotes: ["Month-to-month notice: 30 days.", "No state rent control (preempted)."] },
+  us_ny: { name: "New York", depositCap: "Max 1 month's rent — HSTPA 2019.", depositReturn: "Itemised return within 14 days.", extraCompliance: [{ label: "Rent stabilization", note: "NYC and some areas: renewal and increase limits." }, { label: "State disclosures", note: "Lead paint, bedbug history (NYC), sprinkler, allergen (NYC)." }], extraNotes: ["Notice to end: 30 / 60 / 90 days by length of tenancy.", "Good-cause eviction in NYC and opt-in localities."] },
+  us_fl: { name: "Florida", depositCap: "No statutory cap.", depositReturn: "15 days (no deductions) or 30 days with itemised notice.", extraCompliance: [{ label: "Deposit holding disclosure", note: "Disclose where the deposit is held within 30 days." }], extraNotes: ["Month-to-month notice: 30 days (15 for weekly).", "No state rent control."] },
+  us_il: { name: "Illinois", depositCap: "No state cap.", depositReturn: "30–45 days with itemisation; interest on deposits for larger buildings.", extraCompliance: [{ label: "Chicago RLTO", note: "Chicago's ordinance adds deposit interest, receipts and summaries." }], extraNotes: ["Month-to-month notice: 30 days.", "Some cities cap or regulate; no statewide rent control."] },
+  us_wa: { name: "Washington", depositCap: "No statutory cap.", depositReturn: "Itemised return within 21 days.", extraCompliance: [{ label: "Just cause to end", note: "Statewide just-cause required to terminate (2021)." }, { label: "Checklist required", note: "Move-in condition checklist required to keep a deposit." }], extraNotes: ["Notice for rent increase: 60 days.", "Seattle adds further protections."] },
+  us_ga: { name: "Georgia", depositCap: "No statutory cap.", depositReturn: "Itemised return within 30 days.", extraCompliance: [{ label: "Move-in/out inspection", note: "Required where a deposit is held; list defects." }], extraNotes: ["Month-to-month notice: 30 days (landlord 60).", "No rent control (preempted)."] },
+  us_nj: { name: "New Jersey", depositCap: "Max 1.5 months' rent.", depositReturn: "Itemised return within 30 days, with interest.", extraCompliance: [{ label: "Truth in Renting", note: "Provide the Truth in Renting statement (non-owner-occupied)." }], extraNotes: ["Local rent control is common (many municipalities).", "Notice to quit varies by ground."] },
+  us_co: { name: "Colorado", depositCap: "No statutory cap.", depositReturn: "30 days (up to 60 if the lease says so).", extraCompliance: [{ label: "Warranty of habitability", note: "Strengthened repair timelines and remedies." }], extraNotes: ["Rent increase notice: 60 days for periodic tenancies.", "No statewide rent control."] },
+  us_az: { name: "Arizona", depositCap: "Max 1.5 months' rent.", depositReturn: "Itemised return within 14 business days.", extraCompliance: [{ label: "Move-in checklist", note: "Tenant may request a move-in condition form." }], extraNotes: ["Month-to-month notice: 30 days.", "No rent control (preempted)."] },
+
+  // United Arab Emirates (emirates)
+  ae_dubai: { name: "Dubai", depositCap: "5% (unfurnished) or 10% (furnished) of annual rent.", depositReturn: "Refunded at contract end less damages.", extraCompliance: [{ label: "Ejari registration", note: "Tenancy contracts must be registered with Ejari (RERA/DLD)." }, { label: "RERA rental index", note: "Increases capped by the RERA calculator; Decree No. 43 of 2013." }, { label: "Eviction notice", note: "12 months' notarised/registered notice on valid grounds (Law 33/2008)." }], extraNotes: ["Rent typically paid by 1–4 post-dated cheques.", "Disputes: Dubai Rental Dispute Centre."] },
+  ae_abu_dhabi: { name: "Abu Dhabi", depositCap: "Typically 5% (unfurnished) or 10% (furnished).", depositReturn: "Refunded at contract end less damages.", extraCompliance: [{ label: "Tawtheeq registration", note: "Tenancy contracts registered via Tawtheeq (ADM)." }, { label: "Rent cap", note: "Increase caps have applied periodically; check current ADREC rules." }], extraNotes: ["Disputes: Abu Dhabi rental dispute committees.", "Cheque-based rent is standard."] },
+  ae_sharjah: { name: "Sharjah", extraCompliance: [{ label: "Municipality registration", note: "Tenancy contracts attested via Sharjah Municipality." }], extraNotes: ["Rent disputes handled by the Sharjah rent dispute committee."] },
+
+  // South Africa (provinces — national law + provincial tribunals)
+  za_gauteng: { name: "Gauteng", extraCompliance: [{ label: "Gauteng Rental Housing Tribunal", note: "Free dispute resolution; provincial Unfair Practice Regulations apply." }], extraNotes: ["Deposit + interest returned within 7–14 days after the outgoing inspection."] },
+  za_western_cape: { name: "Western Cape", extraCompliance: [{ label: "Western Cape Rental Housing Tribunal", note: "Free dispute resolution; provincial Unfair Practice Regulations apply." }], extraNotes: ["Deposit must be invested; interest accrues to the tenant."] },
+  za_kwazulu_natal: { name: "KwaZulu-Natal", extraCompliance: [{ label: "KZN Rental Housing Tribunal", note: "Free dispute resolution; provincial Unfair Practice Regulations apply." }], extraNotes: ["Joint incoming and outgoing inspections are required."] },
 };
 
-function withState(base: RegionRuleset, code?: string | null): RegionRuleset {
-  const rule = code ? US_STATE_RULES[code] : undefined;
-  if (!rule) return base;
+function withSub(base: RegionRuleset, code?: string | null): RegionRuleset {
+  const r = code ? SUBREGION_RULES[code] : undefined;
+  if (!r) return base;
   return {
     ...base,
-    subregionName: rule.name,
-    deposit: { cap: rule.depositCap, protection: rule.depositReturn },
-    compliance: [...base.compliance, ...rule.extraCompliance],
-    notes: [...rule.extraNotes, ...base.notes],
+    subregionName: r.name,
+    deposit: r.depositCap ? { cap: r.depositCap, protection: r.depositReturn ?? base.deposit.protection } : base.deposit,
+    compliance: [...base.compliance, ...r.extraCompliance],
+    notes: [...r.extraNotes, ...base.notes],
   };
 }
 
 export function resolveRegion(country?: string | null, region?: string | null, regionCode?: string | null): RegionRuleset {
   const cc = (country ?? "GB").toUpperCase();
-  if (cc === "US") return withState(US, regionCode);
-  if (cc === "AE") return UAE;
-  if (cc === "ZA") return ZA;
+  if (cc === "US") return withSub(US, regionCode);
+  if (cc === "AE") return withSub(UAE, regionCode);
+  if (cc === "ZA") return withSub(ZA, regionCode);
   const key = (["england", "wales", "scotland", "northern_ireland"].includes(region ?? "") ? region : "england") as JurisdictionKey;
   return ukToRuleset(resolveJurisdiction(key));
 }
