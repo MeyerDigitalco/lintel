@@ -3,8 +3,12 @@ import { SiteHeader } from "@/components/site/Header";
 import { Card, CardBody } from "@/components/ui/Card";
 import { AuthForm } from "@/components/auth/AuthForm";
 import { TRIAL_PERIOD_DAYS } from "@/lib/stripe/config";
+import { detectCountry } from "@/lib/i18n/geo";
+
+export const dynamic = "force-dynamic";
 
 export default function SignupPage() {
+  const country = detectCountry();
   return (
     <div className="min-h-screen bg-paper">
       <SiteHeader />
@@ -17,7 +21,7 @@ export default function SignupPage() {
             <p className="mt-1 mb-6 text-sm text-slate">
               No charge until day {TRIAL_PERIOD_DAYS + 1}. Cancel anytime.
             </p>
-            <AuthForm mode="signup" />
+            <AuthForm mode="signup" defaultCountry={country} />
             <p className="mt-5 text-sm text-slate">
               Already have an account?{" "}
               <Link href="/login" className="text-evergreen hover:underline">

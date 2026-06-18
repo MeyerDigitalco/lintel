@@ -4,7 +4,9 @@ import { SiteFooter } from "@/components/site/Footer";
 import { Button } from "@/components/ui/Button";
 import { Card, CardBody } from "@/components/ui/Card";
 import { PLAN, TRIAL_PERIOD_DAYS } from "@/lib/stripe/config";
-import { gbp } from "@/lib/format";
+import { detectCurrency } from "@/lib/i18n/geo";
+import { formatMoney } from "@/lib/i18n/currency";
+import { localPrice, priceDecimals } from "@/lib/i18n/pricing";
 
 const REGIONS = [
   { name: "United Kingdom", detail: "England · Wales · Scotland · Northern Ireland", note: "MTD-ready records, SA105 mapping and jurisdiction-correct compliance.", status: "Live" },
@@ -29,6 +31,9 @@ const FEATURES = [
 ];
 
 export default function HomePage() {
+  const currency = detectCurrency();
+  const dec = priceDecimals(currency);
+  const money = (n: number) => formatMoney(n, currency, { decimals: dec });
   return (
     <div className="min-h-screen bg-paper">
       <SiteHeader />
@@ -142,14 +147,14 @@ export default function HomePage() {
         </h2>
         <p className="mt-2 max-w-2xl text-sm text-slate">
           Every tool is included free for {TRIAL_PERIOD_DAYS} days. After that, keep the always-on core and
-          add only the modules you actually use. Prices shown in GBP — local currency billing is rolling out per region.
+          add only the modules you actually use. Prices shown in your local currency.
         </p>
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           <Card className="border-evergreen/30">
             <CardBody>
               <p className="text-sm text-slate">Core — always on after your trial</p>
               <p className="mt-1 font-heading text-3xl font-semibold tracking-tight">
-                {gbp(PLAN.core.pricePerMonth, { decimals: true })}
+                {money(localPrice("core", currency))}
                 <span className="text-base font-normal text-slate">/mo</span>
               </p>
               <p className="mt-2 text-sm text-slate">{PLAN.core.label}</p>
@@ -165,7 +170,7 @@ export default function HomePage() {
                 {[PLAN.voice, PLAN.tenant_portal, PLAN.maintenance_portal].map((p) => (
                   <li key={p.feature} className="flex justify-between border-b border-hairline pb-2 last:border-0">
                     <span className="text-ink">{p.label}</span>
-                    <span className="text-slate">+{gbp(p.pricePerMonth, { decimals: true })}/mo</span>
+                    <span className="text-slate">+{money(localPrice(p.feature, currency))}/mo</span>
                   </li>
                 ))}
               </ul>

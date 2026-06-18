@@ -3,7 +3,7 @@ import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { PageHeader, Stat, Badge } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
-import { gbp } from "@/lib/format";
+import { formatMoney } from "@/lib/i18n/currency";
 import { fmtDate, daysUntil, quarterlyPeriods, taxYearStartFor } from "@/lib/dates";
 import { mtdMandation } from "@/lib/calculators";
 import { cn } from "@/lib/cn";
@@ -11,7 +11,8 @@ import { cn } from "@/lib/cn";
 export const dynamic = "force-dynamic";
 
 export default async function DashboardOverview() {
-  const { orgId } = await requireSession();
+  const { orgId, currency } = await requireSession();
+  const gbp = (n: number) => formatMoney(n, currency);
   const supabase = createClient();
 
   const [

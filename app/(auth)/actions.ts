@@ -28,6 +28,9 @@ export async function signUpAction(
   const password = String(formData.get("password") ?? "");
   const orgName = String(formData.get("org_name") ?? "");
   const region = String(formData.get("region") ?? "england");
+  const country = String(formData.get("country") ?? "GB");
+  const currency = String(formData.get("currency") ?? "GBP");
+  const regionCode = String(formData.get("region_code") ?? "");
 
   if (password.length < 8) {
     return { error: "Password must be at least 8 characters." };
@@ -38,7 +41,7 @@ export async function signUpAction(
     email,
     password,
     options: {
-      data: { org_name: orgName, region },
+      data: { org_name: orgName, region, country, currency, region_code: regionCode },
       emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/dashboard`,
     },
   });
