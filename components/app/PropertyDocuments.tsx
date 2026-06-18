@@ -33,6 +33,7 @@ export function PropertyDocumentUpload({ propertyId }: { propertyId: string }) {
       </select>
       <label className="text-xs text-slate">Issued<input name="issued_at" type="date" className={inputCls} /></label>
       <label className="text-xs text-slate">Expires<input name="expires_at" type="date" className={inputCls} /></label>
+      <label className="flex items-center gap-2 text-xs text-slate sm:col-span-2"><input type="checkbox" name="visible_to_tenant" className="h-4 w-4" /> Show this document to the tenant in their portal</label>
       <input name="file" type="file" required className="block w-full text-sm text-slate file:mr-3 file:rounded-lintel file:border file:border-hairline file:bg-paper file:px-3 file:py-2 file:text-sm sm:col-span-2" />
       <div className="flex gap-2 sm:col-span-2">
         <Button size="sm" type="submit">Save</Button>

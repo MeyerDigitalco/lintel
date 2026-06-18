@@ -84,6 +84,7 @@ export async function uploadPropertyDocument(formData: FormData) {
     expires_at: expiresAt,
     storage_path: path,
     ai_summary: summary,
+    visible_to_tenant: formData.get("visible_to_tenant") === "on",
   });
   if (error) throw new Error(error.message);
 
@@ -103,6 +104,7 @@ export async function updateDocument(formData: FormData) {
     doc_type: String(formData.get("doc_type") ?? "") || null,
     issued_at: String(formData.get("issued_at") ?? "") || null,
     expires_at: String(formData.get("expires_at") ?? "") || null,
+    visible_to_tenant: formData.get("visible_to_tenant") === "on",
   };
   const { error } = await supabase
     .from("property_documents")

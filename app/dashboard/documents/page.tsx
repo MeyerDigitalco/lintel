@@ -32,7 +32,7 @@ export default async function DocumentsPage({
   const [{ data: docs }, { data: properties }] = await Promise.all([
     supabase
       .from("property_documents")
-      .select("id, label, doc_type, ai_summary, storage_path, issued_at, expires_at, created_at, property_id, properties(label)")
+      .select("id, label, doc_type, ai_summary, storage_path, issued_at, expires_at, created_at, property_id, visible_to_tenant, properties(label)")
       .eq("org_id", orgId)
       .order("created_at", { ascending: false }),
     supabase.from("properties").select("id, label").eq("org_id", orgId).order("label"),
@@ -75,7 +75,10 @@ export default async function DocumentsPage({
                 <CardBody>
                   <div className="flex items-start justify-between gap-2">
                     <span className="text-sm font-medium text-ink">{d.label}</span>
-                    <Badge tone={STATUS_TONE[st.key]}>{st.label}</Badge>
+                    <div className="flex items-center gap-1">
+                      {(d as any).visible_to_tenant ? <Badge tone="mint">Tenant</Badge> : null}
+                      <Badge tone={STATUS_TONE[st.key]}>{st.label}</Badge>
+                    </div>
                   </div>
                   <p className="mt-0.5 text-xs text-slate">
                     {docLabel(d.doc_type)} · {(d as any).properties?.label}
@@ -122,6 +125,7 @@ export default async function DocumentsPage({
                           <input name="issued_at" type="date" defaultValue={(d as any).issued_at ?? ""} className="h-9 flex-1 rounded-lintel border border-hairline bg-surface px-2 text-sm" />
                           <input name="expires_at" type="date" defaultValue={d.expires_at ?? ""} className="h-9 flex-1 rounded-lintel border border-hairline bg-surface px-2 text-sm" />
                         </div>
+                        <label className="flex items-center gap-2 text-xs text-slate"><input type="checkbox" name="visible_to_tenant" defaultChecked={(d as any).visible_to_tenant} className="h-4 w-4" /> Show to tenant in their portal</label>
                         <button type="submit" className="h-9 rounded-lintel bg-evergreen px-3 text-sm font-medium text-paper">Save</button>
                       </form>
                     </details>

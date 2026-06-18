@@ -7,6 +7,7 @@ import { PageHeader, Badge } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { MessageThread } from "@/components/portal/MessageThread";
+import { TenantLink } from "./TenantLink";
 import { ReadinessScore } from "@/components/app/ReadinessScore";
 import { tenancyReadiness } from "@/lib/court-readiness-server";
 import { inviteTenant, shareDocument, sendLandlordMessage, generatePortalLink } from "./actions";
@@ -62,9 +63,7 @@ export default async function TenancyManage({ params }: { params: { id: string }
             <h2 className="font-heading text-base font-semibold tracking-tight">Tenant link (no login)</h2>
             <p className="mt-1 text-sm text-slate">Share a private, read-only link so your tenant can see rent and documents without an account.</p>
             {(tenancy as any).portal_token ? (
-              <code className="mt-3 block break-all rounded-lintel bg-paper px-3 py-2 text-xs text-evergreen">
-                {(process.env.NEXT_PUBLIC_APP_URL ?? "")}/t/{(tenancy as any).portal_token}
-              </code>
+              <TenantLink url={`${process.env.NEXT_PUBLIC_APP_URL ?? ""}/t/${(tenancy as any).portal_token}`} tenancyId={params.id} />
             ) : (
               <form action={generatePortalLink} className="mt-3">
                 <input type="hidden" name="tenancy_id" value={params.id} />

@@ -20,7 +20,7 @@ export default async function TokenTenantPage({ params }: { params: { token: str
 
   const { data: tenancy } = await service
     .from("tenancies")
-    .select("id, org_id, rent_amount, properties(label, city, postcode)")
+    .select("id, org_id, property_id, rent_amount, properties(label, city, postcode)")
     .eq("portal_token", params.token)
     .maybeSingle();
   if (!tenancy) notFound();
@@ -39,6 +39,21 @@ export default async function TokenTenantPage({ params }: { params: { token: str
       return { ...d, url: data?.signedUrl ?? null };
     })
   );
+
+  // Per-property documents the landlord chose to show the tenant.
+  const { data: propDocs } = await service
+    .from("property_documents")
+    .select("id, label, created_at, storage_path")
+    .eq("property_id", (tenancy as any).property_id)
+    .eq("visible_to_tenant", true)
+    .order("created_at", { ascending: false });
+  const propDocsWithUrls = await Promise.all(
+    (propDocs ?? []).map(async (d) => {
+      const { data } = await service.storage.from("property-docs").createSignedUrl(d.storage_path, 600);
+      return { id: d.id, label: d.label, created_at: d.created_at, url: data?.signedUrl ?? null };
+    })
+  );
+  const allDocs = [...docsWithUrls, ...propDocsWithUrls];
 
   const activeFaults = (faults ?? []).filter((f) => f.status !== "completed" && f.status !== "closed");
 
@@ -142,9 +157,9 @@ export default async function TokenTenantPage({ params }: { params: { token: str
         <Card>
           <CardBody>
             <h2 className="font-heading text-sm font-semibold tracking-tight">My documents</h2>
-            {docsWithUrls.length > 0 ? (
+            {allDocs.length > 0 ? (
               <ul className="mt-2 space-y-2 text-sm">
-                {docsWithUrls.map((d) => (
+                {allDocs.map((d) => (
                   <li key={d.id} className="flex items-center justify-between rounded-lintel bg-paper px-3 py-2">
                     <span>
                       <span className="text-ink">{d.label}</span>

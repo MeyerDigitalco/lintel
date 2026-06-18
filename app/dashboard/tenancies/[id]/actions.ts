@@ -109,3 +109,12 @@ export async function sendLandlordMessage(formData: FormData) {
   if (error) throw new Error(error.message);
   revalidatePath(`/dashboard/tenancies/${tenancyId}`);
 }
+
+/** Revoke the tenant link — the magic link stops working immediately. */
+export async function revokePortalLink(formData: FormData) {
+  const tenancyId = String(formData.get("tenancy_id"));
+  await assertTenancyOwner(tenancyId);
+  const supabase = createClient();
+  await supabase.from("tenancies").update({ portal_token: null }).eq("id", tenancyId);
+  revalidatePath(`/dashboard/tenancies/${tenancyId}`);
+}
