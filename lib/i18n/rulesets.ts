@@ -7,6 +7,7 @@ import { resolveJurisdiction, type JurisdictionKey, type JurisdictionRules } fro
 export interface RegionRuleset {
   country: string;
   countryName: string;
+  subregionName?: string;
   currency: string;
   governingLaw: string;
   tenancyTerm: string;
@@ -117,9 +118,70 @@ function ukToRuleset(j: JurisdictionRules, currency = "GBP"): RegionRuleset {
   };
 }
 
-export function resolveRegion(country?: string | null, region?: string | null): RegionRuleset {
+
+interface StateRule {
+  name: string;
+  depositCap: string;
+  depositReturn: string;
+  extraCompliance: { label: string; note: string }[];
+  extraNotes: string[];
+}
+
+const US_STATE_RULES: Record<string, StateRule> = {
+  us_ca: {
+    name: "California",
+    depositCap: "Max 1 month's rent (2 months for small landlords) — AB 12, from July 2024.",
+    depositReturn: "Itemised return within 21 days.",
+    extraCompliance: [
+      { label: "Just-cause eviction & rent cap", note: "AB 1482: increases capped at 5% + CPI (max 10%); just cause required for many units." },
+      { label: "State disclosures", note: "Lead paint, Megan's Law, mold, bed bugs, flood zone, Prop 65." },
+    ],
+    extraNotes: ["Month-to-month notice: 30 days (<1 yr), 60 days (≥1 yr).", "Cities like LA & SF add local rent control."],
+  },
+  us_tx: {
+    name: "Texas",
+    depositCap: "No statutory cap.",
+    depositReturn: "Itemised return within 30 days.",
+    extraCompliance: [
+      { label: "Security devices", note: "Landlord must provide statutory locks and smoke detectors." },
+      { label: "Repair & remedy", note: "Tenant remedies under Texas Property Code §92 if repairs are ignored." },
+    ],
+    extraNotes: ["Month-to-month notice: 30 days.", "No state rent control (locally preempted)."],
+  },
+  us_ny: {
+    name: "New York",
+    depositCap: "Max 1 month's rent — HSTPA 2019.",
+    depositReturn: "Itemised return within 14 days.",
+    extraCompliance: [
+      { label: "Rent stabilization", note: "NYC and some areas: stabilized units have renewal and increase limits." },
+      { label: "State disclosures", note: "Lead paint, bedbug history (NYC), sprinkler, allergen (NYC)." },
+    ],
+    extraNotes: ["Notice to end: 30 / 60 / 90 days by length of tenancy.", "Good-cause eviction applies in NYC and opt-in localities."],
+  },
+  us_fl: {
+    name: "Florida",
+    depositCap: "No statutory cap.",
+    depositReturn: "15 days (no deductions) or 30 days with itemised notice.",
+    extraCompliance: [{ label: "Deposit holding disclosure", note: "Must disclose where the deposit is held within 30 days." }],
+    extraNotes: ["Month-to-month notice: 30 days (15 for weekly).", "No state rent control."],
+  },
+};
+
+function withState(base: RegionRuleset, code?: string | null): RegionRuleset {
+  const rule = code ? US_STATE_RULES[code] : undefined;
+  if (!rule) return base;
+  return {
+    ...base,
+    subregionName: rule.name,
+    deposit: { cap: rule.depositCap, protection: rule.depositReturn },
+    compliance: [...base.compliance, ...rule.extraCompliance],
+    notes: [...rule.extraNotes, ...base.notes],
+  };
+}
+
+export function resolveRegion(country?: string | null, region?: string | null, regionCode?: string | null): RegionRuleset {
   const cc = (country ?? "GB").toUpperCase();
-  if (cc === "US") return US;
+  if (cc === "US") return withState(US, regionCode);
   if (cc === "AE") return UAE;
   if (cc === "ZA") return ZA;
   const key = (["england", "wales", "scotland", "northern_ireland"].includes(region ?? "") ? region : "england") as JurisdictionKey;

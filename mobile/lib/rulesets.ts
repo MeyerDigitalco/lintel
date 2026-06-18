@@ -1,6 +1,7 @@
 // Self-contained region rulesets for mobile (mirrors the web layer). Guidance only.
 export interface RegionRuleset {
   countryName: string;
+  subregionName?: string;
   governingLaw: string;
   tenancyTerm: string;
   depositTerm: string;
@@ -88,9 +89,23 @@ function uk(region?: string | null): RegionRuleset {
   };
 }
 
-export function resolveRegion(country?: string | null, region?: string | null): RegionRuleset {
+
+const US_STATE_RULES: Record<string, { name: string; depositCap: string; depositReturn: string; extra: { label: string; note: string }[]; notes: string[] }> = {
+  us_ca: { name: "California", depositCap: "Max 1 month's rent (2 for small landlords) — AB 12.", depositReturn: "Itemised return within 21 days.", extra: [{ label: "Just-cause & rent cap", note: "AB 1482: increases capped 5% + CPI (max 10%); just cause for many units." }, { label: "State disclosures", note: "Lead, Megan's Law, mold, bed bugs, flood, Prop 65." }], notes: ["Notice: 30 days (<1 yr), 60 days (≥1 yr).", "LA & SF add local rent control."] },
+  us_tx: { name: "Texas", depositCap: "No statutory cap.", depositReturn: "Itemised return within 30 days.", extra: [{ label: "Security devices", note: "Statutory locks and smoke detectors required." }], notes: ["Notice: 30 days.", "No state rent control."] },
+  us_ny: { name: "New York", depositCap: "Max 1 month's rent — HSTPA 2019.", depositReturn: "Itemised return within 14 days.", extra: [{ label: "Rent stabilization", note: "NYC stabilized units have renewal & increase limits." }], notes: ["Notice: 30/60/90 days by length.", "Good-cause eviction in NYC & opt-in areas."] },
+  us_fl: { name: "Florida", depositCap: "No statutory cap.", depositReturn: "15 days (no deductions) or 30 with notice.", extra: [{ label: "Deposit holding disclosure", note: "Disclose where the deposit is held within 30 days." }], notes: ["Notice: 30 days (15 weekly).", "No state rent control."] },
+};
+
+function withState(base: RegionRuleset, code?: string | null): RegionRuleset {
+  const r = code ? US_STATE_RULES[code] : undefined;
+  if (!r) return base;
+  return { ...base, subregionName: r.name, deposit: { cap: r.depositCap, protection: r.depositReturn }, compliance: [...base.compliance, ...r.extra], notes: [...r.notes, ...base.notes] };
+}
+
+export function resolveRegion(country?: string | null, region?: string | null, regionCode?: string | null): RegionRuleset {
   const cc = (country ?? "GB").toUpperCase();
-  if (cc === "US") return US;
+  if (cc === "US") return withState(US, regionCode);
   if (cc === "AE") return AE;
   if (cc === "ZA") return ZA;
   return uk(region);

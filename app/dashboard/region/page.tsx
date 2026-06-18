@@ -7,15 +7,15 @@ import { CURRENCIES } from "@/lib/i18n/currency";
 export const dynamic = "force-dynamic";
 
 export default async function RegionRulesPage() {
-  const { country, region, currency } = await requireSession();
-  const r = resolveRegion(country, region);
+  const { country, region, currency, regionCode } = await requireSession();
+  const r = resolveRegion(country, region, regionCode);
   const cur = CURRENCIES[currency];
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Region rules"
-        subtitle={`${r.countryName} — how Lintel tailors your account.`}
+        subtitle={`${r.subregionName ? `${r.subregionName}, ` : ""}${r.countryName} — how Lintel tailors your account.`}
         action={<Badge tone="mint">{cur?.symbol} {currency}</Badge>}
       />
 

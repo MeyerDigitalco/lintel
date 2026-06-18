@@ -5,13 +5,13 @@ import { useAuth } from "@/providers/AuthProvider";
 import { resolveRegion } from "@/lib/rulesets";
 
 export default function RegionRules() {
-  const { country, region, currency } = useAuth();
-  const r = resolveRegion(country, region);
+  const { country, region, currency, regionCode } = useAuth();
+  const r = resolveRegion(country, region, regionCode);
 
   return (
     <Screen>
       <Row>
-        <Text style={{ fontSize: font.h2, fontWeight: "700", color: colors.ink }}>{r.countryName}</Text>
+        <Text style={{ fontSize: font.h2, fontWeight: "700", color: colors.ink }}>{r.subregionName ? `${r.subregionName}, ${r.countryName}` : r.countryName}</Text>
         <Badge tone="mint">{currency}</Badge>
       </Row>
 

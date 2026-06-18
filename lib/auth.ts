@@ -12,6 +12,7 @@ export interface SessionContext {
   region: JurisdictionKey;
   country: string;
   currency: string;
+  regionCode: string | null;
 }
 
 export const WRITER_ROLES = ["owner", "admin", "landlord"];
@@ -36,7 +37,7 @@ export async function requireSession(): Promise<SessionContext> {
 
   const { data: org } = await supabase
     .from("orgs")
-    .select("region, country, currency")
+    .select("region, country, currency, region_code")
     .eq("id", membership.org_id)
     .maybeSingle();
 
@@ -48,6 +49,7 @@ export async function requireSession(): Promise<SessionContext> {
     region: (org?.region ?? "england") as JurisdictionKey,
     country: ((org as any)?.country as string) ?? "GB",
     currency: ((org as any)?.currency as string) ?? "GBP",
+    regionCode: ((org as any)?.region_code as string) ?? null,
   };
 }
 
