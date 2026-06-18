@@ -1,8 +1,23 @@
-import React from "react";
-import { View, Text } from "react-native";
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
 import { Screen, Card, Badge, Row, SectionTitle, colors, font } from "@/components/ui";
 import { useAuth } from "@/providers/AuthProvider";
 import { resolveRegion } from "@/lib/rulesets";
+
+function Expandable({ title, subtitle, detail, badge }: { title: string; subtitle?: string; detail?: string; badge?: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <Card style={{ marginBottom: 8 }}>
+      <TouchableOpacity activeOpacity={0.7} onPress={() => setOpen((o) => !o)}>
+        <Row>
+          <Text style={{ fontWeight: "600", color: colors.ink, flex: 1 }}>{title}</Text>
+          {badge ? <Badge tone="amber">{badge}</Badge> : <Text style={{ fontSize: font.tiny, color: colors.slate }}>{open ? "Hide" : "Details"}</Text>}
+        </Row>
+      </TouchableOpacity>
+      <Text style={{ fontSize: font.tiny, color: colors.slate, marginTop: 6 }}>{open ? (detail ?? subtitle ?? "") : (subtitle ?? "")}</Text>
+    </Card>
+  );
+}
 
 export default function RegionRules() {
   const { country, region, currency, regionCode } = useAuth();
@@ -24,15 +39,15 @@ export default function RegionRules() {
         </Row>
       </Card>
 
-      <View>
-        <SectionTitle>Compliance</SectionTitle>
-        {r.compliance.map((c) => (
-          <Card key={c.label} style={{ marginBottom: 8 }}>
-            <Text style={{ fontWeight: "600", color: colors.ink }}>{c.label}</Text>
-            <Text style={{ fontSize: font.tiny, color: colors.slate, marginTop: 2 }}>{c.note}</Text>
-          </Card>
-        ))}
-      </View>
+      <SectionTitle>{r.tenancyTerm[0].toUpperCase() + r.tenancyTerm.slice(1)} types</SectionTitle>
+      {r.tenancyTypes.map((t) => (
+        <Expandable key={t.label} title={t.label} detail={t.description} subtitle={t.description.length > 60 ? t.description.slice(0, 57) + "…" : t.description} />
+      ))}
+
+      <SectionTitle>Compliance</SectionTitle>
+      {r.compliance.map((c) => (
+        <Expandable key={c.label} title={c.label} subtitle={c.note} detail={(c as any).detail ?? c.note} />
+      ))}
 
       <Card>
         <Text style={{ fontWeight: "600", color: colors.ink }}>{r.depositTerm[0].toUpperCase() + r.depositTerm.slice(1)}</Text>
@@ -51,15 +66,7 @@ export default function RegionRules() {
 
       <SectionTitle>Notices & deadlines</SectionTitle>
       {r.notices.map((n) => (
-        <Card key={n.label} style={{ marginBottom: 8 }}>
-          <Row>
-            <View style={{ flex: 1 }}>
-              <Text style={{ fontWeight: "600", color: colors.ink }}>{n.label}</Text>
-              <Text style={{ fontSize: font.tiny, color: colors.slate, marginTop: 2 }}>{n.when}</Text>
-            </View>
-            <Badge tone="amber">{n.period}</Badge>
-          </Row>
-        </Card>
+        <Expandable key={n.label} title={n.label} badge={n.period} subtitle={n.when} detail={(n as any).detail ?? n.when} />
       ))}
 
       <Text style={{ fontSize: font.tiny, color: colors.slate }}>Guidance only — Lintel provides software, not legal or tax advice.</Text>

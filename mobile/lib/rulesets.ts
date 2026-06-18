@@ -7,10 +7,10 @@ export interface RegionRuleset {
   depositTerm: string;
   taxLabel: string;
   tenancyTypes: { label: string; description: string }[];
-  compliance: { label: string; note: string }[];
+  compliance: { label: string; note: string; detail?: string }[];
   deposit: { cap: string; protection: string };
   checklist: string[];
-  notices: { label: string; when: string; period: string }[];
+  notices: { label: string; when: string; period: string; detail?: string }[];
   notes: string[];
 }
 
@@ -23,18 +23,18 @@ const US: RegionRuleset = {
     { label: "Month-to-month", description: "Rolling tenancy terminable on state-set notice." },
   ],
   compliance: [
-    { label: "Lead-based paint disclosure", note: "Required for housing built before 1978." },
-    { label: "Smoke & CO detectors", note: "Working detectors required; varies by state/city." },
-    { label: "Warranty of habitability", note: "Property must be safe and livable." },
-    { label: "Security deposit handling", note: "Many states cap amount and require itemised deductions." },
-    { label: "Fair Housing compliance", note: "No discrimination on protected classes." },
+    { label: "Lead-based paint disclosure", note: "Pre-1978 housing.", detail: "Federal Title X requires disclosure of known lead hazards and the EPA pamphlet before signing. Keep the signed form 3 years." },
+    { label: "Smoke & CO detectors", note: "Working detectors required.", detail: "Most states require smoke and CO alarms (where fuel-burning equipment/garage). Count and placement vary; test at move-in and record it." },
+    { label: "Warranty of habitability", note: "Safe and livable.", detail: "Implied in nearly every state: heat, water, plumbing, sound structure. Fix within a reasonable time or face rent withholding / repair-and-deduct." },
+    { label: "Security deposit handling", note: "Caps & itemised deductions vary.", detail: "Many states cap the deposit (1-2 months), require a separate/interest account, and an itemised statement within 14-30 days. Late = forfeit deductions." },
+    { label: "Fair Housing compliance", note: "Anti-discrimination rules.", detail: "Fair Housing Act bans bias on race, color, religion, sex, origin, disability, familial status; many states add more. Screen everyone identically." },
   ],
   deposit: { cap: "Varies by state — often 1–2 months' rent.", protection: "Return within the state deadline with an itemised statement." },
   checklist: ["Written lease", "Lead paint disclosure (pre-1978)", "Move-in inspection", "State-required disclosures"],
   notices: [
-    { label: "Notice to Pay Rent or Quit", when: "Rent unpaid", period: "3-14 days (state-specific)" },
-    { label: "Notice to Cure or Quit", when: "Lease violation", period: "Varies by state" },
-    { label: "Notice to Terminate (no cause)", when: "End a month-to-month", period: "30-60 days" },
+    { label: "Notice to Pay Rent or Quit", when: "Rent unpaid", period: "3-14 days (state-specific)", detail: "Served when rent is overdue. Cure window is state-set (3-14 days), in writing with the exact amount due, before you can file." },
+    { label: "Notice to Cure or Quit", when: "Lease violation", period: "Varies by state", detail: "For non-rent breaches (e.g. unauthorised pet). Gives a state-set window to fix before eviction." },
+    { label: "Notice to Terminate (no cause)", when: "End a month-to-month", period: "30-60 days", detail: "Ends a month-to-month without fault, usually 30 days (60+ longer/tenant-protective states). Just-cause states (CA, OR) restrict it." },
   ],
   notes: ["Rules differ by state (CA, OR, NY are stronger).", "Report income/expenses on Schedule E; 1099 contractors paid $600+."],
 };
@@ -455,15 +455,15 @@ function uk(region?: string | null): RegionRuleset {
     taxLabel: "Self Assessment (SA105) / Making Tax Digital",
     tenancyTypes: [{ label: region === "wales" ? "Occupation contract" : "Assured/periodic tenancy", description: "Standard residential let for this nation." }],
     compliance: [
-      { label: "Gas safety certificate", note: "Annual (where gas present)." },
-      { label: "EICR (electrical)", note: "Every 5 years." },
-      { label: "EPC", note: "Valid certificate required to let." },
-      { label: "Deposit protection", note: "Protect in an approved scheme within the deadline." },
+      { label: "Gas safety certificate", note: "Annual (where gas present).", detail: "CP12 by a Gas Safe engineer every 12 months where gas appliances are present; give the tenant a copy. Lintel reminds you before it expires." },
+      { label: "EICR (electrical)", note: "Every 5 years.", detail: "Electrical Installation Condition Report at least every 5 years (England). Supply to the tenant within 28 days and remedy C1/C2 faults promptly." },
+      { label: "EPC", note: "Valid certificate required to let.", detail: "A valid Energy Performance Certificate (min band E in England/Wales) is required to let and lasts 10 years." },
+      { label: "Deposit protection", note: "Protect within the deadline.", detail: "Protect the deposit in an approved scheme and serve prescribed information within 30 days; failure blocks Section 21 and risks penalties." },
     ],
     deposit: { cap: "5 weeks' rent (annual rent < £50k), else 6 weeks.", protection: "Protect within 30 days in an approved scheme." },
     checklist: ["Tenancy agreement", "EPC", "Gas safety certificate", region === "england" ? "Right to Rent check" : "Deposit prescribed information"],
     notices: [
-      { label: "Possession notice", when: "Statutory grounds", period: "Grounds-dependent" },
+      { label: "Possession notice", when: "Statutory grounds", period: "Grounds-dependent", detail: "Possession is on statutory grounds; the notice period depends on the grounds relied upon. Build and print it in the Notice generator." },
       { label: "Rent increase notice", when: "Increase rent", period: region === "scotland" ? "3 months" : "1-2 months" },
     ],
     notes: ["Jurisdiction-correct notices and court-readiness in the web app.", "Records map to SA105 for Self Assessment / MTD."],
