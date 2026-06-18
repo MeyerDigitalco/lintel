@@ -14,7 +14,7 @@ const config: Config = {
         mint: "#3B82F6",
         paper: "#F6F8FB",
         surface: "#FFFFFF",
-        slate: "#5A6573",
+        slate: "#2B3340",
         hairline: "#E2E7EF",
         amber: "#E0A53D",
         red: "#D9534F",

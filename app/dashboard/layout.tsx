@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { EntitlementProvider } from "@/components/app/EntitlementProvider";
 import { RoleProvider } from "@/components/app/RoleProvider";
 import { Sidebar } from "@/components/app/Sidebar";
+import { ContentColumn } from "@/components/app/ContentColumn";
 import { Topbar } from "@/components/app/Topbar";
 
 export const dynamic = "force-dynamic";
@@ -29,31 +30,17 @@ export default async function DashboardLayout({
     .eq("id", session.orgId)
     .maybeSingle();
 
-  // Regional landscape behind the content column only (never the sidebar).
-  // Prefers a real photo at /regions/<region>.jpg; falls back to the bundled
-  // vector landscape if the photo isn't present (CSS skips a 404 layer).
-  const r = session.region;
-  const contentStyle: React.CSSProperties = {
-    backgroundImage:
-      `linear-gradient(to bottom, rgba(246,248,251,0.34) 0px, rgba(246,248,251,0.06) 140px, rgba(246,248,251,0.10) 360px, rgba(246,248,251,0.86) 600px, #F6F8FB 760px), ` +
-      `url(/regions/${r}.jpg), url(/regions/${r}.svg)`,
-    backgroundRepeat: "no-repeat, no-repeat, no-repeat",
-    backgroundSize: "cover, cover, cover",
-    backgroundPosition: "center top, center 38%, center 38%",
-    backgroundAttachment: "fixed, fixed, fixed",
-  };
-
   return (
     <EntitlementProvider value={entitlements}>
       <RoleProvider readOnly={readOnly}>
         <div className="flex min-h-screen bg-paper">
           <Sidebar readOnly={readOnly} lang={lang} langs={langs} country={session.country} />
-          <div className="flex min-w-0 flex-1 flex-col" style={contentStyle} dir={isRTL(lang) ? "rtl" : "ltr"}>
+          <ContentColumn region={session.region} dir={isRTL(lang) ? "rtl" : "ltr"}>
             <Topbar email={session.email} orgName={org?.name} regionName={ruleset.subregionName ? `${ruleset.subregionName}, ${ruleset.countryName}` : ruleset.countryName} />
             <main className="flex-1 px-5 py-8">
               <div className="mx-auto max-w-5xl">{children}</div>
             </main>
-          </div>
+          </ContentColumn>
         </div>
       </RoleProvider>
     </EntitlementProvider>
