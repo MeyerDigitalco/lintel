@@ -1,5 +1,5 @@
 import { requireTenant } from "@/lib/tenant-auth";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { Card, CardBody } from "@/components/ui/Card";
 import { Badge, EmptyState } from "@/components/app/ui";
 import { fmtDate } from "@/lib/dates";
@@ -26,6 +26,24 @@ export default async function PortalDocuments() {
     })
   );
 
+  // Per-property documents the landlord flagged visible (signed via service client).
+  const service = createServiceClient();
+  const { data: propDocs } = active.propertyId
+    ? await service
+        .from("property_documents")
+        .select("id, label, doc_type, storage_path, created_at")
+        .eq("property_id", active.propertyId)
+        .eq("visible_to_tenant", true)
+        .order("created_at", { ascending: false })
+    : { data: [] as any[] };
+  const propWithUrls = await Promise.all(
+    (propDocs ?? []).map(async (d: any) => {
+      const { data } = await service.storage.from("property-docs").createSignedUrl(d.storage_path, 60 * 10);
+      return { id: d.id, label: d.label, kind: d.doc_type, created_at: d.created_at, url: data?.signedUrl ?? null };
+    })
+  );
+  const allDocs = [...withUrls, ...propWithUrls];
+
   return (
     <div className="space-y-4">
       <h1 className="font-heading text-xl font-semibold tracking-tight">Documents</h1>
@@ -34,11 +52,11 @@ export default async function PortalDocuments() {
         any required notices.
       </p>
 
-      {withUrls.length === 0 ? (
+      {allDocs.length === 0 ? (
         <EmptyState title="No documents" body="Your landlord hasn't shared anything yet." />
       ) : (
         <div className="space-y-3">
-          {withUrls.map((d) => (
+          {allDocs.map((d) => (
             <Card key={d.id}>
               <CardBody className="flex items-center justify-between p-4">
                 <div>

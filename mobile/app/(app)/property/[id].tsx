@@ -24,7 +24,7 @@ function genToken(): string {
 
 export default function PropertyDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { currency } = useAuth();
+  const { currency, isWriter } = useAuth();
   const gbp = (n: number, d = false) => formatMoney(n, currency, d);
   const [loading, setLoading] = useState(true);
   const [prop, setProp] = useState<any>(null);
@@ -84,6 +84,19 @@ export default function PropertyDetail() {
     }
   };
 
+  const revokeTenantLink = (tenancy: any) => {
+    Alert.alert("Revoke tenant link", "The tenant will immediately lose access.", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Revoke", style: "destructive", onPress: async () => {
+          try {
+            const { error } = await supabase.from("tenancies").update({ portal_token: null }).eq("id", tenancy.id);
+            if (error) throw new Error(error.message);
+            await load();
+          } catch (e: any) { Alert.alert("Could not revoke", e.message ?? "Try again."); }
+        } },
+    ]);
+  };
+
   if (loading) return <Loading />;
   if (!prop) return <Screen><EmptyState title="Not found" /></Screen>;
 
@@ -114,6 +127,9 @@ export default function PropertyDetail() {
               {gbp(t.rent_amount, true)} / {t.rent_period} · from {fmtDate(t.start_date)}
             </Text>
             <Button title={t.portal_token ? "Share tenant link" : "Create & share tenant link"} variant="outline" onPress={() => shareTenantLink(t)} style={{ marginTop: 10 }} />
+            {isWriter && t.portal_token ? (
+              <Button title="Revoke tenant link" variant="ghost" onPress={() => revokeTenantLink(t)} style={{ marginTop: 8 }} />
+            ) : null}
           </Card>
         ))}
       </View>
