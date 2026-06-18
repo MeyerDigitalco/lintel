@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { PageHeader, Stat, EmptyState, Badge } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
 import { AddTransactionForm } from "@/components/app/AddTransactionForm";
+import { deleteTransaction } from "./actions";
 import { categoryLabel } from "@/lib/sa105";
 import { formatMoney } from "@/lib/i18n/currency";
 import { fmtDate, quarterlyPeriods, taxYearStartFor } from "@/lib/dates";
@@ -70,6 +71,7 @@ export default async function TransactionsPage() {
                   <th className="px-4 py-3 font-medium">Description</th>
                   <th className="px-4 py-3 font-medium">Category</th>
                   <th className="px-4 py-3 text-right font-medium">Amount</th>
+                  <th className="px-4 py-3 font-medium"></th>
                 </tr>
               </thead>
               <tbody>
@@ -90,6 +92,12 @@ export default async function TransactionsPage() {
                     >
                       {t.direction === "income" ? "+" : "−"}
                       {gbp(Number(t.amount), { decimals: true })}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <form action={deleteTransaction}>
+                        <input type="hidden" name="id" value={t.id} />
+                        <button type="submit" className="text-xs text-slate hover:text-red">Delete</button>
+                      </form>
                     </td>
                   </tr>
                 ))}

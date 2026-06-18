@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { requireSession } from "@/lib/auth";
+import { requireSession, isWriterRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { mileageAllowance } from "@/lib/sa105";
 
@@ -61,5 +61,25 @@ export async function logMileage(formData: FormData) {
   });
   if (error) throw new Error(error.message);
 
+  revalidatePath("/dashboard/transactions");
+}
+
+/** Delete a transaction (and its receipt file). Writers only. */
+export async function deleteTransaction(formData: FormData) {
+  const { orgId, role } = await requireSession();
+  if (!isWriterRole(role)) throw new Error("You don't have permission to delete entries.");
+  const supabase = createClient();
+  const id = String(formData.get("id"));
+  const { data: tx } = await supabase
+    .from("transactions")
+    .select("receipt_url")
+    .eq("id", id)
+    .eq("org_id", orgId)
+    .maybeSingle();
+  if (tx?.receipt_url) {
+    await supabase.storage.from(RECEIPTS_BUCKET).remove([tx.receipt_url]);
+  }
+  const { error } = await supabase.from("transactions").delete().eq("id", id).eq("org_id", orgId);
+  if (error) throw new Error(error.message);
   revalidatePath("/dashboard/transactions");
 }

@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { View, Text, Linking } from "react-native";
+import { View, Text, Linking, Alert, TouchableOpacity } from "react-native";
 import { Screen, Card, Badge, Row, EmptyState, Loading, colors, font } from "@/components/ui";
 import { useAuth } from "@/providers/AuthProvider";
 import { supabase } from "@/lib/supabase";
-import { fmtDate } from "@/lib/format";
+import { fmtDate, daysUntil } from "@/lib/format";
 
 type Doc = {
   id: string; label: string; doc_type: string | null; storage_path: string; expires_at: string | null;
@@ -20,7 +20,7 @@ function docStat(expires_at: string | null): { tone: "default" | "mint" | "amber
 }
 
 export default function Documents() {
-  const { orgId } = useAuth();
+  const { orgId, isWriter } = useAuth();
   const [docs, setDocs] = useState<Doc[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -44,6 +44,19 @@ export default function Documents() {
 
   useEffect(() => { load(); }, [load]);
   const onRefresh = async () => { setRefreshing(true); await load(); setRefreshing(false); };
+  const remove = (d: Doc) => {
+    Alert.alert("Delete document", `Delete "${d.label}"?`, [
+      { text: "Cancel", style: "cancel" },
+      { text: "Delete", style: "destructive", onPress: async () => {
+          try {
+            if (d.storage_path) await supabase.storage.from("property-docs").remove([d.storage_path]);
+            await supabase.from("property_documents").delete().eq("id", d.id);
+            await load();
+          } catch (e: any) { Alert.alert("Could not delete", e.message); }
+        } },
+    ]);
+  };
+
   if (loading) return <Loading />;
 
   return (
@@ -63,6 +76,11 @@ export default function Documents() {
               <View style={{ alignItems: "flex-end", gap: 4 }}>
                 {docStat(d.expires_at) ? <Badge tone={docStat(d.expires_at)!.tone}>{docStat(d.expires_at)!.label}</Badge> : null}
                 {d.doc_type ? <Badge tone="mint">{d.doc_type.replace(/_/g, " ")}</Badge> : null}
+                {isWriter ? (
+                  <TouchableOpacity onPress={() => remove(d)}>
+                    <Text style={{ fontSize: font.tiny, color: colors.slate }}>Delete</Text>
+                  </TouchableOpacity>
+                ) : null}
               </View>
             </Row>
           </Card>

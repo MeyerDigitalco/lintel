@@ -29,17 +29,24 @@ const NAV = [
   { href: "/dashboard/settings", key: "nav.settings" },
 ];
 
+const TAX_SHORT: Record<string, string> = { en: "Tax", es: "Impuestos", fr: "Impôts", de: "Steuern", ar: "الضرائب", hi: "कर", it: "Tasse", pt: "Impostos", ja: "税金" };
+
 export function Sidebar({
   readOnly = false,
   lang = "en",
   langs = ["en"],
+  country = "GB",
 }: {
   readOnly?: boolean;
   lang?: string;
   langs?: string[];
+  country?: string;
 }) {
   const pathname = usePathname();
-  const items = NAV.filter((i) => !(readOnly && i.writerOnly));
+  const isUK = country === "GB";
+  const items = NAV.filter((i) => !(readOnly && i.writerOnly)).filter(
+    (i) => isUK || i.href !== "/dashboard/toolkit"
+  );
   return (
     <aside className="hidden w-60 shrink-0 border-r border-hairline bg-surface md:flex md:flex-col">
       <div className="px-5 py-5">
@@ -60,7 +67,7 @@ export function Sidebar({
                 active ? "bg-evergreen/8 font-medium text-evergreen" : "text-slate hover:bg-ink/5 hover:text-ink"
               )}
             >
-              {translate(lang, item.key)}
+              {item.key === "nav.tax" && !isUK ? (TAX_SHORT[lang] ?? "Tax") : translate(lang, item.key)}
             </Link>
           );
         })}

@@ -47,7 +47,7 @@ export default async function DashboardLayout({
     <EntitlementProvider value={entitlements}>
       <RoleProvider readOnly={readOnly}>
         <div className="flex min-h-screen bg-paper">
-          <Sidebar readOnly={readOnly} lang={lang} langs={langs} />
+          <Sidebar readOnly={readOnly} lang={lang} langs={langs} country={session.country} />
           <div className="flex min-w-0 flex-1 flex-col" style={contentStyle} dir={isRTL(lang) ? "rtl" : "ltr"}>
             <Topbar email={session.email} orgName={org?.name} regionName={ruleset.subregionName ? `${ruleset.subregionName}, ${ruleset.countryName}` : ruleset.countryName} />
             <main className="flex-1 px-5 py-8">
