@@ -48,13 +48,13 @@ export default async function InvoicesPage({
 
       <AddInvoiceForm contacts={contacts ?? []} properties={properties ?? []} />
 
-      <div className="mb-6 flex flex-wrap gap-2">
+      <div className="mb-6 mt-4 flex flex-wrap gap-2">
         {STATUSES.map((s) => (
           <Link
             key={s}
             href={`/dashboard/invoices?status=${s}`}
             className={cn(
-              "rounded-full border px-3 py-1 text-xs capitalize",
+              "rounded-full border px-3 py-1 text-xs capitalize bg-surface",
               status === s ? "border-evergreen bg-evergreen/8 text-evergreen" : "border-hairline text-slate hover:text-ink"
             )}
           >

@@ -16,6 +16,8 @@ export async function createProperty(formData: FormData) {
   const supabase = createClient();
 
   const jurisdiction = String(formData.get("jurisdiction")) as JurisdictionKey;
+  const allElectric = formData.get("all_electric") === "on";
+  const bedroomsRaw = String(formData.get("bedrooms") ?? "").trim();
   const { data: created, error } = await supabase
     .from("properties")
     .insert({
@@ -23,19 +25,42 @@ export async function createProperty(formData: FormData) {
       jurisdiction,
       label: String(formData.get("label") ?? "").trim(),
       address_line1: String(formData.get("address_line1") ?? "") || null,
+      address_line2: String(formData.get("address_line2") ?? "") || null,
       city: String(formData.get("city") ?? "") || null,
       postcode: String(formData.get("postcode") ?? "") || null,
       is_hmo: formData.get("is_hmo") === "on",
+      subtype: String(formData.get("subtype") ?? "") || null,
+      bedrooms: bedroomsRaw ? Number(bedroomsRaw) : null,
+      status: String(formData.get("status") ?? "vacant") || "vacant",
+      all_electric: allElectric,
+      ownership: String(formData.get("ownership") ?? "personal") || "personal",
+      company_name: String(formData.get("company_name") ?? "") || null,
+      company_no: String(formData.get("company_no") ?? "") || null,
+      year_end_month: String(formData.get("year_end_month") ?? "") || null,
     })
     .select("id")
     .single();
   if (error) throw new Error(error.message);
 
+  // Optional property photo.
+  const photo = formData.get("photo");
+  if (created?.id && photo instanceof File && photo.size > 0) {
+    try {
+      const ext = (photo.name.split(".").pop() || "jpg").toLowerCase();
+      const path = `${created.id}/photo-${Date.now()}.${ext}`;
+      const bytes = Buffer.from(await photo.arrayBuffer());
+      const { error: pErr } = await supabase.storage.from("property-docs").upload(path, bytes, { contentType: photo.type || "image/jpeg", upsert: true });
+      if (!pErr) await supabase.from("properties").update({ photo_path: path }).eq("id", created.id);
+    } catch {
+      // non-fatal
+    }
+  }
+
   // Region-aware compliance auto-seeding from the org's country/region ruleset.
   if (created && created.id) {
     try {
       const ruleset = country === "GB" ? resolveRegion("GB", jurisdiction) : resolveRegion(country, region, regionCode);
-      const rows = ruleset.compliance.map((c) => ({
+      const rows = ruleset.compliance.filter((c) => !(allElectric && /gas/i.test(c.label))).map((c) => ({
         org_id: orgId,
         property_id: created.id,
         item_key: slug(c.label),

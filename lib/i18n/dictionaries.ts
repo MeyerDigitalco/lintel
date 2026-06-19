@@ -32,12 +32,12 @@ type Dict = Record<string, string>;
 
 export const DICTIONARIES: Record<string, Dict> = {
   en: {
-    "nav.overview": "Overview", "nav.properties": "Properties", "nav.contacts": "Contacts",
-    "nav.income": "Income & expenses", "nav.invoices": "Invoices", "nav.rent": "Rent ledger",
-    "nav.court": "Court-readiness", "nav.maintenance": "Maintenance", "nav.tasks": "Tasks",
-    "nav.notice": "Notice generator", "nav.compliance": "Compliance", "nav.region": "Region rules",
+    "nav.overview": "Home", "nav.properties": "Properties", "nav.contacts": "Contacts",
+    "nav.income": "Income & expenses", "nav.invoices": "Invoices", "nav.rent": "Rent",
+    "nav.court": "Court ready", "nav.maintenance": "Maintenance", "nav.tasks": "Tasks",
+    "nav.notice": "Notices", "nav.compliance": "Compliance", "nav.region": "Region rules",
     "nav.documents": "Documents", "nav.toolkit": "Toolkit", "nav.reports": "Reports",
-    "nav.assistant": "Assistant", "nav.tax": "Tax & MTD", "nav.accountant": "Accountant", "nav.settings": "Settings",
+    "nav.assistant": "AI assistant", "nav.tax": "Tax & MTD", "nav.accountant": "Accountant", "nav.settings": "Settings",
   },
   es: {
     "nav.overview": "Resumen", "nav.properties": "Propiedades", "nav.contacts": "Contactos",
