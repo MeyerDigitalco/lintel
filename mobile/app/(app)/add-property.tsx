@@ -169,7 +169,7 @@ export default function AddProperty() {
       </Row>
       {ownership === "company" ? (
         <>
-          <Field label="Company name" value={companyName} onChangeText={setCompanyName} placeholder="Blake Properties Ltd" />
+          <Field label="Company name" value={companyName} onChangeText={setCompanyName} placeholder="e.g. Acme Property Holdings Ltd" />
           <Field label="Company number" value={companyNo} onChangeText={setCompanyNo} placeholder="12345678" />
           <Text style={{ fontSize: font.tiny, fontWeight: "600", color: colors.slate }}>YEAR-END MONTH</Text>
           <Row style={{ flexWrap: "wrap", justifyContent: "flex-start", gap: 8 }}>

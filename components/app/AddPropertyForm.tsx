@@ -18,6 +18,7 @@ export function AddPropertyForm({ region }: { region: JurisdictionKey }) {
   const readOnly = useReadOnly();
   const [open, setOpen] = useState(false);
   const [label, setLabel] = useState("");
+  const [labelTouched, setLabelTouched] = useState(false);
   const [line1, setLine1] = useState("");
   const [line2, setLine2] = useState("");
   const [city, setCity] = useState("");
@@ -40,7 +41,7 @@ export function AddPropertyForm({ region }: { region: JurisdictionKey }) {
           action={async (fd) => {
             await createProperty(fd);
             setOpen(false);
-            setLabel(""); setLine1(""); setLine2(""); setCity(""); setPostcode(""); setIsHmo(false); setOwnership("personal"); setPhotoName("");
+            setLabel(""); setLabelTouched(false); setLine1(""); setLine2(""); setCity(""); setPostcode(""); setIsHmo(false); setOwnership("personal"); setPhotoName("");
           }}
           className="space-y-5"
         >
@@ -58,20 +59,21 @@ export function AddPropertyForm({ region }: { region: JurisdictionKey }) {
             </label>
           </div>
 
-          <label className="block">
-            <span className={labelCls}>Property name *</span>
-            <input name="label" required value={label} onChange={(e) => setLabel(e.target.value)} placeholder="e.g. 42 Oak Avenue" className={inputCls} />
-          </label>
-
           <div>
             <span className={labelCls}>Find your address (search)</span>
             <AddressAutocomplete
               onSelect={(a) => {
                 setLine1(a.line1); setCity(a.city); setPostcode(a.postcode);
-                if (!label) setLabel(a.line1 || a.formatted);
+                // Auto-name the property from the address unless the user typed their own name.
+                if (!labelTouched) setLabel([a.line1, a.city].filter(Boolean).join(", ") || a.formatted);
               }}
             />
           </div>
+
+          <label className="block">
+            <span className={labelCls}>Property name *</span>
+            <input name="label" required value={label} onChange={(e) => { setLabel(e.target.value); setLabelTouched(e.target.value.length > 0); }} placeholder="Auto-fills from the address — or type your own" className={inputCls} />
+          </label>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block sm:col-span-2"><span className={labelCls}>Address line 1 *</span>
@@ -147,7 +149,7 @@ export function AddPropertyForm({ region }: { region: JurisdictionKey }) {
             {ownership === "company" && (
               <div className="mt-3 grid gap-3 sm:grid-cols-3">
                 <label className="block"><span className="mb-1 block text-xs text-slate">Company name</span>
-                  <input name="company_name" placeholder="Blake Properties Ltd" className={inputCls} /></label>
+                  <input name="company_name" placeholder="e.g. Acme Property Holdings Ltd" className={inputCls} /></label>
                 <label className="block"><span className="mb-1 block text-xs text-slate">Company number</span>
                   <input name="company_no" placeholder="12345678" className={inputCls} /></label>
                 <label className="block"><span className="mb-1 block text-xs text-slate">Year-end month</span>
