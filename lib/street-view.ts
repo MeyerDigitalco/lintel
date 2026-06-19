@@ -13,6 +13,6 @@ export function streetViewUrl(
   if (!loc) return null;
   return (
     `https://maps.googleapis.com/maps/api/streetview?size=${size}` +
-    `&location=${encodeURIComponent(loc)}&fov=80&pitch=8&source=outdoor&key=${KEY}`
+    `&location=${encodeURIComponent(loc)}&fov=90&pitch=6&source=outdoor&key=${KEY}`
   );
 }

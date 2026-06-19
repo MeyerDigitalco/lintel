@@ -22,11 +22,22 @@ export default async function PropertiesPage() {
   const supabase = createClient();
 
   const [{ data: properties }, { data: tenancies }, { data: compliance }, { data: docs }] = await Promise.all([
-    supabase.from("properties").select("id, label, jurisdiction, address_line1, city, postcode, is_hmo").eq("org_id", orgId).order("created_at", { ascending: false }),
+    supabase.from("properties").select("id, label, jurisdiction, address_line1, city, postcode, is_hmo, photo_path").eq("org_id", orgId).order("created_at", { ascending: false }),
     supabase.from("tenancies").select("property_id, status").eq("org_id", orgId),
     supabase.from("compliance_items").select("property_id, expires_at").eq("org_id", orgId),
     supabase.from("property_documents").select("property_id").eq("org_id", orgId),
   ]);
+
+  // Signed URLs for uploaded property photos (private bucket). Shown in place of Street View.
+  const photos: Record<string, string> = {};
+  await Promise.all(
+    (properties ?? [])
+      .filter((p) => p.photo_path)
+      .map(async (p) => {
+        const { data } = await supabase.storage.from("property-docs").createSignedUrl(p.photo_path as string, 3600);
+        if (data?.signedUrl) photos[p.id] = data.signedUrl;
+      })
+  );
 
   function meta(propId: string, hasAddress: boolean) {
     const tens = (tenancies ?? []).filter((t) => t.property_id === propId);
@@ -58,7 +69,7 @@ export default async function PropertiesPage() {
             const j = resolveJurisdiction(p.jurisdiction as JurisdictionKey);
             const hasAddress = Boolean(p.city || p.postcode);
             const m = meta(p.id, hasAddress);
-            const img = streetViewUrl(p);
+            const img = photos[p.id] ?? streetViewUrl(p);
             return (
               <div key={p.id} className="flex flex-col">
                 <Link href={`/dashboard/properties/${p.id}`}>
