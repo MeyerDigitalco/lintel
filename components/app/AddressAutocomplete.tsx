@@ -111,6 +111,7 @@ export function AddressAutocomplete({
 
   return (
     <div ref={boxRef} className="relative">
+      <span className="mb-1 block text-sm text-ink">Find your address (search)</span>
       <input
         value={query}
         onChange={(e) => handleChange(e.target.value)}

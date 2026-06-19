@@ -59,16 +59,13 @@ export function AddPropertyForm({ region }: { region: JurisdictionKey }) {
             </label>
           </div>
 
-          <div>
-            <span className={labelCls}>Find your address (search)</span>
-            <AddressAutocomplete
-              onSelect={(a) => {
-                setLine1(a.line1); setCity(a.city); setPostcode(a.postcode);
-                // Auto-name the property from the address unless the user typed their own name.
-                if (!labelTouched) setLabel([a.line1, a.city].filter(Boolean).join(", ") || a.formatted);
-              }}
-            />
-          </div>
+          <AddressAutocomplete
+            onSelect={(a) => {
+              setLine1(a.line1); setCity(a.city); setPostcode(a.postcode);
+              // Auto-name the property from the address unless the user typed their own name.
+              if (!labelTouched) setLabel([a.line1, a.city].filter(Boolean).join(", ") || a.formatted);
+            }}
+          />
 
           <label className="block">
             <span className={labelCls}>Property name *</span>
