@@ -155,9 +155,9 @@ export default async function SettingsPage() {
         </Card>
       )}
 
-      <Card className="border-red-200">
+      <Card className="border-red/40 bg-red/5">
         <CardBody>
-          <h2 className="font-heading text-base font-semibold tracking-tight text-red-600">Delete account</h2>
+          <h2 className="font-heading text-base font-semibold tracking-tight text-red">Delete account</h2>
           <p className="mt-1 text-xs text-slate">
             This permanently closes your account and signs you out.
             {role === "owner" ? " If you are the only owner, your organisation and all of its data are removed too." : ""}
@@ -168,7 +168,7 @@ export default async function SettingsPage() {
               <label className={labelCls} htmlFor="confirm">Type DELETE to confirm</label>
               <input id="confirm" name="confirm" autoComplete="off" placeholder="DELETE" className={inputCls} />
             </div>
-            <Button type="submit" variant="outline">Delete my account</Button>
+            <Button type="submit" variant="outline" className="border-red text-red hover:bg-red/10">Delete my account</Button>
           </form>
         </CardBody>
       </Card>
