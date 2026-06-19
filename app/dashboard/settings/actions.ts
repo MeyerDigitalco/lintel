@@ -62,6 +62,45 @@ export async function updateOrgName(formData: FormData) {
   revalidatePath("/dashboard/settings");
 }
 
+export async function deleteAccount(formData: FormData) {
+  const { userId, orgId, role } = await requireSession();
+  const confirm = String(formData.get("confirm") ?? "").trim();
+  if (confirm !== "DELETE") throw new Error("Type DELETE to confirm closing your account.");
+
+  const service = createServiceClient();
+
+  // If this person is the sole owner of the org, remove the org and its data too.
+  if (role === "owner") {
+    const { data: owners } = await service
+      .from("memberships")
+      .select("user_id")
+      .eq("org_id", orgId)
+      .eq("role", "owner");
+    const ownerIds = (owners ?? []).map((o) => o.user_id);
+    const soleOwner = ownerIds.length === 1 && ownerIds[0] === userId;
+    if (soleOwner) {
+      try {
+        await service.from("orgs").delete().eq("id", orgId); // cascades to org data via FK
+      } catch {
+        // best-effort: continue to remove the user even if org cleanup fails
+      }
+    }
+  }
+
+  // Remove all of this user's memberships, then delete the auth account.
+  await service.from("memberships").delete().eq("user_id", userId);
+  try {
+    await service.auth.admin.deleteUser(userId);
+  } catch (e: any) {
+    throw new Error(e?.message ?? "Could not delete the account. Please contact support.");
+  }
+
+  // End the current session and send them to the marketing site.
+  const supabase = createClient();
+  await supabase.auth.signOut();
+  redirect("/?deleted=1");
+}
+
 /* ----------------------------- Billing ----------------------------- */
 
 export async function toggleAddon(formData: FormData) {

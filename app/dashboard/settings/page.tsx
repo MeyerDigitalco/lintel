@@ -4,7 +4,10 @@ import { createClient } from "@/lib/supabase/server";
 import { PageHeader, Badge } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { updateProfile, updateEmail, updatePassword, updateOrgName } from "./actions";
+import { updateProfile, updateEmail, updatePassword, updateOrgName, deleteAccount } from "./actions";
+import { setLanguage } from "@/app/lang-actions";
+import { getLang } from "@/lib/i18n/lang";
+import { availableLanguages, LANGUAGES } from "@/lib/i18n/dictionaries";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +25,9 @@ const ROLE_LABEL: Record<string, string> = {
 };
 
 export default async function SettingsPage() {
-  const { orgId, role } = await requireSession();
+  const { orgId, role, country } = await requireSession();
+  const lang = getLang(country);
+  const langs = availableLanguages(country);
   const supabase = createClient();
   const {
     data: { user },
@@ -80,6 +85,26 @@ export default async function SettingsPage() {
         </CardBody>
       </Card>
 
+      {langs.length > 1 && (
+        <Card>
+          <CardBody>
+            <h2 className="font-heading text-base font-semibold tracking-tight">Language</h2>
+            <p className="mt-1 text-xs text-slate">Choose the language for your dashboard. This applies to your account only.</p>
+            <form action={setLanguage} className="mt-4 flex items-end gap-3">
+              <div className="flex-1">
+                <label className={labelCls} htmlFor="lang">Display language</label>
+                <select id="lang" name="lang" defaultValue={lang} className={inputCls}>
+                  {langs.map((l) => (
+                    <option key={l} value={l}>{LANGUAGES[l]?.nativeName ?? l}</option>
+                  ))}
+                </select>
+              </div>
+              <Button type="submit" variant="outline">Save</Button>
+            </form>
+          </CardBody>
+        </Card>
+      )}
+
       <Card>
         <CardBody>
           <h2 className="font-heading text-base font-semibold tracking-tight">Email address</h2>
@@ -129,6 +154,24 @@ export default async function SettingsPage() {
           </CardBody>
         </Card>
       )}
+
+      <Card className="border-red-200">
+        <CardBody>
+          <h2 className="font-heading text-base font-semibold tracking-tight text-red-600">Delete account</h2>
+          <p className="mt-1 text-xs text-slate">
+            This permanently closes your account and signs you out.
+            {role === "owner" ? " If you are the only owner, your organisation and all of its data are removed too." : ""}
+            {" "}This cannot be undone.
+          </p>
+          <form action={deleteAccount} className="mt-4 flex items-end gap-3">
+            <div className="flex-1 max-w-xs">
+              <label className={labelCls} htmlFor="confirm">Type DELETE to confirm</label>
+              <input id="confirm" name="confirm" autoComplete="off" placeholder="DELETE" className={inputCls} />
+            </div>
+            <Button type="submit" variant="outline">Delete my account</Button>
+          </form>
+        </CardBody>
+      </Card>
     </div>
   );
 }
