@@ -11,6 +11,8 @@ import { raiseFaultByToken } from "./actions";
 import { tenancyReadiness } from "@/lib/court-readiness-server";
 
 export const dynamic = "force-dynamic";
+export const metadata = { robots: { index: false, follow: false } };
+
 
 const inputCls =
   "h-11 w-full rounded-lintel border border-hairline bg-surface px-3 text-sm outline-none focus:ring-2 focus:ring-evergreen/30";

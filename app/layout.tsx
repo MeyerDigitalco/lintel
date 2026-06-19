@@ -23,6 +23,21 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
   appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "Lintel" },
   icons: { apple: "/apple-touch-icon.png" },
+  keywords: ["landlord software", "property management", "rental compliance", "Making Tax Digital", "tenant portal", "rent tracking", "court-ready evidence", "international landlords"],
+  openGraph: {
+    type: "website",
+    siteName: "Lintel",
+    title: "Lintel — tax, compliance & rent for landlords worldwide",
+    description: "Tax records, compliance, rent and documents in one place, tuned to your country's rules. Free for 30 days.",
+    url: process.env.NEXT_PUBLIC_APP_URL ?? "https://lintel-green.vercel.app",
+    images: [{ url: "/icon-512.png", width: 512, height: 512, alt: "Lintel" }],
+  },
+  twitter: {
+    card: "summary",
+    title: "Lintel — landlord software, worldwide",
+    description: "Tax records, compliance, rent and documents in one place. Free for 30 days.",
+    images: ["/icon-512.png"],
+  },
 };
 
 export const viewport: Viewport = {

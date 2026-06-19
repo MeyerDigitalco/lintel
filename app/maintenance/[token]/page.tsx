@@ -13,6 +13,8 @@ import {
 } from "./actions";
 
 export const dynamic = "force-dynamic";
+export const metadata = { robots: { index: false, follow: false } };
+
 
 const inputCls =
   "h-10 w-full rounded-lintel border border-hairline bg-surface px-3 text-sm outline-none focus:ring-2 focus:ring-evergreen/30";

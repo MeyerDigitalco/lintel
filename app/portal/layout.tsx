@@ -1,4 +1,5 @@
 import Link from "next/link";
+export const metadata = { robots: { index: false, follow: false } };
 import { requireTenant } from "@/lib/tenant-auth";
 import { Logo } from "@/components/Logo";
 import { PortalNav } from "@/components/portal/PortalNav";

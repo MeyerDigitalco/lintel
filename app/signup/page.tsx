@@ -5,6 +5,11 @@ import { AuthForm } from "@/components/auth/AuthForm";
 import { TRIAL_PERIOD_DAYS } from "@/lib/stripe/config";
 import { detectCountry } from "@/lib/i18n/geo";
 
+import type { Metadata } from "next";
+export const metadata: Metadata = {
+  title: "Start your free trial — Lintel",
+  description: "Create your Lintel account. Every feature free for 30 days, no charge until day 31.",
+};
 export const dynamic = "force-dynamic";
 
 export default function SignupPage() {

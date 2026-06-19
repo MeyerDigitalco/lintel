@@ -10,6 +10,8 @@ import { ContentColumn } from "@/components/app/ContentColumn";
 import { Topbar } from "@/components/app/Topbar";
 
 export const dynamic = "force-dynamic";
+export const metadata = { robots: { index: false, follow: false } };
+
 
 export default async function DashboardLayout({
   children,
