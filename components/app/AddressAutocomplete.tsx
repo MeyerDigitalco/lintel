@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { loadGoogleMaps, type SelectedAddress } from "@/lib/google-maps";
+import { loadGoogleMaps, hasGoogleMapsKey, type SelectedAddress } from "@/lib/google-maps";
 
 const inputCls =
   "h-11 w-full rounded-lintel border border-hairline bg-surface px-3 text-sm outline-none focus:ring-2 focus:ring-evergreen/30";
 
 /**
- * Custom-styled UK address search using the Google Places Autocomplete Data API
- * (AutocompleteSuggestion). Renders our own input + dropdown so it matches the
- * design system. Returns nothing when no key is configured (manual entry).
+ * UK address search using Google Places Autocomplete (new AutocompleteSuggestion API).
+ * The input always renders when a key is configured; Places is initialised lazily on
+ * the first keystroke so a slow/async script load can never hide the field.
  */
 export function AddressAutocomplete({
   onSelect,
@@ -19,33 +19,12 @@ export function AddressAutocomplete({
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
-  const [enabled, setEnabled] = useState<boolean | null>(null);
 
   const placesRef = useRef<any>(null);
   const tokenRef = useRef<any>(null);
   const debounceRef = useRef<any>(null);
   const boxRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      const google = await loadGoogleMaps();
-      if (cancelled) return;
-      if (!google) return setEnabled(false);
-      try {
-        const places = await google.maps.importLibrary("places");
-        if (!places?.AutocompleteSuggestion) return setEnabled(false);
-        placesRef.current = places;
-        tokenRef.current = new places.AutocompleteSessionToken();
-        setEnabled(true);
-      } catch {
-        setEnabled(false);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const initRef = useRef<Promise<any> | null>(null);
 
   useEffect(() => {
     function onDoc(e: MouseEvent) {
@@ -55,18 +34,40 @@ export function AddressAutocomplete({
     return () => document.removeEventListener("mousedown", onDoc);
   }, []);
 
+  // Lazily load Maps + the Places library. Cached after the first call.
+  function ensurePlaces(): Promise<any> {
+    if (placesRef.current) return Promise.resolve(placesRef.current);
+    if (initRef.current) return initRef.current;
+    initRef.current = (async () => {
+      const google = await loadGoogleMaps();
+      if (!google) return null;
+      try {
+        const places = await google.maps.importLibrary("places");
+        if (!places?.AutocompleteSuggestion) return null;
+        placesRef.current = places;
+        tokenRef.current = new places.AutocompleteSessionToken();
+        return places;
+      } catch {
+        initRef.current = null;
+        return null;
+      }
+    })();
+    return initRef.current;
+  }
+
   function handleChange(v: string) {
     setQuery(v);
-    if (!placesRef.current || !v.trim()) {
+    if (!v.trim()) {
       setSuggestions([]);
       setOpen(false);
       return;
     }
     clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(async () => {
+      const places = await ensurePlaces();
+      if (!places) return;
       try {
-        const { AutocompleteSuggestion } = placesRef.current;
-        const res = await AutocompleteSuggestion.fetchAutocompleteSuggestions({
+        const res = await places.AutocompleteSuggestion.fetchAutocompleteSuggestions({
           input: v,
           sessionToken: tokenRef.current,
           includedRegionCodes: ["gb"],
@@ -107,7 +108,8 @@ export function AddressAutocomplete({
     if (placesRef.current) tokenRef.current = new placesRef.current.AutocompleteSessionToken();
   }
 
-  if (enabled === false) return null;
+  // No key at build time → manual entry only (hide the search box).
+  if (!hasGoogleMapsKey()) return null;
 
   return (
     <div ref={boxRef} className="relative">
