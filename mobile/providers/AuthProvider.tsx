@@ -1,8 +1,22 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { I18nManager } from "react-native";
 import type { Session, User } from "@supabase/supabase-js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "@/lib/supabase";
-import { availableLanguages } from "@/lib/i18n";
+import { availableLanguages, isRTL } from "@/lib/i18n";
+
+function applyRTL(lang: string) {
+  const want = isRTL(lang);
+  try {
+    I18nManager.allowRTL(want);
+    if (I18nManager.isRTL !== want) {
+      I18nManager.forceRTL(want);
+      // Layout direction fully applies after the next app launch.
+    }
+  } catch {
+    // no-op
+  }
+}
 
 export type Region = "england" | "wales" | "scotland" | "northern_ireland";
 
@@ -87,12 +101,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [loadContext]);
 
   useEffect(() => {
-    AsyncStorage.getItem("lintel_lang").then((v) => { if (v) setLangState(v); });
+    AsyncStorage.getItem("lintel_lang").then((v) => { if (v) { setLangState(v); applyRTL(v); } });
   }, []);
 
   const setLang = useCallback((l: string) => {
     setLangState(l);
     AsyncStorage.setItem("lintel_lang", l).catch(() => {});
+    applyRTL(l);
   }, []);
 
   const signIn = useCallback(async (email: string, password: string) => {

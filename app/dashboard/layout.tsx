@@ -35,7 +35,7 @@ export default async function DashboardLayout({
   return (
     <EntitlementProvider value={entitlements}>
       <RoleProvider readOnly={readOnly}>
-        <div className="flex min-h-screen bg-paper">
+        <div className="flex min-h-screen bg-paper" dir={isRTL(lang) ? "rtl" : "ltr"}>
           <Sidebar readOnly={readOnly} lang={lang} langs={langs} country={session.country} />
           <ContentColumn region={session.region} dir={isRTL(lang) ? "rtl" : "ltr"}>
             <Topbar email={session.email} orgName={org?.name} regionName={ruleset.subregionName ? `${ruleset.subregionName}, ${ruleset.countryName}` : ruleset.countryName} />

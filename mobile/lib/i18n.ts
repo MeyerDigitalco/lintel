@@ -10,6 +10,7 @@ export const LANGUAGES: Record<string, Language> = {
   it: { code: "it", name: "Italian", nativeName: "Italiano" },
   pt: { code: "pt", name: "Portuguese", nativeName: "Português" },
   ja: { code: "ja", name: "Japanese", nativeName: "日本語" },
+  he: { code: "he", name: "Hebrew", nativeName: "עברית", rtl: true },
 };
 
 export const COUNTRY_LANGUAGES: Record<string, string[]> = {
@@ -17,7 +18,7 @@ export const COUNTRY_LANGUAGES: Record<string, string[]> = {
   CA: ["en", "fr"], IE: ["en"], DE: ["de", "en"], ES: ["es", "en"], IN: ["en", "hi"],
   FR: ["fr", "en"], NL: ["en"], SG: ["en"], IT: ["it", "en"], PT: ["pt", "en"],
   CH: ["de", "fr", "en"], JP: ["ja", "en"], MX: ["es", "en"], BR: ["pt", "en"],
-  BE: ["fr", "en"], AT: ["de", "en"], PL: ["en"], SA: ["ar", "en"], QA: ["ar", "en"], HK: ["en"],
+  BE: ["fr", "en"], AT: ["de", "en"], PL: ["en"], SA: ["ar", "en"], QA: ["ar", "en"], HK: ["en"], IL: ["he", "en"],
 };
 
 export function availableLanguages(country?: string | null): string[] {
@@ -35,8 +36,13 @@ const D: Record<string, Dict> = {
   it: { home: "Home", properties: "Immobili", rent: "Affitto", repairs: "Riparazioni", more: "Altro", compliance: "Conformità", documents: "Documenti", court: "Pronto per il tribunale", scan: "Scansiona ricevuta", assistant: "Assistente", tasks: "Attività", region: "Regole regionali", language: "Lingua", signout: "Esci" },
   pt: { home: "Início", properties: "Imóveis", rent: "Renda", repairs: "Reparações", more: "Mais", compliance: "Conformidade", documents: "Documentos", court: "Preparação judicial", scan: "Digitalizar recibo", assistant: "Assistente", tasks: "Tarefas", region: "Regras regionais", language: "Idioma", signout: "Terminar sessão" },
   ja: { home: "ホーム", properties: "物件", rent: "家賃", repairs: "修繕", more: "その他", compliance: "コンプライアンス", documents: "書類", court: "訴訟準備", scan: "領収書をスキャン", assistant: "アシスタント", tasks: "タスク", region: "地域ルール", language: "言語", signout: "サインアウト" },
+  he: { home: "בית", properties: "נכסים", rent: "שכר דירה", repairs: "תיקונים", more: "עוד", compliance: "תאימות", documents: "מסמכים", court: "מוכנות משפטית", scan: "סריקת קבלה", assistant: "עוזר", tasks: "משימות", region: "כללי אזור", language: "שפה", signout: "התנתקות" },
 };
 
 export function t(lang: string, key: string): string {
   return D[lang]?.[key] ?? D.en[key] ?? key;
+}
+
+export function isRTL(lang: string): boolean {
+  return Boolean(LANGUAGES[lang]?.rtl);
 }
