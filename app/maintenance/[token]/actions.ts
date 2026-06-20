@@ -37,19 +37,22 @@ export async function contractorAccept(formData: FormData) {
 
 export async function contractorSchedule(formData: FormData) {
   const token = String(formData.get("token"));
-  const { service, requestId } = await resolveByToken(token);
+  const { service, requestId, orgId } = await resolveByToken(token);
   const date = String(formData.get("scheduled_for") ?? "");
-  await service
-    .from("maintenance_requests")
-    .update({ scheduled_for: date || null, status: "scheduled" })
-    .eq("id", requestId);
+  const time = String(formData.get("scheduled_time") ?? "").trim();
+  const quote = parseFloat(String(formData.get("quote_amount") ?? ""));
+  const patch: Record<string, unknown> = { status: "scheduled", scheduled_for: date || null, scheduled_time: time || null };
+  if (isFinite(quote) && quote > 0) patch.quote_amount = quote;
+  await service.from("maintenance_requests").update(patch).eq("id", requestId);
+  const when = date ? `${date}${time ? ` at ${time}` : ""}` : "";
   await service.from("maintenance_events").insert({
     request_id: requestId,
     actor_role: "contractor",
     kind: "schedule",
     new_status: "scheduled",
-    body: date ? `Scheduled for ${date}.` : "Schedule updated.",
+    body: [when ? `Scheduled for ${when}.` : "Schedule updated.", isFinite(quote) && quote > 0 ? `Quote provided.` : ""].filter(Boolean).join(" "),
   });
+  await sendPushToOrg(orgId, { title: "Contractor scheduled a visit", body: when ? `Attending ${when}.` : "A visit was scheduled.", data: { type: "maintenance_status", request_id: requestId, status: "scheduled" } });
   revalidatePath(`/maintenance/${token}`);
 }
 
@@ -71,25 +74,30 @@ export async function contractorComplete(formData: FormData) {
   const token = String(formData.get("token"));
   const { service, requestId, orgId } = await resolveByToken(token);
 
-  // Optional completion photo.
-  const file = formData.get("photo");
-  if (file instanceof File && file.size > 0) {
-    const path = `${requestId}/${Date.now()}-${file.name}`;
-    const { error: upErr } = await service.storage
-      .from("maintenance")
-      .upload(path, file, { upsert: false });
-    if (!upErr) {
-      await service.from("maintenance_photos").insert({
-        request_id: requestId,
-        storage_path: path,
-        uploaded_by_role: "contractor",
-      });
+  // Optional completion photos (one or many).
+  const files = formData.getAll("photos");
+  for (const file of files) {
+    if (file instanceof File && file.size > 0) {
+      const path = `${requestId}/${Date.now()}-${file.name}`;
+      const { error: upErr } = await service.storage
+        .from("maintenance")
+        .upload(path, file, { upsert: false });
+      if (!upErr) {
+        await service.from("maintenance_photos").insert({
+          request_id: requestId,
+          storage_path: path,
+          uploaded_by_role: "contractor",
+        });
+      }
     }
   }
 
+  const finalCost = parseFloat(String(formData.get("cost") ?? ""));
+  const donePatch: Record<string, unknown> = { status: "completed", completed_at: new Date().toISOString() };
+  if (isFinite(finalCost) && finalCost > 0) donePatch.cost = finalCost;
   await service
     .from("maintenance_requests")
-    .update({ status: "completed", completed_at: new Date().toISOString() })
+    .update(donePatch)
     .eq("id", requestId);
   await service.from("maintenance_events").insert({
     request_id: requestId,

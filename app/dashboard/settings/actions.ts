@@ -101,6 +101,28 @@ export async function deleteAccount(formData: FormData) {
   redirect("/?deleted=1");
 }
 
+
+/* -------------------------- Notifications -------------------------- */
+
+export const NOTIFICATION_TYPES = [
+  { type: "fault_reported", label: "New fault reported by a tenant" },
+  { type: "maintenance_status", label: "Maintenance status updates" },
+  { type: "rent_confirmed", label: "Rent received" },
+] as const;
+
+export async function setNotificationPrefs(formData: FormData) {
+  const { userId } = await requireSession();
+  const service = createServiceClient();
+  const rows = NOTIFICATION_TYPES.map((t) => ({
+    user_id: userId,
+    type: t.type,
+    enabled: formData.get(`notif_${t.type}`) === "on",
+  }));
+  const { error } = await service.from("notification_prefs").upsert(rows, { onConflict: "user_id,type" });
+  if (error) throw new Error(error.message);
+  revalidatePath("/dashboard/settings");
+}
+
 /* ----------------------------- Billing ----------------------------- */
 
 export async function toggleAddon(formData: FormData) {

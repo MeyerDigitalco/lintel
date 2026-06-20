@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { PageHeader, Badge } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { updateProfile, updateEmail, updatePassword, updateOrgName, deleteAccount } from "./actions";
+import { updateProfile, updateEmail, updatePassword, updateOrgName, deleteAccount, setNotificationPrefs, NOTIFICATION_TYPES } from "./actions";
 import { setLanguage } from "@/app/lang-actions";
 import { getLang } from "@/lib/i18n/lang";
 import { availableLanguages, LANGUAGES } from "@/lib/i18n/dictionaries";
@@ -33,6 +33,9 @@ export default async function SettingsPage() {
     data: { user },
   } = await supabase.auth.getUser();
   const { data: org } = await supabase.from("orgs").select("name").eq("id", orgId).maybeSingle();
+  const { data: { user: me } } = await supabase.auth.getUser();
+  const { data: notifRows } = await supabase.from("notification_prefs").select("type, enabled").eq("user_id", me?.id ?? "");
+  const notifOff = new Set((notifRows ?? []).filter((r) => r.enabled === false).map((r) => r.type));
 
   const fullName = (user?.user_metadata?.full_name as string) ?? "";
   const email = user?.email ?? "";
@@ -154,6 +157,22 @@ export default async function SettingsPage() {
           </CardBody>
         </Card>
       )}
+
+      <Card>
+        <CardBody>
+          <h2 className="font-heading text-base font-semibold tracking-tight">Notifications</h2>
+          <p className="mt-1 text-xs text-slate">Choose which push alerts this device receives. Applies to your account.</p>
+          <form action={setNotificationPrefs} className="mt-4 space-y-3">
+            {NOTIFICATION_TYPES.map((t) => (
+              <label key={t.type} className="flex items-center gap-3 text-sm text-ink">
+                <input type="checkbox" name={`notif_${t.type}`} defaultChecked={!notifOff.has(t.type)} className="h-4 w-4 rounded border-hairline" />
+                {t.label}
+              </label>
+            ))}
+            <Button type="submit" variant="outline">Save preferences</Button>
+          </form>
+        </CardBody>
+      </Card>
 
       <Card className="border-red/40 bg-red/5">
         <CardBody>

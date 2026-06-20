@@ -15,7 +15,21 @@ export async function sendPushToUsers(userIds: string[], msg: PushMessage): Prom
   if (!ids.length) return;
   try {
     const svc = createServiceClient();
-    const { data } = await svc.from("push_tokens").select("token").in("user_id", ids);
+    // Respect per-user opt-outs for this alert type (absence of a row = on).
+    let recipients = ids;
+    const type = (msg.data?.type as string) || "";
+    if (type) {
+      const { data: prefs } = await svc
+        .from("notification_prefs")
+        .select("user_id")
+        .eq("type", type)
+        .eq("enabled", false)
+        .in("user_id", ids);
+      const off = new Set((prefs ?? []).map((r: any) => r.user_id));
+      recipients = ids.filter((id) => !off.has(id));
+    }
+    if (!recipients.length) return;
+    const { data } = await svc.from("push_tokens").select("token").in("user_id", recipients);
     const tokens = [...new Set((data ?? []).map((r: any) => r.token as string))].filter(
       (t) => typeof t === "string" && t.startsWith("ExponentPushToken")
     );
