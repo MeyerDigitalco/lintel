@@ -64,7 +64,7 @@ export default async function PropertiesPage() {
       {!properties || properties.length === 0 ? (
         <EmptyState title="No properties yet" body="Add your first property to start tracking income, compliance and rent." />
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {properties.map((p) => {
             const j = resolveJurisdiction(p.jurisdiction as JurisdictionKey);
             const hasAddress = Boolean(p.city || p.postcode);
@@ -75,7 +75,7 @@ export default async function PropertiesPage() {
                 <Link href={`/dashboard/properties/${p.id}`}>
                 <Card className="h-full overflow-hidden transition-colors hover:border-evergreen/40">
                   {img && (
-                    <div className="h-36 w-full bg-cover bg-center" style={{ backgroundImage: `url(${img})`, backgroundColor: "#eef1f6" }} />
+                    <div className="h-52 w-full bg-cover bg-center" style={{ backgroundImage: `url(${img})`, backgroundColor: "#eef1f6" }} />
                   )}
                   <CardBody>
                     <div className="flex items-start justify-between gap-2">
