@@ -10,6 +10,7 @@ import type { ParsedCommand } from "@/lib/voice/types";
 import {
   voiceLogTransaction,
   voiceQuery,
+  askAssistant,
   type QueryResult,
 } from "@/app/dashboard/assistant/actions";
 
@@ -18,6 +19,7 @@ const EXAMPLES = [
   "Rent received £950",
   "Who's in arrears?",
   "Which certificates expire soon?",
+  "How much deposit can I legally take?",
   "Draft a message to my tenant about the gas safety check",
 ];
 
@@ -29,16 +31,39 @@ export function VoiceConsole() {
   const [draft, setDraft] = useState<string | null>(null);
   const [saved, setSaved] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [aiAnswer, setAiAnswer] = useState<string | null>(null);
+  const [asking, setAsking] = useState(false);
   const recognitionRef = useRef<any>(null);
 
-  function handleParse(text: string) {
+  function reset() {
     setQueryResult(null);
     setDraft(null);
     setSaved(null);
+    setAiAnswer(null);
+  }
+
+  async function askAI(text: string) {
+    setAsking(true);
+    setAiAnswer(null);
+    try {
+      const { answer } = await askAssistant(text);
+      setAiAnswer(answer);
+    } catch {
+      setAiAnswer("Something went wrong reaching the assistant. Please try again.");
+    } finally {
+      setAsking(false);
+    }
+  }
+
+  function handleParse(text: string) {
+    reset();
     const result = parseCommand(text);
     setParsed(result);
     if (result.intent.type === "draft_message") {
       setDraft(draftTenantMessage(result.intent.topic));
+    } else if (result.intent.type === "unknown") {
+      // Anything that isn't a known command becomes a free-form AI question.
+      askAI(text);
     }
   }
 
@@ -48,7 +73,7 @@ export function VoiceConsole() {
         ((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition)) ||
       null;
     if (!SR) {
-      alert("Speech recognition isn't available in this browser — type your command instead.");
+      alert("Speech recognition isn't available in this browser — type your question instead.");
       return;
     }
     const recognition = new SR();
@@ -114,9 +139,9 @@ export function VoiceConsole() {
               onClick={listening ? stopListening : startListening}
               variant={listening ? "mint" : "primary"}
             >
-              {listening ? "Listening… tap to stop" : "Speak a command"}
+              {listening ? "Listening… tap to stop" : "Speak"}
             </Button>
-            <span className="text-xs text-slate">or type below</span>
+            <span className="text-xs text-slate">or type below — ask anything</span>
           </div>
           <form
             className="mt-3 flex gap-2"
@@ -132,18 +157,40 @@ export function VoiceConsole() {
           >
             <input
               name="cmd"
-              placeholder="e.g. Log expense £85 for boiler repair"
+              placeholder="Ask anything, or log a rent/expense entry…"
               className="h-11 flex-1 rounded-lintel border border-hairline bg-surface px-3 text-sm outline-none focus:ring-2 focus:ring-evergreen/30"
             />
-            <Button type="submit" variant="outline">Parse</Button>
+            <Button type="submit" variant="outline">Ask</Button>
           </form>
           {transcript && (
             <p className="mt-3 text-sm text-slate">
-              Heard: <span className="text-ink">“{transcript}”</span>
+              You said: <span className="text-ink">“{transcript}”</span>
             </p>
           )}
         </CardBody>
       </Card>
+
+      {/* Free-form AI answer */}
+      {(asking || aiAnswer) && (
+        <Card>
+          <CardBody>
+            <div className="flex items-center justify-between">
+              <h3 className="font-heading text-sm font-semibold tracking-tight">Assistant</h3>
+              <Badge tone="mint">AI</Badge>
+            </div>
+            {asking ? (
+              <p className="mt-3 text-sm text-slate">Thinking…</p>
+            ) : (
+              <p className="mt-3 whitespace-pre-wrap text-sm text-ink">{aiAnswer}</p>
+            )}
+            {!asking && aiAnswer && (
+              <p className="mt-3 text-xs text-slate">
+                Information only — not formal legal or tax advice.
+              </p>
+            )}
+          </CardBody>
+        </Card>
+      )}
 
       {/* Confirmation / result */}
       {parsed && parsed.intent.type === "log_transaction" && (
@@ -221,14 +268,6 @@ export function VoiceConsole() {
         </Card>
       )}
 
-      {parsed && parsed.intent.type === "unknown" && (
-        <Card>
-          <CardBody>
-            <p className="text-sm text-slate">{parsed.summary} Try one of the examples below.</p>
-          </CardBody>
-        </Card>
-      )}
-
       {saved && (
         <Card className="border-mint/40">
           <CardBody>
@@ -239,7 +278,7 @@ export function VoiceConsole() {
 
       {/* Examples */}
       <div>
-        <p className="mb-2 text-xs uppercase tracking-wide text-slate">Try saying</p>
+        <p className="mb-2 text-xs uppercase tracking-wide text-slate">Try asking</p>
         <div className="flex flex-wrap gap-2">
           {EXAMPLES.map((ex) => (
             <button
