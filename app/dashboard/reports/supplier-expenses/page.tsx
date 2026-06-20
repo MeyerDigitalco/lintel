@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { ReportShell } from "@/components/app/ReportShell";
 import { formatMoney } from "@/lib/i18n/currency";
 import { resolveRegion } from "@/lib/i18n/rulesets";
-import { categoryLabel } from "@/lib/sa105";
+import { categoryLabelForRegion } from "@/lib/tax-categories";
 import { fmtDate } from "@/lib/dates";
 
 export const dynamic = "force-dynamic";
@@ -54,7 +54,7 @@ export default async function SupplierExpensesReport() {
                   {b.items.map((t, i) => (
                     <tr key={i} className="border-b border-hairline last:border-0">
                       <td className="py-1.5 text-slate">{fmtDate(t.occurred_on)}</td>
-                      <td className="py-1.5 text-ink">{t.description || categoryLabel(t.sa105_category)}</td>
+                      <td className="py-1.5 text-ink">{t.description || categoryLabelForRegion(country, t.sa105_category)}</td>
                       <td className="py-1.5 text-right tabular-nums text-ink">{money(Number(t.amount))}</td>
                     </tr>
                   ))}

@@ -4,7 +4,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Card, CardBody } from "@/components/ui/Card";
 import { Badge } from "@/components/app/ui";
-import { categoriesFor, type Direction } from "@/lib/sa105";
+import { type Direction } from "@/lib/sa105";
+import { categoriesForRegion } from "@/lib/tax-categories";
 import { createTransaction } from "@/app/dashboard/transactions/actions";
 
 const inputCls =
@@ -12,8 +13,10 @@ const inputCls =
 
 export function AddTransactionForm({
   properties,
+  country,
 }: {
   properties: { id: string; label: string }[];
+  country: string;
 }) {
   const [open, setOpen] = useState(false);
   const [direction, setDirection] = useState<Direction>("expense");
@@ -45,7 +48,7 @@ export function AddTransactionForm({
     return <Button onClick={() => setOpen(true)}>Add transaction</Button>;
   }
 
-  const categories = categoriesFor(direction);
+  const categories = categoriesForRegion(country, direction);
 
   return (
     <Card className="mb-6">
@@ -71,7 +74,7 @@ export function AddTransactionForm({
           </label>
 
           <label className="block">
-            <span className="mb-1 block text-sm text-ink">SA105 category</span>
+            <span className="mb-1 block text-sm text-ink">Category</span>
             <select name="sa105_category" className={inputCls} defaultValue={categories[0]?.key}>
               {categories.map((c) => (
                 <option key={c.key} value={c.key}>{c.label}</option>

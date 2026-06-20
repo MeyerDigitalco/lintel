@@ -4,14 +4,16 @@ import { PageHeader, Stat, EmptyState, Badge } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
 import { AddTransactionForm } from "@/components/app/AddTransactionForm";
 import { deleteTransaction } from "./actions";
-import { categoryLabel } from "@/lib/sa105";
+import { categoryLabelForRegion } from "@/lib/tax-categories";
+import { resolveRegion } from "@/lib/i18n/rulesets";
 import { formatMoney } from "@/lib/i18n/currency";
 import { fmtDate, quarterlyPeriods, taxYearStartFor } from "@/lib/dates";
 
 export const dynamic = "force-dynamic";
 
 export default async function TransactionsPage() {
-  const { orgId, currency} = await requireWriter();
+  const { orgId, currency, country, region, regionCode } = await requireWriter();
+  const ruleset = country === "GB" ? resolveRegion("GB", region) : resolveRegion(country, region, regionCode);
   const gbp = (n: number, opts?: { decimals?: boolean }) => formatMoney(n, currency, opts);
   const supabase = createClient();
 
@@ -44,17 +46,17 @@ export default async function TransactionsPage() {
     <div>
       <PageHeader
         title="Income & expenses"
-        subtitle="Mapped to SA105 categories for your tax return."
+        subtitle={`Categorised for ${ruleset.taxLabel}.`}
       />
 
       <div className="mb-6 grid gap-4 sm:grid-cols-4">
         <Stat label="Income (year)" value={gbp(income)} tone="evergreen" />
         <Stat label="Expenses (year)" value={gbp(expenses)} />
-        <Stat label="Finance costs" value={gbp(finance)} hint="Section 24 — 20% reducer" />
+        <Stat label="Finance costs" value={gbp(finance)} hint={country === "GB" ? "Section 24 — 20% reducer" : "Interest & finance"} />
         <Stat label="Net (excl. finance)" value={gbp(income - expenses)} />
       </div>
 
-      <AddTransactionForm properties={properties ?? []} />
+      <AddTransactionForm properties={properties ?? []} country={country} />
 
       {!tx || tx.length === 0 ? (
         <EmptyState
@@ -84,7 +86,7 @@ export default async function TransactionsPage() {
                         {t.receipt_url && <Badge>Receipt</Badge>}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-slate">{categoryLabel(t.sa105_category)}</td>
+                    <td className="px-4 py-3 text-slate">{categoryLabelForRegion(country, t.sa105_category)}</td>
                     <td
                       className={`px-4 py-3 text-right tabular-nums ${
                         t.direction === "income" ? "text-evergreen" : "text-ink"

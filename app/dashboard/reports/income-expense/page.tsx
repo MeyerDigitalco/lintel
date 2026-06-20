@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { ReportShell } from "@/components/app/ReportShell";
 import { formatMoney } from "@/lib/i18n/currency";
 import { resolveRegion } from "@/lib/i18n/rulesets";
-import { categoryLabel, SA105_CATEGORIES } from "@/lib/sa105";
+import { categoriesForRegion, type TaxCategory } from "@/lib/tax-categories";
 
 export const dynamic = "force-dynamic";
 
@@ -31,13 +31,13 @@ export default async function IncomeExpenseReport({
   const sum = (dir: string, key: string) =>
     (tx ?? []).filter((t) => t.direction === dir && (t.sa105_category ?? "uncategorised") === key).reduce((s, t) => s + Number(t.amount), 0);
 
-  const incomeCats = SA105_CATEGORIES.filter((c) => c.direction === "income");
-  const expenseCats = SA105_CATEGORIES.filter((c) => c.direction === "expense");
+  const incomeCats = categoriesForRegion(country, "income");
+  const expenseCats = categoriesForRegion(country, "expense");
   const incomeTotal = (tx ?? []).filter((t) => t.direction === "income").reduce((s, t) => s + Number(t.amount), 0);
   const expenseTotal = (tx ?? []).filter((t) => t.direction === "expense").reduce((s, t) => s + Number(t.amount), 0);
   const net = incomeTotal - expenseTotal;
 
-  const Section = ({ title, cats, dir, total }: { title: string; cats: typeof SA105_CATEGORIES; dir: string; total: number }) => (
+  const Section = ({ title, cats, dir, total }: { title: string; cats: TaxCategory[]; dir: string; total: number }) => (
     <section className="mb-6 break-inside-avoid">
       <h2 className="font-heading text-base font-semibold">{title}</h2>
       <table className="mt-1 w-full text-sm">
