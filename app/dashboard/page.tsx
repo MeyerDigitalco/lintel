@@ -9,11 +9,21 @@ import { mtdMandation } from "@/lib/calculators";
 import { cn } from "@/lib/cn";
 import { getLang } from "@/lib/i18n/lang";
 import { translate } from "@/lib/i18n/dictionaries";
+import { resolveRegion } from "@/lib/i18n/rulesets";
 
 export const dynamic = "force-dynamic";
 
+const TAX_AUTHORITY: Record<string, string> = {
+  GB: "HMRC", US: "IRS", ZA: "SARS", AU: "ATO", NZ: "Inland Revenue", CA: "CRA",
+  IE: "Revenue", DE: "Finanzamt", ES: "AEAT", IN: "Income Tax Dept", FR: "DGFiP",
+  NL: "Belastingdienst", SG: "IRAS", IT: "Agenzia delle Entrate", PT: "Autoridade Tributária",
+  CH: "Tax office", JP: "NTA", MX: "SAT", BR: "Receita Federal", BE: "FPS Finance",
+  AT: "Finanzamt", PL: "KAS", SA: "ZATCA", QA: "GTA", HK: "IRD", IL: "ITA",
+};
+
 export default async function DashboardOverview() {
-  const { orgId, currency, country } = await requireSession();
+  const { orgId, currency, country, region, regionCode } = await requireSession();
+  const ruleset = country === "GB" ? resolveRegion("GB", region) : resolveRegion(country, region, regionCode);
   const lang = getLang(country);
   const t = (k: string) => translate(lang, k);
   const gbp = (n: number) => formatMoney(n, currency);
@@ -113,15 +123,30 @@ export default async function DashboardOverview() {
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
         <Card>
           <CardBody>
-            <div className="flex items-center justify-between">
-              <h2 className="font-heading text-base font-semibold tracking-tight">MTD for Income Tax</h2>
-              <Badge tone={mtd.mandated ? "amber" : "mint"}>{mtd.mandated ? `From ${mtd.from}` : "Not yet mandated"}</Badge>
-            </div>
-            <p className="mt-3 text-sm text-slate">
-              Based on {gbp(income)} property income this year.{" "}
-              {mtd.mandated ? `You fall in the ${gbp(mtd.band!)} threshold band.` : "Below the £20,000 band — keep records ready."}
-            </p>
-            <Link href="/dashboard/tax" className="mt-4 inline-block text-sm text-evergreen hover:underline">View tax & MTD →</Link>
+            {country === "GB" ? (
+              <>
+                <div className="flex items-center justify-between">
+                  <h2 className="font-heading text-base font-semibold tracking-tight">MTD for Income Tax</h2>
+                  <Badge tone={mtd.mandated ? "amber" : "mint"}>{mtd.mandated ? `From ${mtd.from}` : "Not yet mandated"}</Badge>
+                </div>
+                <p className="mt-3 text-sm text-slate">
+                  Based on {gbp(income)} property income this year.{" "}
+                  {mtd.mandated ? `You fall in the ${gbp(mtd.band!)} threshold band.` : "Below the £20,000 band — keep records ready."}
+                </p>
+                <Link href="/dashboard/tax" className="mt-4 inline-block text-sm text-evergreen hover:underline">View tax & MTD →</Link>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center justify-between">
+                  <h2 className="font-heading text-base font-semibold tracking-tight">Tax records</h2>
+                  <Badge tone="mint">{TAX_AUTHORITY[country] ?? "Tax authority"}</Badge>
+                </div>
+                <p className="mt-3 text-sm text-slate">
+                  Based on {gbp(income)} property income this year. We keep your records ready for {ruleset.taxLabel}.
+                </p>
+                <Link href="/dashboard/reports" className="mt-4 inline-block text-sm text-evergreen hover:underline">View reports →</Link>
+              </>
+            )}
           </CardBody>
         </Card>
 
