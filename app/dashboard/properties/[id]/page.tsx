@@ -8,13 +8,14 @@ import { AddUnitForm, AddRegistrationForm } from "@/components/app/PropertyDetai
 import { PropertyDocumentUpload } from "@/components/app/PropertyDocuments";
 import { resolveJurisdiction, type JurisdictionKey } from "@/lib/jurisdictions";
 import { fmtDate } from "@/lib/dates";
+import { formatMoney } from "@/lib/i18n/currency";
 import { updateProperty, deleteProperty } from "../actions";
 import { Button } from "@/components/ui/Button";
 
 export const dynamic = "force-dynamic";
 
 export default async function PropertyDetail({ params }: { params: { id: string } }) {
-  const { orgId, role } = await requireSession();
+  const { orgId, role, currency } = await requireSession();
   const canWrite = isWriterRole(role);
   const supabase = createClient();
 
@@ -31,6 +32,14 @@ export default async function PropertyDetail({ params }: { params: { id: string 
     supabase.from("registrations").select("id, scheme, reference, issued_at, renews_at").eq("property_id", property.id),
     supabase.from("property_documents").select("id, label, doc_type, storage_path, expires_at, created_at").eq("property_id", property.id).order("created_at", { ascending: false }),
   ]);
+
+  const { data: tenancies } = await supabase
+    .from("tenancies")
+    .select("id, tenant_name, tenant_email, tenant_phone, rent_amount, rent_period, deposit_amount, start_date, end_date, status")
+    .eq("org_id", orgId)
+    .eq("property_id", property.id)
+    .order("created_at", { ascending: false });
+  const money = (n: number) => formatMoney(n, currency, { decimals: true });
 
   const docsWithUrls = await Promise.all(
     (documents ?? []).map(async (d) => {
@@ -131,6 +140,41 @@ export default async function PropertyDetail({ params }: { params: { id: string 
               </ul>
             ) : (
               <p className="text-sm text-slate">No documents uploaded yet. Add EPC, gas/electrical certificates, deposit certificate, inventory, correspondence.</p>
+            )}
+          </CardBody>
+        </Card>
+
+        <Card className="lg:col-span-2">
+          <CardBody>
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="font-heading text-base font-semibold tracking-tight">Tenants</h2>
+              <Link href="/dashboard/rent" className="text-sm text-evergreen hover:underline">Rent ledger →</Link>
+            </div>
+            {tenancies && tenancies.length > 0 ? (
+              <ul className="space-y-2 text-sm">
+                {tenancies.map((tn) => (
+                  <li key={tn.id} className="flex items-start justify-between gap-3 rounded-lintel bg-paper px-3 py-2">
+                    <div>
+                      <p className="font-medium text-ink">{tn.tenant_name || "Tenant"}</p>
+                      <p className="text-xs text-slate">
+                        {[tn.tenant_email, tn.tenant_phone].filter(Boolean).join(" · ") || "No contact details"}
+                      </p>
+                      <p className="mt-1 text-xs text-slate">
+                        {tn.rent_amount ? `${money(Number(tn.rent_amount))}/${tn.rent_period === "weekly" ? "wk" : "mo"}` : "Rent not set"}
+                        {tn.deposit_amount ? ` · deposit ${money(Number(tn.deposit_amount))}` : ""}
+                        {tn.start_date ? ` · from ${fmtDate(tn.start_date)}` : ""}
+                        {tn.end_date ? ` to ${fmtDate(tn.end_date)}` : ""}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {tn.status ? <Badge tone={tn.status === "active" ? "mint" : "default"}>{tn.status}</Badge> : null}
+                      <Link href={`/dashboard/tenancies/${tn.id}`} className="text-sm text-evergreen hover:underline">Manage</Link>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-slate">No tenants yet. Add one when editing the property, or from the rent ledger.</p>
             )}
           </CardBody>
         </Card>

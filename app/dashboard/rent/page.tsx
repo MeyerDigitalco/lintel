@@ -28,7 +28,7 @@ export default async function RentPage() {
 
   const { data: tenancies } = await supabase
     .from("tenancies")
-    .select("id, property_id, rent_amount, start_date")
+    .select("id, property_id, rent_amount, rent_period, start_date, tenant_name, tenant_email")
     .eq("org_id", orgId)
     .order("created_at", { ascending: false });
 
@@ -67,8 +67,11 @@ export default async function RentPage() {
                       <h3 className="font-heading text-base font-semibold tracking-tight">
                         {propMap.get(t.property_id) ?? "Property"}
                       </h3>
+                      {t.tenant_name ? (
+                        <p className="text-sm text-ink">{t.tenant_name}{t.tenant_email ? ` · ${t.tenant_email}` : ""}</p>
+                      ) : null}
                       <p className="text-sm text-slate">
-                        {gbp(Number(t.rent_amount ?? 0), { decimals: true })}/mo
+                        {gbp(Number(t.rent_amount ?? 0), { decimals: true })}/{t.rent_period === "weekly" ? "wk" : "mo"}
                         {t.start_date ? ` · since ${fmtDate(t.start_date)}` : ""}
                       </p>
                     </div>
