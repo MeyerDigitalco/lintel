@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireSession, isWriterRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import type { JurisdictionKey } from "@/lib/jurisdictions";
+import { resolveJurisdiction, type JurisdictionKey } from "@/lib/jurisdictions";
 import { resolveRegion } from "@/lib/i18n/rulesets";
 
 function slug(label: string): string {
@@ -73,6 +73,62 @@ export async function createProperty(formData: FormData) {
       }
     } catch {
       // non-fatal: the property is created regardless
+    }
+  }
+
+  // Optional: store the uploaded tenancy contract in the property's document vault.
+  const contract = formData.get("contract");
+  if (created?.id && contract instanceof File && contract.size > 0) {
+    try {
+      const ext = (contract.name.split(".").pop() || "pdf").toLowerCase();
+      const cpath = `${created.id}/contract-${Date.now()}.${ext}`;
+      const cbytes = Buffer.from(await contract.arrayBuffer());
+      const { error: cErr } = await supabase.storage
+        .from("property-docs")
+        .upload(cpath, cbytes, { contentType: contract.type || "application/pdf", upsert: true });
+      if (!cErr) {
+        await supabase.from("property_documents").insert({
+          org_id: orgId,
+          property_id: created.id,
+          label: contract.name || "Tenancy contract",
+          doc_type: "tenancy_agreement",
+          storage_path: cpath,
+          visible_to_tenant: false,
+        });
+      }
+    } catch {
+      // non-fatal
+    }
+  }
+
+  // Optional: create a tenancy from the tenant fields captured at add-property time.
+  const tName = String(formData.get("tenant_name") ?? "").trim();
+  const tEmail = String(formData.get("tenant_email") ?? "").trim();
+  const tPhone = String(formData.get("tenant_phone") ?? "").trim();
+  const rentAmount = parseFloat(String(formData.get("rent_amount") ?? "")) || null;
+  const depositAmount = parseFloat(String(formData.get("deposit_amount") ?? "")) || null;
+  const startDate = String(formData.get("start_date") ?? "") || null;
+  const endDate = String(formData.get("end_date") ?? "") || null;
+  if (created?.id && (tName || tEmail || tPhone || rentAmount || startDate)) {
+    try {
+      const tType = resolveJurisdiction(jurisdiction).tenancyTypes?.[0]?.key ?? "tenancy";
+      await supabase.from("tenancies").insert({
+        org_id: orgId,
+        property_id: created.id,
+        type: tType,
+        tenant_name: tName || null,
+        tenant_email: tEmail || null,
+        tenant_phone: tPhone || null,
+        rent_amount: rentAmount,
+        rent_period: String(formData.get("rent_period") ?? "monthly") || "monthly",
+        deposit_amount: depositAmount,
+        start_date: startDate,
+        end_date: endDate,
+        status: "active",
+      });
+      revalidatePath("/dashboard/rent");
+    } catch {
+      // non-fatal: the property is still created
     }
   }
 

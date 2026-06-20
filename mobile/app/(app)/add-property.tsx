@@ -2,9 +2,10 @@ import React, { useState, useRef } from "react";
 import { View, Text, TouchableOpacity, Alert, Image } from "react-native";
 import { useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
+import * as DocumentPicker from "expo-document-picker";
 import { Screen, Field, Button, Card, Badge, Row, colors, font, radius } from "@/components/ui";
 import { useAuth } from "@/providers/AuthProvider";
-import { supabase } from "@/lib/supabase";
+import { supabase, API_URL } from "@/lib/supabase";
 import { REGION_LABEL } from "@/lib/format";
 import { autocomplete, placeDetails, placesEnabled, type Suggestion } from "@/lib/places";
 import { resolveRegion } from "@/lib/rulesets";
@@ -29,6 +30,7 @@ export default function AddProperty() {
   const { orgId, region, country, regionCode } = useAuth();
   const router = useRouter();
   const [label, setLabel] = useState("");
+  const [labelTouched, setLabelTouched] = useState(false);
   const [line1, setLine1] = useState("");
   const [line2, setLine2] = useState("");
   const [city, setCity] = useState("");
@@ -47,6 +49,22 @@ export default function AddProperty() {
   const [saving, setSaving] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // AI contract autofill
+  const [contract, setContract] = useState<{ uri: string; name: string; type: string } | null>(null);
+  const [reading, setReading] = useState(false);
+  const [aiNote, setAiNote] = useState("");
+
+  // Optional tenant + tenancy
+  const [showTenant, setShowTenant] = useState(false);
+  const [tenantName, setTenantName] = useState("");
+  const [tenantEmail, setTenantEmail] = useState("");
+  const [tenantPhone, setTenantPhone] = useState("");
+  const [rent, setRent] = useState("");
+  const [rentPeriod, setRentPeriod] = useState("monthly");
+  const [deposit, setDeposit] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
   const onLine1Change = (t: string) => {
     setLine1(t);
     if (!placesEnabled) return;
@@ -56,7 +74,7 @@ export default function AddProperty() {
   const choose = async (s: Suggestion) => {
     setSuggestions([]);
     const parsed = await placeDetails(s.placeId);
-    if (parsed) { setLine1(parsed.line1 || s.text); setCity(parsed.city); setPostcode(parsed.postcode); if (!label) setLabel(parsed.line1 || s.text); }
+    if (parsed) { setLine1(parsed.line1 || s.text); setCity(parsed.city); setPostcode(parsed.postcode); if (!labelTouched) setLabel(parsed.line1 || s.text); }
     else setLine1(s.text);
   };
 
@@ -65,6 +83,50 @@ export default function AddProperty() {
     if (!perm.granted) { Alert.alert("Permission needed"); return; }
     const res = await ImagePicker.launchImageLibraryAsync({ quality: 0.7, mediaTypes: ['images'] });
     if (!res.canceled && res.assets[0]) setPhotoUri(res.assets[0].uri);
+  };
+
+  const pickContract = async () => {
+    const res = await DocumentPicker.getDocumentAsync({ type: ["application/pdf", "image/*"], copyToCacheDirectory: true });
+    if (res.canceled || !res.assets?.[0]) return;
+    const a = res.assets[0];
+    const picked = { uri: a.uri, name: a.name ?? "contract", type: a.mimeType ?? "application/pdf" };
+    setContract(picked);
+    setReading(true);
+    setAiNote("");
+    try {
+      if (!API_URL) { setAiNote("Set EXPO_PUBLIC_API_URL to enable AI autofill. Saved for upload."); return; }
+      const { data: sess } = await supabase.auth.getSession();
+      const fd = new FormData();
+      fd.append("file", { uri: picked.uri, name: picked.name, type: picked.type } as any);
+      const resp = await fetch(`${API_URL}/api/extract-contract`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${sess.session?.access_token ?? ""}` },
+        body: fd,
+      });
+      const json = await resp.json();
+      const f = (json?.fields ?? {}) as Record<string, any>;
+      if (f.address_line1) setLine1(f.address_line1);
+      if (f.address_line2) setLine2(f.address_line2);
+      if (f.city) setCity(f.city);
+      if (f.postcode) setPostcode(f.postcode);
+      if (!labelTouched && (f.address_line1 || f.city)) setLabel([f.address_line1, f.city].filter(Boolean).join(", "));
+      let tenant = false;
+      if (f.tenant_name) { setTenantName(f.tenant_name); tenant = true; }
+      if (f.tenant_email) { setTenantEmail(f.tenant_email); tenant = true; }
+      if (f.tenant_phone) { setTenantPhone(f.tenant_phone); tenant = true; }
+      if (f.rent_amount) { setRent(String(f.rent_amount)); tenant = true; }
+      if (f.rent_period) setRentPeriod(f.rent_period);
+      if (f.deposit_amount) { setDeposit(String(f.deposit_amount)); tenant = true; }
+      if (f.start_date) { setStartDate(f.start_date); tenant = true; }
+      if (f.end_date) { setEndDate(f.end_date); tenant = true; }
+      if (tenant) setShowTenant(true);
+      const got = Object.keys(f).length;
+      setAiNote(got > 0 ? `Autofilled ${got} field${got > 1 ? "s" : ""} — check below.` : "Couldn't read details — enter them manually.");
+    } catch {
+      setAiNote("Couldn't read the contract — enter details manually.");
+    } finally {
+      setReading(false);
+    }
   };
 
   const save = async () => {
@@ -91,6 +153,18 @@ export default function AddProperty() {
         } catch { /* non-fatal */ }
       }
 
+      if (created?.id && contract) {
+        try {
+          const ext = fileExt(contract.name) || "pdf";
+          const path = `${created.id}/contract-${Date.now()}.${ext}`;
+          await uploadLocalFile("property-docs", path, contract.uri, contract.type);
+          await supabase.from("property_documents").insert({
+            org_id: orgId, property_id: created.id, label: contract.name || "Tenancy contract",
+            doc_type: "tenancy_agreement", storage_path: path, visible_to_tenant: false,
+          });
+        } catch { /* non-fatal */ }
+      }
+
       if (created?.id) {
         try {
           const ruleset = resolveRegion(country, region, regionCode);
@@ -98,6 +172,21 @@ export default function AddProperty() {
             .filter((c) => !(allElectric && /gas/i.test(c.label)))
             .map((c) => ({ org_id: orgId, property_id: created.id, item_key: slug(c.label), label: c.label, statutory_basis: c.note, expires_at: null }));
           if (rows.length) await supabase.from("compliance_items").insert(rows);
+        } catch { /* non-fatal */ }
+      }
+
+      const hasTenant = tenantName.trim() || tenantEmail.trim() || tenantPhone.trim() || rent.trim() || startDate.trim();
+      if (created?.id && hasTenant) {
+        try {
+          const tt = resolveRegion(country, region, regionCode).tenancyTypes?.[0]?.label;
+          await supabase.from("tenancies").insert({
+            org_id: orgId, property_id: created.id, type: tt ? slug(tt) : "tenancy",
+            tenant_name: tenantName.trim() || null, tenant_email: tenantEmail.trim() || null,
+            tenant_phone: tenantPhone.trim() || null,
+            rent_amount: rent ? Number(rent) : null, rent_period: rentPeriod,
+            deposit_amount: deposit ? Number(deposit) : null,
+            start_date: startDate.trim() || null, end_date: endDate.trim() || null, status: "active",
+          });
         } catch { /* non-fatal */ }
       }
 
@@ -114,10 +203,20 @@ export default function AddProperty() {
         <Badge tone="mint">{REGION_LABEL[region]}</Badge>
       </Row>
 
+      {/* Quick start: AI reads the tenancy contract */}
+      <Card style={{ borderColor: colors.evergreen, borderWidth: 1, backgroundColor: colors.mintBg }}>
+        <Text style={{ fontWeight: "600", color: colors.ink }}>Quick start — upload the contract</Text>
+        <Text style={{ fontSize: font.tiny, color: colors.slate, marginTop: 2 }}>We&apos;ll read the address, tenant and rent and fill the form. PDF or photo. Optional.</Text>
+        <View style={{ marginTop: 10 }}>
+          <Button title={reading ? "Reading…" : contract ? contract.name : "Upload tenancy contract"} variant="outline" onPress={pickContract} disabled={reading} />
+        </View>
+        {aiNote ? <Text style={{ fontSize: font.tiny, color: colors.evergreen, marginTop: 6 }}>{aiNote}</Text> : null}
+      </Card>
+
       {photoUri ? <Image source={{ uri: photoUri }} style={{ width: "100%", height: 160, borderRadius: radius.md }} /> : null}
       <Button title={photoUri ? "Change photo" : "Add a photo"} variant="outline" onPress={pickPhoto} />
 
-      <Field label="Property name" value={label} onChangeText={setLabel} placeholder="e.g. 12 Oak Street" />
+      <Field label="Property name" value={label} onChangeText={(t) => { setLabel(t); setLabelTouched(t.length > 0); }} placeholder="Auto-fills from the address" />
       <Field label="Address line 1" value={line1} onChangeText={onLine1Change} placeholder={placesEnabled ? "Start typing to search…" : "Street address"} />
       {suggestions.length > 0 ? (
         <Card style={{ padding: 0 }}>
@@ -175,6 +274,34 @@ export default function AddProperty() {
           <Row style={{ flexWrap: "wrap", justifyContent: "flex-start", gap: 8 }}>
             {MONTHS.map((m) => <Chip key={m} label={m} active={yearEnd === m} onPress={() => setYearEnd(m)} />)}
           </Row>
+        </>
+      ) : null}
+
+      {/* Optional tenant */}
+      <TouchableOpacity onPress={() => setShowTenant((v) => !v)}>
+        <Card>
+          <Row>
+            <View style={{ flex: 1 }}>
+              <Text style={{ color: colors.ink, fontWeight: "500" }}>Tenant (optional)</Text>
+              <Text style={{ fontSize: font.tiny, color: colors.slate, marginTop: 2 }}>Add the current tenant and rent now, or later.</Text>
+            </View>
+            <Text style={{ fontSize: font.tiny, color: colors.evergreen }}>{showTenant ? "Hide" : "Add"}</Text>
+          </Row>
+        </Card>
+      </TouchableOpacity>
+      {showTenant ? (
+        <>
+          <Field label="Tenant name" value={tenantName} onChangeText={setTenantName} placeholder="Full name" />
+          <Field label="Tenant email" value={tenantEmail} onChangeText={setTenantEmail} placeholder="name@example.com" autoCapitalize="none" keyboardType="email-address" />
+          <Field label="Tenant phone" value={tenantPhone} onChangeText={setTenantPhone} placeholder="Phone" keyboardType="phone-pad" />
+          <Field label="Rent amount" value={rent} onChangeText={setRent} placeholder="0.00" keyboardType="numeric" />
+          <Text style={{ fontSize: font.tiny, fontWeight: "600", color: colors.slate }}>RENT PERIOD</Text>
+          <Row style={{ justifyContent: "flex-start", gap: 8 }}>
+            {["monthly", "weekly"].map((x) => <Chip key={x} label={x} active={rentPeriod === x} onPress={() => setRentPeriod(x)} />)}
+          </Row>
+          <Field label="Deposit" value={deposit} onChangeText={setDeposit} placeholder="0.00" keyboardType="numeric" />
+          <Field label="Tenancy start (YYYY-MM-DD)" value={startDate} onChangeText={setStartDate} placeholder="2026-01-01" autoCapitalize="none" />
+          <Field label="Tenancy end (YYYY-MM-DD)" value={endDate} onChangeText={setEndDate} placeholder="optional" autoCapitalize="none" />
         </>
       ) : null}
 
