@@ -13,11 +13,20 @@ async function resolveByToken(token: string) {
   const service = createServiceClient();
   const { data } = await service
     .from("maintenance_requests")
-    .select("id, contractor_token, org_id")
+    .select("id, contractor_token, org_id, property_id, tenancy_id, title, contractor_name, status")
     .eq("contractor_token", token)
     .maybeSingle();
   if (!data) throw new Error("Invalid link");
-  return { service, requestId: data.id, orgId: data.org_id as string };
+  return {
+    service,
+    requestId: data.id,
+    orgId: data.org_id as string,
+    propertyId: (data.property_id as string) ?? null,
+    tenancyId: (data.tenancy_id as string) ?? null,
+    title: (data.title as string) ?? "Maintenance",
+    contractorName: (data.contractor_name as string) ?? null,
+    status: (data.status as string) ?? "",
+  };
 }
 
 export async function contractorAccept(formData: FormData) {
@@ -72,7 +81,7 @@ export async function contractorNote(formData: FormData) {
 
 export async function contractorComplete(formData: FormData) {
   const token = String(formData.get("token"));
-  const { service, requestId, orgId } = await resolveByToken(token);
+  const { service, requestId, orgId, propertyId, tenancyId, title, contractorName, status: prevStatus } = await resolveByToken(token);
 
   // Optional completion photos (one or many).
   const files = formData.getAll("photos");
@@ -99,6 +108,24 @@ export async function contractorComplete(formData: FormData) {
     .from("maintenance_requests")
     .update(donePatch)
     .eq("id", requestId);
+
+  // Auto-log the spend as an expense (once), so it flows into the accounting reports.
+  if (isFinite(finalCost) && finalCost > 0 && prevStatus !== "completed") {
+    try {
+      await service.from("transactions").insert({
+        org_id: orgId,
+        property_id: propertyId,
+        tenancy_id: tenancyId,
+        direction: "expense",
+        sa105_category: "repairs_maintenance",
+        amount: finalCost,
+        occurred_on: new Date().toISOString().slice(0, 10),
+        description: `Maintenance: ${title}${contractorName ? ` — ${contractorName}` : ""}`,
+      });
+    } catch {
+      // non-fatal: completion still succeeds even if the ledger entry fails
+    }
+  }
   await service.from("maintenance_events").insert({
     request_id: requestId,
     actor_role: "contractor",
