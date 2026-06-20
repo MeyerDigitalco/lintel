@@ -6,6 +6,7 @@ import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { stripe } from "@/lib/stripe/client";
 import { priceIdFor, TRIAL_PERIOD_DAYS, type Feature } from "@/lib/stripe/config";
+import { NOTIFICATION_TYPES } from "@/lib/notification-types";
 
 const ADMIN_ROLES = ["owner", "admin"];
 function assertAdmin(role: string) {
@@ -103,12 +104,6 @@ export async function deleteAccount(formData: FormData) {
 
 
 /* -------------------------- Notifications -------------------------- */
-
-export const NOTIFICATION_TYPES = [
-  { type: "fault_reported", label: "New fault reported by a tenant" },
-  { type: "maintenance_status", label: "Maintenance status updates" },
-  { type: "rent_confirmed", label: "Rent received" },
-] as const;
 
 export async function setNotificationPrefs(formData: FormData) {
   const { userId } = await requireSession();
