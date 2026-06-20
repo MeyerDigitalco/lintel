@@ -30,9 +30,10 @@
         "backgroundColor": "#16233A"
       },
       "permissions": [
-        "CAMERA",
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE"
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "plugins": [
@@ -51,6 +52,12 @@
     "web": {
       "favicon": "./assets/images/favicon.png",
       "bundler": "metro"
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "cbe1a26c-fc0d-4c36-9506-e72e2c7c06af"
+      }
     }
   }
 }
