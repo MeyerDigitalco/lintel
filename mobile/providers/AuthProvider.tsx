@@ -4,6 +4,7 @@ import type { Session, User } from "@supabase/supabase-js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "@/lib/supabase";
 import { availableLanguages, isRTL } from "@/lib/i18n";
+import { registerPushToken } from "@/lib/push";
 
 function applyRTL(lang: string) {
   const want = isRTL(lang);
@@ -60,6 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setOrgId(null); setRole(null); setOrgName(null); setRegion("england"); setCurrency("GBP"); setCountry("GB"); setRegionCode(null);
       return;
     }
+    registerPushToken(s.user.id);
     const { data: membership } = await supabase
       .from("memberships")
       .select("org_id, role")

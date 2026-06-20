@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createServiceClient } from "@/lib/supabase/server";
 import { slaDueAt, type Priority } from "@/lib/maintenance";
+import { sendPushToOrg } from "@/lib/push";
 import type { JurisdictionKey } from "@/lib/jurisdictions";
 
 /**
@@ -50,6 +51,12 @@ export async function raiseFaultByToken(formData: FormData) {
     kind: "status_change",
     new_status: "raised",
     body: "Fault reported by tenant.",
+  });
+
+  await sendPushToOrg(tenancy.org_id, {
+    title: isHazard ? "⚠️ Hazard reported by tenant" : "New fault reported",
+    body: String(formData.get("title") ?? "").trim() || "A tenant reported a maintenance issue.",
+    data: { type: "fault_reported", request_id: req.id },
   });
 
   revalidatePath(`/t/${token}`);

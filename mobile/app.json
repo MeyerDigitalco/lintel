@@ -43,7 +43,8 @@
         {
           "photosPermission": "Allow Lintel to attach photos from your library."
         }
-      ]
+      ],
+      "expo-notifications"
     ],
     "experiments": {
       "typedRoutes": true

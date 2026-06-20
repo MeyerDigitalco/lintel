@@ -18,31 +18,46 @@ export async function ensureNotificationPermission(): Promise<boolean> {
   }
 }
 
-type Item = { id: string; label: string; expires_at: string | null; properties?: { label: string } | null };
+type ExpiringItem = { id: string; label: string; expires_at: string | null; properties?: { label: string } | null };
 
-/** Schedule local reminders 14 days before each compliance item expires. */
-export async function scheduleComplianceReminders(items: Item[]): Promise<void> {
+async function scheduleOne(title: string, label: string, where: string, expires: string) {
+  const exp = new Date(`${expires}T09:00:00`);
+  const now = Date.now();
+  if (isNaN(exp.getTime()) || exp.getTime() < now) return;
+  let when = new Date(exp.getTime() - 14 * 86400000);
+  if (when.getTime() < now + 60000) when = new Date(now + 86400000); // within 14d → remind tomorrow
+  await Notifications.scheduleNotificationAsync({
+    content: { title, body: `${label}${where} expires ${fmtDate(expires)}.` },
+    trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: when },
+  });
+}
+
+/**
+ * Schedule local reminders 14 days before each compliance item AND each
+ * document expires. Cancels and rebuilds the full set in one pass.
+ */
+export async function scheduleReminders(opts: {
+  compliance?: ExpiringItem[];
+  documents?: ExpiringItem[];
+}): Promise<void> {
   const ok = await ensureNotificationPermission();
   if (!ok) return;
   try {
     await Notifications.cancelAllScheduledNotificationsAsync();
-    const now = Date.now();
-    for (const it of items) {
+    for (const it of opts.compliance ?? []) {
       if (!it.expires_at) continue;
-      const exp = new Date(`${it.expires_at}T09:00:00`);
-      if (isNaN(exp.getTime()) || exp.getTime() < now) continue;
-      let when = new Date(exp.getTime() - 14 * 86400000);
-      if (when.getTime() < now + 60000) when = new Date(now + 86400000); // within 14d → remind tomorrow
-      const where = it.properties?.label ? ` · ${it.properties.label}` : "";
-      await Notifications.scheduleNotificationAsync({
-        content: {
-          title: "Compliance expiring soon",
-          body: `${it.label}${where} expires ${fmtDate(it.expires_at)}.`,
-        },
-        trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: when },
-      });
+      await scheduleOne("Compliance expiring soon", it.label, it.properties?.label ? ` · ${it.properties.label}` : "", it.expires_at);
+    }
+    for (const d of opts.documents ?? []) {
+      if (!d.expires_at) continue;
+      await scheduleOne("Document expiring soon", d.label, d.properties?.label ? ` · ${d.properties.label}` : "", d.expires_at);
     }
   } catch {
     // best-effort; notifications are non-critical
   }
+}
+
+/** Back-compat wrapper. */
+export async function scheduleComplianceReminders(items: ExpiringItem[]): Promise<void> {
+  await scheduleReminders({ compliance: items });
 }

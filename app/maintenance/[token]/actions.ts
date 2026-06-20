@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createServiceClient } from "@/lib/supabase/server";
+import { sendPushToOrg } from "@/lib/push";
 
 /**
  * Contractor actions. Contractors have no account — they act via a tokenised
@@ -12,16 +13,16 @@ async function resolveByToken(token: string) {
   const service = createServiceClient();
   const { data } = await service
     .from("maintenance_requests")
-    .select("id, contractor_token")
+    .select("id, contractor_token, org_id")
     .eq("contractor_token", token)
     .maybeSingle();
   if (!data) throw new Error("Invalid link");
-  return { service, requestId: data.id };
+  return { service, requestId: data.id, orgId: data.org_id as string };
 }
 
 export async function contractorAccept(formData: FormData) {
   const token = String(formData.get("token"));
-  const { service, requestId } = await resolveByToken(token);
+  const { service, requestId, orgId } = await resolveByToken(token);
   await service.from("maintenance_requests").update({ status: "in_progress" }).eq("id", requestId);
   await service.from("maintenance_events").insert({
     request_id: requestId,
@@ -30,6 +31,7 @@ export async function contractorAccept(formData: FormData) {
     new_status: "in_progress",
     body: "Contractor accepted the job.",
   });
+  await sendPushToOrg(orgId, { title: "Contractor accepted", body: "A contractor accepted a maintenance job.", data: { type: "maintenance_status", request_id: requestId, status: "in_progress" } });
   revalidatePath(`/maintenance/${token}`);
 }
 
@@ -67,7 +69,7 @@ export async function contractorNote(formData: FormData) {
 
 export async function contractorComplete(formData: FormData) {
   const token = String(formData.get("token"));
-  const { service, requestId } = await resolveByToken(token);
+  const { service, requestId, orgId } = await resolveByToken(token);
 
   // Optional completion photo.
   const file = formData.get("photo");
@@ -96,5 +98,6 @@ export async function contractorComplete(formData: FormData) {
     new_status: "completed",
     body: "Contractor marked the job complete.",
   });
+  await sendPushToOrg(orgId, { title: "✅ Work completed", body: "A contractor marked a maintenance job complete.", data: { type: "maintenance_status", request_id: requestId, status: "completed" } });
   revalidatePath(`/maintenance/${token}`);
 }

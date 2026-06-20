@@ -5,7 +5,7 @@ import { Screen, PageTitle, Card, Badge, Stat, Row, Loading, colors, font } from
 import { useAuth } from "@/providers/AuthProvider";
 import { supabase } from "@/lib/supabase";
 import { formatMoney, REGION_LABEL, daysUntil } from "@/lib/format";
-import { scheduleComplianceReminders } from "@/lib/notifications";
+import { scheduleReminders } from "@/lib/notifications";
 
 function taxYearStartISO(): string {
   const now = new Date();
@@ -25,11 +25,12 @@ export default function Dashboard() {
   const load = useCallback(async () => {
     if (!orgId) return;
     const start = taxYearStartISO();
-    const [{ count: propCount }, { data: tx }, { data: arrears }, { data: comp }] = await Promise.all([
+    const [{ count: propCount }, { data: tx }, { data: arrears }, { data: comp }, { data: docs }] = await Promise.all([
       supabase.from("properties").select("id", { count: "exact", head: true }).eq("org_id", orgId),
       supabase.from("transactions").select("direction, amount, occurred_on").eq("org_id", orgId).gte("occurred_on", start),
       supabase.from("rent_ledger").select("id, status").eq("org_id", orgId).eq("status", "overdue"),
       supabase.from("compliance_items").select("id, label, expires_at, properties(label)").eq("org_id", orgId),
+      supabase.from("property_documents").select("id, label, expires_at, properties(label)").eq("org_id", orgId).not("expires_at", "is", null),
     ]);
     let income = 0, expenses = 0;
     for (const r of tx ?? []) {
@@ -41,7 +42,7 @@ export default function Dashboard() {
       return d !== null && d <= 60 && d >= 0;
     }).length;
     setStats({ properties: propCount ?? 0, income, expenses, arrears: (arrears ?? []).length, dueSoon });
-    scheduleComplianceReminders((comp as any) ?? []);
+    scheduleReminders({ compliance: (comp as any) ?? [], documents: (docs as any) ?? [] });
     setLoading(false);
   }, [orgId]);
 

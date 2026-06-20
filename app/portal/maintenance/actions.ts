@@ -5,6 +5,7 @@ import { requireTenant } from "@/lib/tenant-auth";
 import { createClient } from "@/lib/supabase/server";
 import { resolveJurisdiction, type JurisdictionKey } from "@/lib/jurisdictions";
 import { slaDueAt, type Priority } from "@/lib/maintenance";
+import { sendPushToOrg } from "@/lib/push";
 
 /** Tenant raises a maintenance request (with optional photos). */
 export async function raiseRequest(formData: FormData) {
@@ -76,6 +77,12 @@ export async function raiseRequest(formData: FormData) {
     action: "maintenance_raised",
     entity: "maintenance_requests",
     entity_id: req.id,
+  });
+
+  await sendPushToOrg(active.orgId, {
+    title: isHazard ? "⚠️ Hazard reported by tenant" : "New maintenance request",
+    body: String(formData.get("title") ?? "").trim() || "A tenant raised a maintenance request.",
+    data: { type: "fault_reported", request_id: req.id },
   });
 
   revalidatePath("/portal/maintenance");

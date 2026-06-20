@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { sendPushToOrg } from "@/lib/push";
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { resolveJurisdiction, type JurisdictionKey } from "@/lib/jurisdictions";
@@ -86,7 +87,7 @@ export async function generateRentPeriods(formData: FormData) {
 
 /** Landlord confirms rent received (log only). */
 export async function confirmRent(formData: FormData) {
-  await requireSession();
+  const { orgId } = await requireSession();
   const supabase = createClient();
   const id = String(formData.get("id"));
   const { error } = await supabase
@@ -94,5 +95,10 @@ export async function confirmRent(formData: FormData) {
     .update({ status: "confirmed", confirmed_at: new Date().toISOString() })
     .eq("id", id);
   if (error) throw new Error(error.message);
+  await sendPushToOrg(orgId, {
+    title: "Rent received",
+    body: "A rent payment was marked as received.",
+    data: { type: "rent_confirmed", ledger_id: id },
+  });
   revalidatePath("/dashboard/rent");
 }

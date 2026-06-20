@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { requireSession, isWriterRole } from "@/lib/auth";
 import { requireEntitlement } from "@/lib/entitlements";
+import { sendPushToOrg } from "@/lib/push";
 import { createClient } from "@/lib/supabase/server";
 import { newContractorToken, type RequestStatus } from "@/lib/maintenance";
 
@@ -77,6 +78,13 @@ export async function updateStatus(formData: FormData) {
     new_status: status || null,
     body: note || (status ? `Status set to ${status}.` : null),
   });
+  if (status) {
+    await sendPushToOrg(orgId, {
+      title: "Maintenance updated",
+      body: `A request was marked "${status}".`,
+      data: { type: "maintenance_status", request_id: requestId, status },
+    });
+  }
   revalidatePath(`/dashboard/maintenance/${requestId}`);
 }
 
