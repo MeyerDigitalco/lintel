@@ -20,7 +20,8 @@
       "bundleIdentifier": "com.meyerdigital.lintel",
       "infoPlist": {
         "NSCameraUsageDescription": "Lintel uses the camera to photograph receipts and document property maintenance.",
-        "NSPhotoLibraryUsageDescription": "Lintel attaches photos to expenses, documents and maintenance reports."
+        "NSPhotoLibraryUsageDescription": "Lintel attaches photos to expenses, documents and maintenance reports.",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -32,8 +33,7 @@
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE",
-        "android.permission.RECORD_AUDIO"
+        "android.permission.WRITE_EXTERNAL_STORAGE"
       ]
     },
     "plugins": [

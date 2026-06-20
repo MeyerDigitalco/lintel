@@ -22,9 +22,9 @@
   "submit": {
     "production": {
       "ios": {
-        "appleId": "REPLACE_WITH_YOUR_APPLE_ID_EMAIL",
-        "ascAppId": "REPLACE_WITH_APP_STORE_CONNECT_APP_ID",
-        "appleTeamId": "REPLACE_WITH_YOUR_APPLE_TEAM_ID"
+        "appleId": "pietermeyer667@gmail.com",
+        "ascAppId": "6782335176",
+        "appleTeamId": "55B25S423G"
       }
     }
   }
