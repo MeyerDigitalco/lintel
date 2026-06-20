@@ -41,14 +41,14 @@ export default async function ContactsPage({
       <PageHeader title="Contacts" subtitle="Contractors, suppliers, agents and other partners in one place." />
       <AddContactForm />
 
-      <div className="mb-6 flex flex-wrap gap-2">
+      <div className="mt-6 mb-6 flex flex-wrap gap-2">
         {TABS.map((t) => (
           <Link
             key={t.key}
             href={`/dashboard/contacts?kind=${t.key}`}
             className={cn(
               "rounded-full border px-3 py-1 text-xs",
-              kind === t.key ? "border-evergreen bg-evergreen/8 text-evergreen" : "border-hairline text-slate hover:text-ink"
+              kind === t.key ? "border-evergreen bg-evergreen/8 text-evergreen" : "border-slate/40 text-slate hover:border-evergreen/50 hover:text-ink"
             )}
           >
             {t.label}
