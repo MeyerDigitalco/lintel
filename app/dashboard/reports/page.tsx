@@ -18,9 +18,9 @@ const REPORTS: {
   { slug: "compliance-status", title: "Compliance status", body: "Per-property Gas Safety, EICR, EPC, insurance status.", group: "Compliance" },
   { slug: "court-readiness", title: "Court-readiness assessment", body: "Per-tenancy readiness score with the exact items to fix.", group: "Evidence" },
   { slug: "tenancy-journey", title: "Tenancy journey", body: "Every event for a tenancy — setup, notices, rent, maintenance.", group: "Evidence" },
-  { title: "Income & expense statement", body: "Comprehensive breakdown of income and expenses over a period.", group: "Accounting", soon: true },
-  { title: "P&L summary", body: "High-level profit and loss overview.", group: "Accounting", soon: true },
-  { title: "Supplier expenses", body: "Expenses grouped by supplier or contractor.", group: "Accounting", soon: true },
+  { slug: "income-expense", title: "Income & expense statement", body: "Breakdown of income and expenses by category over a period.", group: "Accounting" },
+  { slug: "profit-loss", title: "P&L summary", body: "Profit and loss totals with a month-by-month view.", group: "Accounting" },
+  { slug: "supplier-expenses", title: "Supplier expenses", body: "Expenses grouped by supplier or contractor.", group: "Accounting" },
 ];
 
 export default async function ReportsPage() {
