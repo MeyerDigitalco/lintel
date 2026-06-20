@@ -4,7 +4,7 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Screen, Card, Field, Button, Row, Badge, colors, font, radius } from "@/components/ui";
 import { useAuth } from "@/providers/AuthProvider";
-import { supabase } from "@/lib/supabase";
+import { supabase, API_URL } from "@/lib/supabase";
 import { formatMoney } from "@/lib/format";
 
 type Parsed = { amount: number; description: string } | null;
@@ -22,6 +22,13 @@ export default function Assistant() {
   const { orgId, currency } = useAuth();
   const gbp = (n: number, d = false) => formatMoney(n, currency, d);
   const router = useRouter();
+
+  // Ask-anything
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState<string | null>(null);
+  const [asking, setAsking] = useState(false);
+
+  // Quick-log expense
   const [text, setText] = useState("");
   const [parsed, setParsed] = useState<Parsed>(null);
   const [properties, setProperties] = useState<{ id: string; label: string }[]>([]);
@@ -35,6 +42,27 @@ export default function Assistant() {
     if (data && data.length) setPropId((p) => p ?? data[0].id);
   }, [orgId]);
   useEffect(() => { loadProps(); }, [loadProps]);
+
+  const ask = async () => {
+    if (!question.trim()) return;
+    if (!API_URL) { Alert.alert("Set EXPO_PUBLIC_API_URL", "The assistant needs your web app URL to answer questions."); return; }
+    setAsking(true);
+    setAnswer(null);
+    try {
+      const { data: sess } = await supabase.auth.getSession();
+      const resp = await fetch(`${API_URL}/api/assistant`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${sess.session?.access_token ?? ""}` },
+        body: JSON.stringify({ question: question.trim() }),
+      });
+      const json = await resp.json();
+      setAnswer(json?.answer ?? json?.error ?? "Couldn't get an answer — please try again.");
+    } catch {
+      setAnswer("Something went wrong reaching the assistant. Please try again.");
+    } finally {
+      setAsking(false);
+    }
+  };
 
   const interpret = () => {
     const p = parseExpense(text);
@@ -61,10 +89,27 @@ export default function Assistant() {
 
   return (
     <Screen>
+      {/* Ask anything */}
+      <Text style={{ fontSize: font.h3, fontWeight: "700", color: colors.ink }}>Ask anything</Text>
       <Text style={{ fontSize: font.small, color: colors.slate }}>
-        Quick-log by typing. Like the web assistant, nothing is saved until you confirm.
+        Questions about your properties, tenants, rent, compliance, or the rules in your region.
       </Text>
+      <Field label="Your question" value={question} onChangeText={setQuestion} placeholder="e.g. How much deposit can I take?" multiline />
+      <Button title={asking ? "Thinking…" : "Ask"} onPress={ask} loading={asking} />
+      {answer ? (
+        <Card>
+          <Row>
+            <Text style={{ fontSize: font.tiny, fontWeight: "600", color: colors.slate, flex: 1 }}>ASSISTANT</Text>
+            <Badge tone="mint">AI</Badge>
+          </Row>
+          <Text style={{ color: colors.ink, marginTop: 8 }}>{answer}</Text>
+          <Text style={{ fontSize: font.tiny, color: colors.slate, marginTop: 8 }}>Information only — not formal legal or tax advice.</Text>
+        </Card>
+      ) : null}
 
+      {/* Quick-log expense */}
+      <Text style={{ fontSize: font.h3, fontWeight: "600", color: colors.ink, marginTop: 8 }}>Quick-log an expense</Text>
+      <Text style={{ fontSize: font.small, color: colors.slate }}>Nothing is saved until you confirm.</Text>
       <Field label="Tell me what happened" value={text} onChangeText={setText} placeholder="e.g. Paid £60 for boiler repair" multiline />
       <Button title="Interpret" variant="outline" onPress={interpret} />
 
@@ -101,9 +146,6 @@ export default function Assistant() {
           <Ionicons name="chevron-forward" size={18} color={colors.slate} />
         </Row>
       </Card>
-      <Text style={{ fontSize: font.tiny, color: colors.slate }}>
-        Full voice control and portfolio Q&A run in the web app's assistant.
-      </Text>
     </Screen>
   );
 }
