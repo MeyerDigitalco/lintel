@@ -20,6 +20,7 @@ export const CURRENCIES: Record<string, Currency> = {
   BRL: { code: "BRL", symbol: "R$", locale: "pt-BR" },
   PLN: { code: "PLN", symbol: "zł", locale: "pl-PL" },
   HKD: { code: "HKD", symbol: "HK$", locale: "en-HK" },
+  ILS: { code: "ILS", symbol: "₪", locale: "he-IL" },
 };
 
 // ISO country code -> default currency.
@@ -30,7 +31,7 @@ export const COUNTRY_CURRENCY: Record<string, string> = {
   DE: "EUR", ES: "EUR", IN: "INR",
   FR: "EUR", NL: "EUR", SG: "SGD",
   IT: "EUR", PT: "EUR", CH: "CHF", JP: "JPY", MX: "MXN", BR: "BRL",
-  BE: "EUR", AT: "EUR", PL: "PLN", HK: "HKD",
+  BE: "EUR", AT: "EUR", PL: "PLN", HK: "HKD", IL: "ILS",
 };
 
 export function currencyForCountry(cc?: string | null): string {

@@ -115,6 +115,8 @@ const SA_REGIONS: RegionOption[] = ["Riyadh","Makkah","Eastern Province","Madina
 const QA_MUNICIPALITIES: RegionOption[] = ["Doha","Al Rayyan","Al Wakrah","Al Khor","Umm Salal"].map((n) => ({ value: `qa_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
 const HK_REGIONS: RegionOption[] = ["Hong Kong Island","Kowloon","New Territories"].map((n) => ({ value: `hk_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
 
+const IL_DISTRICTS: RegionOption[] = ["Jerusalem","Tel Aviv","Haifa","Central","Southern","Northern","Judea & Samaria"].map((n) => ({ value: `il_${n.toLowerCase().replace(/[^a-z]+/g, "_")}`, label: n }));
+
 export const COUNTRIES: CountryInfo[] = [
   { code: "GB", name: "United Kingdom", currency: "GBP", taxLabel: "Self Assessment (SA105) / MTD", tenancyTerm: "tenancy", depositTerm: "deposit", regions: UK_NATIONS },
   { code: "US", name: "United States", currency: "USD", taxLabel: "Schedule E (Form 1040)", tenancyTerm: "lease", depositTerm: "security deposit", regions: US_STATES },
@@ -142,6 +144,7 @@ export const COUNTRIES: CountryInfo[] = [
   { code: "SA", name: "Saudi Arabia", currency: "SAR", taxLabel: "No personal income tax; VAT records", tenancyTerm: "lease (Ejar contract)", depositTerm: "security deposit", regions: SA_REGIONS },
   { code: "QA", name: "Qatar", currency: "QAR", taxLabel: "No personal income tax", tenancyTerm: "lease contract", depositTerm: "security deposit", regions: QA_MUNICIPALITIES },
   { code: "HK", name: "Hong Kong", currency: "HKD", taxLabel: "Property tax (IRD)", tenancyTerm: "tenancy agreement", depositTerm: "deposit", regions: HK_REGIONS },
+  { code: "IL", name: "Israel", currency: "ILS", taxLabel: "Rental income (Form 1301) — 10% track or marginal", tenancyTerm: "lease (חוזה שכירות)", depositTerm: "security deposit (פיקדון)", regions: IL_DISTRICTS },
 ];
 
 export function countryByCode(code?: string | null): CountryInfo {
@@ -175,6 +178,7 @@ export function countryForRegion(region?: string | null): CountryInfo {
   if (region.startsWith("sa_")) return countryByCode("SA");
   if (region.startsWith("qa_")) return countryByCode("QA");
   if (region.startsWith("hk_")) return countryByCode("HK");
+  if (region.startsWith("il_")) return countryByCode("IL");
   return countryByCode("GB");
 }
 

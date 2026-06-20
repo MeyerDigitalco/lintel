@@ -22,6 +22,7 @@ export const LOCAL_PRICES: Record<string, Prices> = {
   QAR: { core: 39, voice: 8, tenant_portal: 19, maintenance_portal: 19 },
   PLN: { core: 39, voice: 8, tenant_portal: 19, maintenance_portal: 19 },
   HKD: { core: 98, voice: 19, tenant_portal: 49, maintenance_portal: 49 },
+  ILS: { core: 39, voice: 8, tenant_portal: 19, maintenance_portal: 19 },
 };
 
 const WHOLE = ["AED", "ZAR", "SAR", "QAR", "KWD", "INR", "JPY"];

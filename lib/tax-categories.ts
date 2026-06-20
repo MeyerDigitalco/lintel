@@ -44,6 +44,18 @@ const BY_COUNTRY: Record<string, TaxCategory[]> = {
   GB: SA105_CATEGORIES as TaxCategory[],
 
   // United States — Schedule E.
+  // Israel — rental income (Form 1301). Deductions/depreciation apply on the
+  // marginal track; the 10% flat track allows none.
+  IL: [
+    inc("rents", "Rental income (דמי שכירות)"), inc("other_property_income", "Other property income"),
+    exp("repairs_maintenance", "Repairs & maintenance (תיקונים)"),
+    exp("finance_costs", "Mortgage interest (ריבית משכנתא)", true),
+    exp("legal_management_other", "Management, legal & brokerage (ניהול ותיווך)"),
+    exp("depreciation", "Depreciation (פחת)"),
+    exp("rent_rates_insurance", "Building insurance (ביטוח מבנה)"),
+    exp("other_expenses", "Other expenses (הוצאות אחרות)"),
+  ],
+
   US: [
     inc("rents", "Rents received"), inc("other_property_income", "Other rental income"),
     exp("rent_rates_insurance", "Insurance"),

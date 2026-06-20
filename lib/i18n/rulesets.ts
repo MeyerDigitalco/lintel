@@ -593,6 +593,34 @@ function withSub(base: RegionRuleset, code?: string | null): RegionRuleset {
   };
 }
 
+const IL: RegionRuleset = {
+  country: "IL", countryName: "Israel", currency: "ILS",
+  governingLaw: "Hire and Loan Law 1971 + the Fair Rental Law (2017 amendment)",
+  tenancyTerm: "lease (חוזה שכירות)", depositTerm: "security deposit (פיקדון)",
+  taxLabel: "Rental income (Form 1301) — 10% track or marginal",
+  tenancyTypes: [
+    { label: "Unprotected residential lease (שכירות בלתי מוגנת)", description: "The standard modern lease — usually a fixed 12-month term, freely negotiated, no key money." },
+    { label: "Protected tenancy (דייר מוגן)", description: "Legacy key-money tenancies under the Tenant Protection Law with strong, near-permanent occupancy rights — rare in new lettings." },
+  ],
+  compliance: [
+    { label: "Fair Rental Law standards", note: "Dwelling must be fit to live in (Amendment 2017).", detail: "The 2017 Fair Rental Law requires a residential dwelling to be fit for living — functioning drainage, electricity and ventilation, no danger to health or safety — and the lease must disclose defects before signing." },
+    { label: "Repairs within statutory time", note: "Landlord must fix defects within 30 days (or 3 days if urgent).", detail: "The landlord must repair defects that are their responsibility within a reasonable time — generally 30 days, or 3 days where the defect prevents reasonable use of the dwelling — failing which the tenant may repair and deduct or reduce rent." },
+    { label: "Security / guarantee cap", note: "Guarantees capped at the lower of 3 months' rent or one-third of the lease total.", detail: "Under the Fair Rental Law the total of all guarantees (deposit, bank guarantee, promissory note) a landlord may require is capped at the lower of three months' rent or one-third of the total lease value." },
+    { label: "Limits on charges to the tenant", note: "Landlord bears building insurance, management and their own broker fees.", detail: "The landlord cannot pass their own costs — building/structure insurance, management company fees, or the landlord's own broker — onto the tenant; the tenant pays only for usage-based charges and agreed services." },
+  ],
+  deposit: { cap: "All guarantees capped at the lower of 3 months' rent or one-third of the lease value.", protection: "Returned at the end of the term less arrears and damage; no government deposit scheme." },
+  checklist: ["Written lease (Hebrew)", "Defects disclosure / condition report", "Fitness-for-living confirmation", "Guarantee or deposit within the statutory cap", "Tenant ID (te'udat zehut)"],
+  notices: [
+    { label: "End of fixed term", when: "Lease term ends", period: "Per contract", detail: "A fixed-term lease ends on its date; renewal or extension is by agreement. Give clear written notice in line with the contract's renewal clause." },
+    { label: "Eviction for breach", when: "Non-payment or breach", period: "Court process", detail: "Eviction is obtained through the courts (an eviction claim / hotzaa lapoal enforcement). Protected tenants can only be removed on the specific statutory grounds in the Tenant Protection Law." },
+    { label: "Rent change", when: "On renewal", period: "No statutory cap", detail: "Residential rent is market-set with no national rent cap; increases are negotiated at renewal and should be fixed in the lease (often index-linked)." },
+  ],
+  notes: [
+    "Two tax tracks for individuals: a 10% flat rate on gross rent (no deductions), or marginal rates with deductions and depreciation; a monthly exemption threshold (index-linked, ~₪5,654/month in 2024) may fully or partly exempt small landlords.",
+    "Residential rent is generally exempt from VAT; report rental income on the annual return (Form 1301).",
+  ],
+};
+
 export function resolveRegion(country?: string | null, region?: string | null, regionCode?: string | null): RegionRuleset {
   const cc = (country ?? "GB").toUpperCase();
   if (cc === "US") return withSub(US, regionCode);
@@ -620,8 +648,9 @@ export function resolveRegion(country?: string | null, region?: string | null, r
   if (cc === "SA") return SA;
   if (cc === "QA") return QA;
   if (cc === "HK") return HK;
+  if (cc === "IL") return IL;
   const key = (["england", "wales", "scotland", "northern_ireland"].includes(region ?? "") ? region : "england") as JurisdictionKey;
   return ukToRuleset(resolveJurisdiction(key));
 }
 
-export const INTERNATIONAL_RULESETS = { US, UAE, ZA, AU, NZ, CA, IE, DE, ES, IN, FR, NL, SG, IT, PT, CH, JP, MX, BR, BE, AT, PL, SA, QA, HK };
+export const INTERNATIONAL_RULESETS = { US, UAE, ZA, AU, NZ, CA, IE, DE, ES, IN, FR, NL, SG, IT, PT, CH, JP, MX, BR, BE, AT, PL, SA, QA, HK, IL };

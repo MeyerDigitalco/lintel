@@ -444,6 +444,34 @@ const HK: RegionRuleset = {
   notes: ["Stamp promptly to avoid penalties.", "Property tax on net assessable value."],
 };
 
+const IL: RegionRuleset = {
+  countryName: "Israel",
+  governingLaw: "Hire and Loan Law 1971 + the Fair Rental Law (2017 amendment)",
+  tenancyTerm: "lease (חוזה שכירות)", depositTerm: "security deposit (פיקדון)",
+  taxLabel: "Rental income (Form 1301) — 10% track or marginal",
+  tenancyTypes: [
+    { label: "Unprotected residential lease (שכירות בלתי מוגנת)", description: "The standard modern lease — usually a fixed 12-month term, freely negotiated, no key money." },
+    { label: "Protected tenancy (דייר מוגן)", description: "Legacy key-money tenancies with strong, near-permanent rights — rare in new lettings." },
+  ],
+  compliance: [
+    { label: "Fair Rental Law standards", note: "Dwelling must be fit to live in (2017).", detail: "The Fair Rental Law requires a residential dwelling to be fit for living — drainage, electricity, ventilation, no danger — and defects disclosed before signing." },
+    { label: "Repairs within statutory time", note: "Fix defects within 30 days (3 if urgent).", detail: "The landlord must repair their defects within a reasonable time — about 30 days, or 3 days if the defect blocks reasonable use — or the tenant may repair and deduct." },
+    { label: "Guarantee cap", note: "Capped at the lower of 3 months' rent or 1/3 of the lease.", detail: "Total guarantees a landlord can require are capped at the lower of three months' rent or one-third of the total lease value." },
+    { label: "Limits on charges", note: "Landlord bears building insurance, management and their own broker.", detail: "The landlord cannot pass building insurance, management fees or their own broker fee to the tenant." },
+  ],
+  deposit: { cap: "Guarantees capped at the lower of 3 months' rent or one-third of the lease value.", protection: "Returned at end of term less arrears/damage; no government scheme." },
+  checklist: ["Written lease (Hebrew)", "Defects disclosure", "Fitness-for-living confirmation", "Guarantee within the cap", "Tenant ID"],
+  notices: [
+    { label: "End of fixed term", when: "Lease ends", period: "Per contract", detail: "A fixed-term lease ends on its date; renewal is by agreement per the contract." },
+    { label: "Eviction for breach", when: "Non-payment / breach", period: "Court process", detail: "Eviction is via the courts; protected tenants only on statutory grounds." },
+    { label: "Rent change", when: "On renewal", period: "No statutory cap", detail: "Rent is market-set with no national cap; agreed at renewal, often index-linked." },
+  ],
+  notes: [
+    "Two tax tracks: 10% flat on gross rent (no deductions), or marginal rates with deductions and depreciation; a monthly exemption threshold (~₪5,654 in 2024) may apply.",
+    "Residential rent is generally VAT-exempt; report on Form 1301.",
+  ],
+};
+
 const UK_NAMES: Record<string, string> = { england: "England", wales: "Wales", scotland: "Scotland", northern_ireland: "Northern Ireland" };
 
 function uk(region?: string | null): RegionRuleset {
@@ -552,6 +580,7 @@ export function resolveRegion(country?: string | null, region?: string | null, r
   if (cc === "SA") return SA;
   if (cc === "QA") return QA;
   if (cc === "HK") return HK;
+  if (cc === "IL") return IL;
   return uk(region);
 }
 
