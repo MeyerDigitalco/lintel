@@ -1,5 +1,5 @@
 import "server-only";
-import { generateText } from "@/lib/ai";
+import { generateText, generateFromDocument } from "@/lib/ai";
 
 export interface ContractFields {
   address_line1?: string;
@@ -15,6 +15,18 @@ export interface ContractFields {
   start_date?: string;
   end_date?: string;
 }
+
+const PROMPT =
+  "You are reading a residential tenancy agreement / lease. Extract ONLY what is stated, never guess.\n" +
+  "Return STRICT JSON with these keys (use null when not present):\n" +
+  '{"address_line1":string,"address_line2":string,"city":string,"postcode":string,' +
+  '"tenant_name":string,"tenant_email":string,"tenant_phone":string,' +
+  '"rent_amount":number,"rent_period":"monthly"|"weekly","deposit_amount":number,' +
+  '"start_date":"YYYY-MM-DD","end_date":"YYYY-MM-DD"}\n' +
+  "If multiple tenants are listed, use the first named tenant. Amounts as plain numbers (no currency symbols).\n" +
+  "Output JSON only.";
+
+const SYSTEM = "You extract structured fields from tenancy contracts and output only JSON.";
 
 async function extractText(buffer: Buffer, contentType: string): Promise<string> {
   const ct = contentType || "";
@@ -51,34 +63,8 @@ const numv = (v: unknown): number | undefined => {
   return isFinite(n) && n > 0 ? n : undefined;
 };
 
-/**
- * Read a tenancy contract and return the property + tenant + tenancy fields it
- * contains. Returns {} when text/AI is unavailable so the caller can fall back
- * to manual entry. Never throws.
- */
-export async function extractContractFields(
-  buffer: Buffer,
-  contentType: string
-): Promise<ContractFields> {
-  const text = await extractText(buffer, contentType);
-  if (!text.trim()) return {};
-
-  const ai = await generateText(
-    `You are reading a residential tenancy agreement / lease. Extract ONLY what is stated, never guess.\n` +
-      `Return STRICT JSON with these keys (use null when not present):\n` +
-      `{"address_line1":string,"address_line2":string,"city":string,"postcode":string,` +
-      `"tenant_name":string,"tenant_email":string,"tenant_phone":string,` +
-      `"rent_amount":number,"rent_period":"monthly"|"weekly","deposit_amount":number,` +
-      `"start_date":"YYYY-MM-DD","end_date":"YYYY-MM-DD"}\n` +
-      `If multiple tenants are listed, use the first named tenant. Amounts as plain numbers (no currency symbols).\n` +
-      `Output JSON only.\n\nCONTRACT TEXT:\n${text.slice(0, 8000)}`,
-    {
-      system: "You extract structured fields from tenancy contracts and output only JSON.",
-      maxTokens: 500,
-    }
-  );
+function parseFields(ai: string | null): ContractFields {
   if (!ai) return {};
-
   try {
     const j = JSON.parse(ai.replace(/```json|```/g, "").trim());
     const out: ContractFields = {};
@@ -94,10 +80,42 @@ export async function extractContractFields(
     if (j.rent_period === "weekly" || j.rent_period === "monthly") out.rent_period = j.rent_period;
     if (isDate(j.start_date)) out.start_date = j.start_date;
     if (isDate(j.end_date)) out.end_date = j.end_date;
-    // Drop undefined keys for a clean payload.
     (Object.keys(out) as (keyof ContractFields)[]).forEach((k) => out[k] === undefined && delete out[k]);
     return out;
   } catch {
     return {};
   }
+}
+
+/**
+ * Read a tenancy contract and return the property + tenant + tenancy fields it
+ * contains. Tries Claude's native document understanding first (works on scanned
+ * PDFs and images with no text layer), then falls back to text extraction.
+ * Returns {} when nothing can be read. Never throws.
+ */
+export async function extractContractFields(
+  buffer: Buffer,
+  contentType: string
+): Promise<ContractFields> {
+  const ct = contentType || "";
+  const isPdf = ct === "application/pdf" || /pdf/i.test(ct);
+  const isImage = /^image\//.test(ct);
+
+  // 1) Native document/vision pass — robust to scanned contracts.
+  if (isPdf || isImage) {
+    const fromDoc = parseFields(
+      await generateFromDocument(buffer.toString("base64"), isPdf ? "application/pdf" : ct, PROMPT, {
+        system: SYSTEM,
+        maxTokens: 600,
+      })
+    );
+    if (Object.keys(fromDoc).length > 0) return fromDoc;
+  }
+
+  // 2) Fallback: extract embedded text, then ask the text model.
+  const text = await extractText(buffer, ct);
+  if (!text.trim()) return {};
+  return parseFields(
+    await generateText(PROMPT + "\n\nCONTRACT TEXT:\n" + text.slice(0, 8000), { system: SYSTEM, maxTokens: 600 })
+  );
 }
