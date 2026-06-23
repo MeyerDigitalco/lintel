@@ -2,7 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
-    // Server Actions are enabled by default in Next 14; keep config minimal.
+    // Keep heavy Node-only libs out of the server bundle so they load at runtime.
+    serverComponentsExternalPackages: ["pdf-parse", "tesseract.js"],
   },
 };
 

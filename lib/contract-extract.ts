@@ -31,7 +31,7 @@ async function extractText(buffer: Buffer, contentType: string): Promise<string>
   }
   if (ct === "application/pdf") {
     try {
-      const pkg = "pdf-parse";
+      const pkg = "pdf-parse/lib/pdf-parse.js";
       const pdf = ((await import(pkg)) as any).default;
       const data = await pdf(buffer);
       return (data?.text as string) ?? "";

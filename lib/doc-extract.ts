@@ -27,7 +27,7 @@ export async function extractDocFields(
   } else if (ct === "application/pdf") {
     try {
       // Variable specifier so tsc doesn't require the module to be present locally.
-      const pkg = "pdf-parse";
+      const pkg = "pdf-parse/lib/pdf-parse.js";
       const pdf = ((await import(pkg)) as any).default;
       const data = await pdf(buffer);
       text = (data?.text as string) ?? "";
