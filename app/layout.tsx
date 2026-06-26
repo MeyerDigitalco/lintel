@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     siteName: "Lintel",
     title: "Lintel — tax, compliance & rent for landlords worldwide",
     description: "Tax records, compliance, rent and documents in one place, tuned to your country's rules. Free for 30 days.",
-    url: process.env.NEXT_PUBLIC_APP_URL ?? "https://lintel-green.vercel.app",
+    url: process.env.NEXT_PUBLIC_APP_URL ?? "https://lintelsquared.com",
     images: [{ url: "/icon-512.png", width: 512, height: 512, alt: "Lintel" }],
   },
   twitter: {

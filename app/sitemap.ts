@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { CALCULATORS } from "@/components/calculators/registry";
 
-const base = process.env.NEXT_PUBLIC_APP_URL ?? "https://lintel-green.vercel.app";
+const base = process.env.NEXT_PUBLIC_APP_URL ?? "https://lintelsquared.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
