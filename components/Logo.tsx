@@ -25,10 +25,11 @@ export function Logo({
           strokeLinecap="round"
         />
         <rect x="11" y="12.4" width="18" height="2.8" rx="1.4" fill="#3B82F6" />
+        <text x="32" y="14" fontSize="12" fontWeight="800" fill="#3B82F6" textAnchor="middle" fontFamily="system-ui, sans-serif">2</text>
       </svg>
       {showWordmark && (
         <span className="font-heading text-lg font-semibold tracking-tight text-ink">
-          Lintel
+          Lintel<sup className="ml-0.5 align-super text-[0.62em] font-bold text-[#3B82F6]">2</sup>
         </span>
       )}
     </span>

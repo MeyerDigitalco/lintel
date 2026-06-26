@@ -161,6 +161,31 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Security */}
+      <section id="security" className="mx-auto max-w-6xl px-5 py-16">
+        <span className="text-xs font-semibold uppercase tracking-wide text-mint">Security &amp; privacy</span>
+        <h2 className="mt-2 font-heading text-3xl font-semibold tracking-tight text-ink">Your information is protected.</h2>
+        <p className="mt-3 max-w-2xl text-slate">
+          You&apos;re trusting Lintel with tenancy, financial and tax records. We treat that seriously, with bank-grade
+          infrastructure and strict access controls on every account.
+        </p>
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            ["Encrypted end to end", "Every connection runs over HTTPS/TLS, and your data is stored in an encrypted, access-controlled database."],
+            ["Your data is isolated", "Row-level security walls off each landlord&apos;s records — other customers and unauthorised staff can never see them."],
+            ["Least-access sharing", "Tenants and contractors only ever see the single tenancy or job you share with them, through links you can revoke anytime."],
+            ["Payments secured by Stripe", "Card details go straight to Stripe (PCI-DSS Level 1). Lintel never sees or stores your card number."],
+            ["You stay in control", "Export your records or permanently delete your account and its data whenever you choose."],
+            ["Court-ready audit trail", "Key actions are timestamped and logged, so your evidence stands up when it matters."],
+          ].map(([title, body]) => (
+            <div key={title} className="rounded-lintel border border-hairline bg-surface p-5">
+              <h3 className="font-heading text-base font-semibold tracking-tight text-ink" dangerouslySetInnerHTML={{ __html: title }} />
+              <p className="mt-2 text-sm text-slate" dangerouslySetInnerHTML={{ __html: body }} />
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Pricing */}
       <section id="pricing" className="mx-auto max-w-6xl px-5 py-16">
         <div className="max-w-2xl">
