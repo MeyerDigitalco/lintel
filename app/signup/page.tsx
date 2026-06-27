@@ -34,8 +34,11 @@ export default function SignupPage() {
               </Link>
             </p>
             <p className="mt-4 text-xs text-slate">
-              By continuing you agree to our terms. Lintel provides software
-              tools, not legal, tax or financial advice.
+              By continuing you agree to our{" "}
+              <Link href="/terms" className="text-evergreen hover:underline">Terms of Use</Link>{" "}
+              and{" "}
+              <Link href="/privacy" className="text-evergreen hover:underline">Privacy Policy</Link>.
+              Lintel provides software tools, not legal, tax or financial advice.
             </p>
           </CardBody>
         </Card>

@@ -44,6 +44,8 @@ export const viewport: Viewport = {
   themeColor: "#16233A",
 };
 
+import { CookieConsent } from "@/components/site/CookieConsent";
+
 export default function RootLayout({
   children,
 }: {
@@ -51,7 +53,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en-GB" className={`${inter.variable} ${interTight.variable}`}>
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased">{children}<CookieConsent /></body>
     </html>
   );
 }
