@@ -129,7 +129,7 @@ export function AddTransactionForm({
 
           <label className="block">
             <span className="mb-1 flex items-center gap-2 text-sm text-ink">
-              Receipt
+              Receipt (photo or PDF)
               {ocrState === "scanning" && <Badge tone="amber">Scanning…</Badge>}
               {ocrState === "done" && <Badge tone="mint">Fields pre-filled</Badge>}
               {ocrState === "error" && <Badge tone="red">OCR failed — enter manually</Badge>}
@@ -137,7 +137,7 @@ export function AddTransactionForm({
             <input
               name="receipt"
               type="file"
-              accept="image/*"
+              accept="image/*,application/pdf"
               onChange={handleReceipt}
               className="block w-full text-sm text-slate file:mr-3 file:rounded-lintel file:border file:border-hairline file:bg-paper file:px-3 file:py-2 file:text-sm"
             />

@@ -27,6 +27,14 @@ export default async function TransactionsPage() {
       .limit(200),
   ]);
 
+  const receiptUrls: Record<string, string> = {};
+  await Promise.all(
+    (tx ?? []).filter((t) => t.receipt_url).map(async (t) => {
+      const { data } = await supabase.storage.from("receipts").createSignedUrl(t.receipt_url as string, 3600);
+      if (data?.signedUrl) receiptUrls[t.id] = data.signedUrl;
+    })
+  );
+
   const yStart = taxYearStartFor();
   const periods = quarterlyPeriods(yStart);
   const inYear = (d: string) => d >= periods[0].startDate && d <= periods[3].endDate;
@@ -83,7 +91,9 @@ export default async function TransactionsPage() {
                     <td className="px-4 py-3 text-ink">
                       <span className="flex items-center gap-2">
                         {t.description || "—"}
-                        {t.receipt_url && <Badge>Receipt</Badge>}
+                        {t.receipt_url && (receiptUrls[t.id] ? (
+                          <a href={receiptUrls[t.id]} target="_blank" rel="noopener noreferrer" className="text-xs text-evergreen hover:underline">View receipt</a>
+                        ) : <Badge>Receipt</Badge>)}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-slate">{categoryLabelForRegion(country, t.sa105_category)}</td>
