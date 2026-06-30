@@ -22,10 +22,10 @@ const FEATURES = [
 ];
 
 const FAQ = [
-  { q: "Do I need a card to start?", a: `You start a ${TRIAL_PERIOD_DAYS}-day free trial with everything switched on. No charge until day ${TRIAL_PERIOD_DAYS + 1}, and you can cancel anytime.` },
+  { q: "Do I need a card to start?", a: "No card needed. Every feature is free for everyone until 31 August 2026 — just sign up and start." },
   { q: "Which countries do you support?", a: `${COUNTRIES.length}+ countries across the UK, US, Europe, the Middle East, Africa, Asia and Oceania — each with the correct currency, tenancy rules, compliance items and tax framing.` },
   { q: "Is my data private?", a: "Yes. Every account is isolated with row-level security, and your portfolio data is never shared or sold." },
-  { q: "What happens after the free month?", a: "Keep the always-on core and switch off any add-ons you don't use. One screen, no surprises — you only pay for what you keep." },
+  { q: "What happens after 31 August 2026?", a: "We'll share simple pricing well before then. Nothing is charged automatically, and you'll always be able to export or delete your data." },
   { q: "Can my accountant get involved?", a: "Yes — invite them to a read-only seat with an accountant pack and export, so they see exactly what they need and nothing they shouldn't." },
 ];
 
@@ -55,20 +55,20 @@ export default function HomePage() {
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-lg text-slate">
             Lintel keeps your tax records, compliance, rent, documents and tenants in one calm place —
-            tuned to your country&apos;s rules. Try every feature free for {TRIAL_PERIOD_DAYS} days, then keep only what you love.
+            tuned to your country&apos;s rules. Every feature is free for everyone until 31 August 2026.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Link href="/signup"><Button size="lg">Start your {TRIAL_PERIOD_DAYS}-day free trial</Button></Link>
+            <Link href="/signup"><Button size="lg">Start free — no card needed</Button></Link>
             <Link href="#pricing"><Button variant="outline" size="lg">See pricing</Button></Link>
           </div>
-          <p className="mt-3 text-xs text-slate">Everything included free for {TRIAL_PERIOD_DAYS} days · no charge until day {TRIAL_PERIOD_DAYS + 1} · cancel anytime</p>
+          <p className="mt-3 text-xs text-slate">Every feature free for everyone until 31 August 2026 · no card needed</p>
 
           <div className="mx-auto mt-12 grid max-w-3xl grid-cols-2 gap-px overflow-hidden rounded-lintel border border-hairline bg-hairline text-center sm:grid-cols-4">
             {[
               [`${COUNTRIES.length}+`, "Countries"],
               [`${currencyCount}`, "Currencies"],
               [`${langCount}`, "Languages"],
-              [`${TRIAL_PERIOD_DAYS} days`, "Free, all-in"],
+              ["Free", "until 31 Aug 2026"],
             ].map(([n, l]) => (
               <div key={l} className="bg-surface px-4 py-5">
                 <p className="font-heading text-2xl font-semibold text-evergreen">{n}</p>
@@ -101,16 +101,16 @@ export default function HomePage() {
       <section className="border-y border-hairline bg-surface">
         <div className="mx-auto grid max-w-6xl items-center gap-8 px-5 py-16 md:grid-cols-[1.2fr_1fr]">
           <div>
-            <h2 className="font-heading text-3xl font-semibold tracking-tight text-ink">One free month. Everything switched on.</h2>
+            <h2 className="font-heading text-3xl font-semibold tracking-tight text-ink">Free until 31 August 2026. Everything switched on.</h2>
             <p className="mt-3 max-w-xl text-slate">
-              No tiers to puzzle over on day one. Voice assistant, tenant portal, maintenance, documents, reports —
-              all on the moment you sign up. When your {TRIAL_PERIOD_DAYS} days are up, a single screen lets you keep what you use and switch off the rest.
+              No tiers, no card, nothing to puzzle over. Voice assistant, tenant portal, maintenance, documents and reports —
+              every feature is on the moment you sign up, and completely free for everyone until 31 August 2026.
             </p>
             <div className="mt-6"><Link href="/signup"><Button>Get started — it&apos;s free</Button></Link></div>
           </div>
           <Card className="border-evergreen/30">
             <CardBody>
-              <p className="text-xs uppercase tracking-wide text-slate">During your free month</p>
+              <p className="text-xs uppercase tracking-wide text-slate">Included free for everyone</p>
               <ul className="mt-3 space-y-2 text-sm text-ink">
                 {["Tax records, rent & arrears", "Compliance vault & reminders", "Voice assistant & receipt scanning", "Tenant portal & maintenance", "Reports, tasks & court-readiness", "iPhone & Android app"].map((x) => (
                   <li key={x} className="flex items-center gap-2"><span className="text-mint">✓</span> {x}</li>
@@ -174,7 +174,7 @@ export default function HomePage() {
             ["Encrypted end to end", "Every connection runs over HTTPS/TLS, and your data is stored in an encrypted, access-controlled database."],
             ["Your data is isolated", "Row-level security walls off each landlord&apos;s records — other customers and unauthorised staff can never see them."],
             ["Least-access sharing", "Tenants and contractors only ever see the single tenancy or job you share with them, through links you can revoke anytime."],
-            ["Payments secured by Stripe", "Card details go straight to Stripe (PCI-DSS Level 1). Lintel never sees or stores your card number."],
+            ["Reliable, backed-up infrastructure", "Your data lives on managed cloud infrastructure with regular encrypted backups and high availability."],
             ["You stay in control", "Export your records or permanently delete your account and its data whenever you choose."],
             ["Court-ready audit trail", "Key actions are timestamped and logged, so your evidence stands up when it matters."],
           ].map(([title, body]) => (
@@ -189,21 +189,21 @@ export default function HomePage() {
       {/* Pricing */}
       <section id="pricing" className="mx-auto max-w-6xl px-5 py-16">
         <div className="max-w-2xl">
-          <h2 className="font-heading text-3xl font-semibold tracking-tight text-ink">Free for a month. Then only what you keep.</h2>
-          <p className="mt-3 text-slate">Every tool is included free for {TRIAL_PERIOD_DAYS} days. After that, keep the always-on core and add only the modules you use. Shown in your local currency.</p>
+          <h2 className="font-heading text-3xl font-semibold tracking-tight text-ink">Free for everyone until 31 August 2026.</h2>
+          <p className="mt-3 text-slate">Every tool — core and add-ons — is completely free to use until 31 August 2026. No card required to start.</p>
         </div>
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           <Card className="border-evergreen/30">
             <CardBody>
-              <p className="text-sm text-slate">Core — always on after your trial</p>
+              <p className="text-sm text-slate">Core — included free until 31 Aug 2026</p>
               <p className="mt-1 font-heading text-4xl font-semibold tracking-tight">{corePrice}<span className="text-base font-normal text-slate">/mo</span></p>
               <p className="mt-2 text-sm text-slate">{PLAN.core.label}</p>
-              <Link href="/signup" className="mt-6 inline-block"><Button size="lg">Start free trial</Button></Link>
+              <Link href="/signup" className="mt-6 inline-block"><Button size="lg">Start free</Button></Link>
             </CardBody>
           </Card>
           <Card>
             <CardBody>
-              <p className="text-sm text-slate">Optional add-ons (free during trial)</p>
+              <p className="text-sm text-slate">Optional add-ons (free until 31 Aug 2026)</p>
               <ul className="mt-3 space-y-2 text-sm">
                 {[PLAN.voice, PLAN.tenant_portal, PLAN.maintenance_portal].map((p) => (
                   <li key={p.feature} className="flex justify-between border-b border-hairline pb-2 last:border-0">
@@ -238,7 +238,7 @@ export default function HomePage() {
         <h2 className="mx-auto max-w-2xl font-heading text-3xl font-semibold tracking-tight text-ink md:text-4xl">Your whole portfolio, finally in one calm place.</h2>
         <p className="mx-auto mt-4 max-w-xl text-slate">Start free today. Set up your first property in minutes, with everything switched on.</p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <Link href="/signup"><Button size="lg">Start your {TRIAL_PERIOD_DAYS}-day free trial</Button></Link>
+          <Link href="/signup"><Button size="lg">Start free — no card needed</Button></Link>
           <Link href="/calculators"><Button variant="outline" size="lg">Try the calculators</Button></Link>
         </div>
       </section>

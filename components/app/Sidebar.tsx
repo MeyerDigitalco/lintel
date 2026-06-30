@@ -6,6 +6,7 @@ import { Logo } from "@/components/Logo";
 import { cn } from "@/lib/cn";
 import { translate } from "@/lib/i18n/dictionaries";
 import { LanguageSwitcher } from "@/components/app/LanguageSwitcher";
+import { FreeCountdown } from "@/components/app/FreeCountdown";
 
 const NAV = [
   { href: "/dashboard", key: "nav.overview" },
@@ -72,6 +73,7 @@ export function Sidebar({
           );
         })}
       </nav>
+      <FreeCountdown />
       <LanguageSwitcher lang={lang} langs={langs} />
     </aside>
   );

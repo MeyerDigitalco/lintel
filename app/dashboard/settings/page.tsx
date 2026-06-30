@@ -52,17 +52,7 @@ export default async function SettingsPage() {
       />
 
       {writer && (
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Link href="/dashboard/settings/billing">
-            <Card className="h-full transition-colors hover:border-evergreen/40">
-              <CardBody>
-                <h3 className="font-heading text-sm font-semibold tracking-tight">Plan &amp; add-ons</h3>
-                <p className="mt-1 text-xs text-slate">
-                  Turn the voice assistant, tenant portal and maintenance portal on or off.
-                </p>
-              </CardBody>
-            </Card>
-          </Link>
+        <div className="grid gap-4">
           <Link href="/dashboard/settings/team">
             <Card className="h-full transition-colors hover:border-evergreen/40">
               <CardBody>

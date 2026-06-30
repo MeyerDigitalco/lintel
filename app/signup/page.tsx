@@ -21,10 +21,10 @@ export default function SignupPage() {
         <Card>
           <CardBody>
             <h1 className="font-heading text-2xl font-semibold tracking-tight">
-              Start your {TRIAL_PERIOD_DAYS}-day free trial
+              Start free — no card needed
             </h1>
             <p className="mt-1 mb-6 text-sm text-slate">
-              No charge until day {TRIAL_PERIOD_DAYS + 1}. Cancel anytime.
+              Free to use until 31 August 2026 — no card needed.
             </p>
             <AuthForm mode="signup" defaultCountry={country} />
             <p className="mt-5 text-sm text-slate">

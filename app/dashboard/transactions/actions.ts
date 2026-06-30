@@ -7,6 +7,17 @@ import { mileageAllowance } from "@/lib/sa105";
 
 const RECEIPTS_BUCKET = "receipts";
 
+/** Add n months to a YYYY-MM-DD date, clamping to the end of the target month. */
+function addMonthsISO(dateStr: string, n: number): string {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const base = new Date(Date.UTC(y, m - 1 + n, 1));
+  const daysInMonth = new Date(Date.UTC(base.getUTCFullYear(), base.getUTCMonth() + 1, 0)).getUTCDate();
+  const day = Math.min(d || 1, daysInMonth);
+  const mm = String(base.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(day).padStart(2, "0");
+  return `${base.getUTCFullYear()}-${mm}-${dd}`;
+}
+
 export async function createTransaction(formData: FormData) {
   const { orgId } = await requireSession();
   const supabase = createClient();
@@ -27,17 +38,36 @@ export async function createTransaction(formData: FormData) {
     }
   }
 
-  const { error } = await supabase.from("transactions").insert({
+  const recurring = formData.get("recurring") === "on";
+  const startDate = String(formData.get("occurred_on") ?? "") || new Date().toISOString().slice(0, 10);
+  const base = {
     org_id: orgId,
     property_id: String(formData.get("property_id") ?? "") || null,
     direction,
     sa105_category: String(formData.get("sa105_category") ?? "") || null,
     amount: isNaN(amount) ? 0 : amount,
-    occurred_on: String(formData.get("occurred_on") ?? new Date().toISOString().slice(0, 10)),
     description: String(formData.get("description") ?? "") || null,
-    receipt_url: receiptUrl,
-  });
-  if (error) throw new Error(error.message);
+  };
+
+  if (recurring) {
+    // Create this month plus the next 11 months (a rolling year forward).
+    const rows = Array.from({ length: 12 }, (_, i) => ({
+      ...base,
+      occurred_on: addMonthsISO(startDate, i),
+      receipt_url: i === 0 ? receiptUrl : null, // receipt only on the first entry
+      recurring: true,
+    }));
+    const { error } = await supabase.from("transactions").insert(rows);
+    if (error) throw new Error(error.message);
+  } else {
+    const { error } = await supabase.from("transactions").insert({
+      ...base,
+      occurred_on: startDate,
+      receipt_url: receiptUrl,
+      recurring: false,
+    });
+    if (error) throw new Error(error.message);
+  }
 
   revalidatePath("/dashboard/transactions");
 }

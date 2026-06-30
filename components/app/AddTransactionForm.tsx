@@ -146,6 +146,14 @@ export function AddTransactionForm({
             </span>
           </label>
 
+          <label className="flex items-start gap-3 rounded-lintel border border-hairline bg-paper p-3 sm:col-span-2">
+            <input type="checkbox" name="recurring" className="mt-0.5 h-4 w-4 rounded border-hairline" />
+            <span>
+              <span className="block text-sm font-medium text-ink">Repeat monthly</span>
+              <span className="mt-0.5 block text-xs text-slate">Creates this entry and the next 11 months on the same day, so it recurs going forward. Each one is editable and deletable.</span>
+            </span>
+          </label>
+
           <div className="flex gap-2 sm:col-span-2">
             <Button type="submit">Save</Button>
             <Button type="button" variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
