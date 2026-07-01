@@ -73,7 +73,7 @@ export function VoiceConsole() {
         ((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition)) ||
       null;
     if (!SR) {
-      alert("Speech recognition isn't available in this browser — type your question instead.");
+      alert("Speech recognition isn't available in this browser, type your question instead.");
       return;
     }
     const recognition = new SR();
@@ -111,7 +111,7 @@ export function VoiceConsole() {
       setSaved(
         r.matchedProperty
           ? "Saved and matched to a property."
-          : "Saved (no property matched — assigned to portfolio)."
+          : "Saved (no property matched, assigned to portfolio)."
       );
       setParsed(null);
     } finally {
@@ -141,7 +141,7 @@ export function VoiceConsole() {
             >
               {listening ? "Listening… tap to stop" : "Speak"}
             </Button>
-            <span className="text-xs text-slate">or type below — ask anything</span>
+            <span className="text-xs text-slate">or type below, ask anything</span>
           </div>
           <form
             className="mt-3 flex gap-2"
@@ -185,7 +185,7 @@ export function VoiceConsole() {
             )}
             {!asking && aiAnswer && (
               <p className="mt-3 text-xs text-slate">
-                Information only — not formal legal or tax advice.
+                Information only, not formal legal or tax advice.
               </p>
             )}
           </CardBody>
@@ -262,7 +262,7 @@ export function VoiceConsole() {
               </Button>
             </div>
             <p className="mt-3 text-xs text-slate">
-              The assistant drafts only — copy this into your tenant thread to send.
+              The assistant drafts only, copy this into your tenant thread to send.
             </p>
           </CardBody>
         </Card>

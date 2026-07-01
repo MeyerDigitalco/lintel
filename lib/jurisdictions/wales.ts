@@ -2,7 +2,7 @@ import type { JurisdictionRules } from "./types";
 import { SHARED_COMPLIANCE } from "./shared";
 
 /**
- * Wales — Renting Homes (Wales) Act 2016.
+ * Wales, Renting Homes (Wales) Act 2016.
  * Occupiers are "contract-holders" under an "occupation contract". A written
  * statement must be provided within 14 days. No Right to Rent. Landlords and
  * agents must register/licence with Rent Smart Wales.
@@ -40,7 +40,7 @@ export const wales: JurisdictionRules = {
       label: "Written statement of the occupation contract provided",
       cadence: "once",
       statutoryBasis:
-        "Renting Homes (Wales) Act 2016 — within 14 days of occupation",
+        "Renting Homes (Wales) Act 2016, within 14 days of occupation",
       reminderDaysBefore: [],
     },
   ],

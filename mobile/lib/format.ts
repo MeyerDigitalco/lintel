@@ -9,9 +9,9 @@ export function gbp(value: number | string | null | undefined, decimals = false)
 }
 
 export function fmtDate(d: string | Date | null | undefined): string {
-  if (!d) return "—";
+  if (!d) return "-";
   const date = typeof d === "string" ? new Date(d) : d;
-  if (isNaN(date.getTime())) return "—";
+  if (isNaN(date.getTime())) return "-";
   return date.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
 

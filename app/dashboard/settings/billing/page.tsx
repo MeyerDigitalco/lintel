@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 const ADDONS = ["voice", "tenant_portal", "maintenance_portal"] as const;
 
 const BLURB: Record<string, string> = {
-  voice: "Log income and expenses, query your portfolio and draft tenant messages by voice or text — always with a confirm step.",
+  voice: "Log income and expenses, query your portfolio and draft tenant messages by voice or text, always with a confirm step.",
   tenant_portal: "Give each tenant a secure login to see rent, documents and report repairs.",
   maintenance_portal: "Triage repairs, assign contractors and track SLAs from the dashboard.",
 };
@@ -54,7 +54,7 @@ export default async function BillingPage({
         <Card className="border-mint/40">
           <CardBody>
             <p className="text-sm text-evergreen">
-              You&apos;re on your free trial — every add-on is on{sub.trial_ends_at ? ` until ${fmtDate(sub.trial_ends_at)}` : ""}.
+              You&apos;re on your free trial, every add-on is on{sub.trial_ends_at ? ` until ${fmtDate(sub.trial_ends_at)}` : ""}.
               Keep the tools you use and switch off the rest before your trial ends; you&apos;ll only be billed for what you keep.
             </p>
           </CardBody>
@@ -63,12 +63,12 @@ export default async function BillingPage({
 
       {searchParams?.checkout === "success" && (
         <Card className="border-mint/40">
-          <CardBody><p className="text-sm text-evergreen">Subscription started — it can take a few seconds for add-ons to switch on.</p></CardBody>
+          <CardBody><p className="text-sm text-evergreen">Subscription started, it can take a few seconds for add-ons to switch on.</p></CardBody>
         </Card>
       )}
       {searchParams?.checkout === "cancelled" && (
         <Card className="border-amber/40">
-          <CardBody><p className="text-sm text-slate">Checkout cancelled — nothing was charged.</p></CardBody>
+          <CardBody><p className="text-sm text-slate">Checkout cancelled, nothing was charged.</p></CardBody>
         </Card>
       )}
 
@@ -76,7 +76,7 @@ export default async function BillingPage({
         <CardBody>
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="font-heading text-base font-semibold tracking-tight">Core — {PLAN.core.label}</h2>
+              <h2 className="font-heading text-base font-semibold tracking-tight">Core, {PLAN.core.label}</h2>
               <p className="mt-1 text-xs text-slate">Always on. Properties, tax record-keeping, rent ledger, compliance and reports.</p>
             </div>
             <div className="text-right">
@@ -99,7 +99,7 @@ export default async function BillingPage({
           <CardBody className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h3 className="font-heading text-sm font-semibold tracking-tight">Manage billing</h3>
-              <p className="mt-1 text-xs text-slate">Update your card, add or remove add-ons, view invoices or cancel — in the secure Stripe portal.</p>
+              <p className="mt-1 text-xs text-slate">Update your card, add or remove add-ons, view invoices or cancel, in the secure Stripe portal.</p>
             </div>
             <form action={openBillingPortal}><Button type="submit">Manage billing &amp; add-ons</Button></form>
           </CardBody>

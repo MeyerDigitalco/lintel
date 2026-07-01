@@ -39,7 +39,7 @@ export default async function TeamPage() {
   const rows = (members ?? []).map((m) => ({
     userId: m.user_id,
     role: m.role as string,
-    email: emailById.get(m.user_id) ?? "—",
+    email: emailById.get(m.user_id) ?? "-",
     name: nameById.get(m.user_id) ?? "",
   }));
   const ownerCount = rows.filter((r) => r.role === "owner").length;

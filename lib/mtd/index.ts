@@ -5,7 +5,7 @@
  * locally. The UI must NOT claim "file to HMRC" until HMRC recognition is granted.
  *
  * Later: a real provider that calls the HMRC MTD ITSA API is swapped in behind
- * the same interface — no UI changes required. See ./hmrc and ./select.
+ * the same interface, no UI changes required. See ./hmrc and ./select.
  */
 
 export type SA105Category =

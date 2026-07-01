@@ -52,6 +52,9 @@ export default function More() {
       <LinkRow icon="checkbox-outline" label={t(lang, "tasks")} hint="Reminders & to-dos" onPress={() => router.push("/(app)/tasks")} />
       <LinkRow icon="map-outline" label={t(lang, "region")} hint="Your country\u2019s rules" onPress={() => router.push("/(app)/region-rules")} />
       <LinkRow icon="cash-outline" label="Income & expenses" hint="Ledger, receipts & recurring" onPress={() => router.push("/(app)/expenses")} />
+      <LinkRow icon="people-outline" label="Contacts" hint="Contractors, suppliers & agents" onPress={() => router.push("/(app)/contacts")} />
+      <LinkRow icon="bar-chart-outline" label="Reports" hint="P&L, income/expense, suppliers" onPress={() => router.push("/(app)/reports")} />
+
       <LinkRow icon="receipt-outline" label={t(lang, "scan")} hint="Snap to log an expense" onPress={() => router.push("/(app)/scan-receipt")} />
       <LinkRow icon="sparkles-outline" label={t(lang, "assistant")} hint="Log & ask by text" onPress={() => router.push("/(app)/assistant")} />
 

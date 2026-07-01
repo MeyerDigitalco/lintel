@@ -1,7 +1,7 @@
 /**
  * Lazily loads the Google Maps JavaScript API (Places library) once.
  * Resolves to the `google` global, or null if no key is configured or the
- * script fails to load — callers must degrade gracefully to manual entry.
+ * script fails to load, callers must degrade gracefully to manual entry.
  */
 let loader: Promise<any> | null = null;
 

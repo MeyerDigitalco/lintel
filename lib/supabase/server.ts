@@ -30,7 +30,7 @@ export function createClient() {
               cookieStore.set(name, value, options as never)
             );
           } catch {
-            // Called from a Server Component without a mutable cookie store —
+            // Called from a Server Component without a mutable cookie store -
             // safe to ignore when middleware refreshes the session.
           }
         },
@@ -40,7 +40,7 @@ export function createClient() {
 }
 
 /**
- * Service-role client. Bypasses RLS — use ONLY in trusted server contexts
+ * Service-role client. Bypasses RLS, use ONLY in trusted server contexts
  * (e.g. Stripe webhook reconciliation, cron sweeps). Never import in client code.
  */
 export function createServiceClient() {

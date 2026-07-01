@@ -20,7 +20,7 @@ const inputCls =
   "h-10 w-full rounded-lintel border border-hairline bg-surface px-3 text-sm outline-none focus:ring-2 focus:ring-evergreen/30";
 
 /**
- * Public contractor view — accessed via a tokenised link, no account required.
+ * Public contractor view, accessed via a tokenised link, no account required.
  * The token maps to a single job, so a contractor only ever sees the one job
  * (and its address) they were allocated. Reads use the service-role client.
  */

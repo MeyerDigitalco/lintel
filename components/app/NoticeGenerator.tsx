@@ -119,7 +119,7 @@ export function NoticeGenerator({
             <p>{landlordName || "[Landlord / agent]"}</p>
 
             <p className="mt-8 text-xs text-slate">
-              Template guidance only — Lintel provides software, not legal advice. Check your local notice
+              Template guidance only, Lintel provides software, not legal advice. Check your local notice
               requirements and serving rules before relying on this document.
             </p>
           </div>

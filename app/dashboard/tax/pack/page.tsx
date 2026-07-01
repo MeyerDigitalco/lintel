@@ -54,7 +54,7 @@ export default async function TaxPackPage() {
       <div className="rounded-lintel border border-hairline bg-surface p-8 print:border-0 print:p-0">
         <header className="mb-6 border-b border-hairline pb-4">
           <h1 className="font-heading text-2xl font-semibold tracking-tight text-ink">
-            Tax pack — {org?.name}
+            Tax pack, {org?.name}
           </h1>
           <p className="mt-1 text-sm text-slate">
             Tax year {yStart}/{(yStart + 1) % 100} · prepared {fmtDate(new Date())} · by Lintel
@@ -128,7 +128,7 @@ export default async function TaxPackPage() {
         </section>
 
         <footer className="mt-8 border-t border-hairline pt-4 text-xs text-slate">
-          Prepared by Lintel from your records. Indicative only — not tax advice,
+          Prepared by Lintel from your records. Indicative only, not tax advice,
           and not an HMRC submission. Please review with your accountant.
         </footer>
       </div>

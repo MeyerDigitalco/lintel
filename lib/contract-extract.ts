@@ -101,7 +101,7 @@ export async function extractContractFields(
   const isPdf = ct === "application/pdf" || /pdf/i.test(ct);
   const isImage = /^image\//.test(ct);
 
-  // 1) Native document/vision pass — robust to scanned contracts.
+  // 1) Native document/vision pass, robust to scanned contracts.
   if (isPdf || isImage) {
     const fromDoc = parseFields(
       await generateFromDocument(buffer.toString("base64"), isPdf ? "application/pdf" : ct, PROMPT, {

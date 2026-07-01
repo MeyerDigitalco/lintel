@@ -67,7 +67,7 @@ export async function uploadPropertyDocument(formData: FormData) {
   const basicSummary = `${(filenameType ?? "Document").replace(/_/g, " ")} for ${where || "this property"}${expiresAt ? `, valid until ${expiresAt}` : ""}.`;
   const contentType = file.type || "";
 
-  // Fast insert — the upload returns immediately with a filename-based type + basic summary.
+  // Fast insert, the upload returns immediately with a filename-based type + basic summary.
   const { data: created, error } = await supabase
     .from("property_documents")
     .insert({

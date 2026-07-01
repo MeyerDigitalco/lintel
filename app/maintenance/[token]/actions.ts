@@ -5,7 +5,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { sendPushToOrg } from "@/lib/push";
 
 /**
- * Contractor actions. Contractors have no account — they act via a tokenised
+ * Contractor actions. Contractors have no account, they act via a tokenised
  * link. Every action re-validates the token with the service-role client, which
  * is the only trusted path (RLS does not grant contractors access).
  */
@@ -120,7 +120,7 @@ export async function contractorComplete(formData: FormData) {
         sa105_category: "repairs_maintenance",
         amount: finalCost,
         occurred_on: new Date().toISOString().slice(0, 10),
-        description: `Maintenance: ${title}${contractorName ? ` — ${contractorName}` : ""}`,
+        description: `Maintenance: ${title}${contractorName ? `, ${contractorName}` : ""}`,
       });
     } catch {
       // non-fatal: completion still succeeds even if the ledger entry fails

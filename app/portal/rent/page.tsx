@@ -26,7 +26,7 @@ export default async function PortalRent() {
       <h1 className="font-heading text-xl font-semibold tracking-tight">Rent</h1>
       <p className="text-xs text-slate">
         Lintel doesn&apos;t process payments. Pay your landlord as usual, then
-        mark it here — they&apos;ll confirm receipt.
+        mark it here, they&apos;ll confirm receipt.
       </p>
 
       {!rows || rows.length === 0 ? (

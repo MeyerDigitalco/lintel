@@ -6,7 +6,7 @@ import { Card, CardBody } from "@/components/ui/Card";
 import { CALCULATORS } from "@/components/calculators/registry";
 
 export const metadata: Metadata = {
-  title: "UK landlord calculators — Lintel",
+  title: "UK landlord calculators, Lintel",
   description:
     "Free calculators for UK landlords: stamp duty (SDLT/LTT/LBTT), rental yield, income tax, CGT, Section 24, MTD, mortgage, rent increase, deposit cap and EPC.",
 };
@@ -20,7 +20,7 @@ export default function CalculatorsIndex() {
           Landlord calculators
         </h1>
         <p className="mt-3 max-w-2xl text-slate">
-          Free, no sign-up. Indicative figures for the 2025/26 tax year — not
+          Free, no sign-up. Indicative figures for the 2025/26 tax year, not
           advice.
         </p>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

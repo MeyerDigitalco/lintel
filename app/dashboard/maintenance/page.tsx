@@ -66,7 +66,7 @@ export default async function MaintenancePage() {
                       {r.is_hazard && <span className="ml-2 text-xs text-red">hazard</span>}
                     </p>
                     <p className="text-xs text-slate">
-                      {(r as any).properties?.label ?? "—"} · {humanAge(r.created_at)}
+                      {(r as any).properties?.label ?? "-"} · {humanAge(r.created_at)}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">

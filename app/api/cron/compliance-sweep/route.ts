@@ -6,7 +6,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
- * Vercel Cron — compliance + certificate expiry sweep.
+ * Vercel Cron, compliance + certificate expiry sweep.
  * Finds compliance items expiring in 60/30/7 days and sends SendGrid reminders.
  * Guarded by a shared CRON_SECRET.
  *

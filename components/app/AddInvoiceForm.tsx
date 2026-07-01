@@ -27,14 +27,14 @@ export function AddInvoiceForm({
           <label className="block">
             <span className="mb-1 block text-sm text-ink">Contact</span>
             <select name="contact_id" className={inputCls} defaultValue="">
-              <option value="">— None —</option>
+              <option value="">- None -</option>
               {contacts.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
             </select>
           </label>
           <label className="block">
             <span className="mb-1 block text-sm text-ink">Property (optional)</span>
             <select name="property_id" className={inputCls} defaultValue="">
-              <option value="">— None —</option>
+              <option value="">- None -</option>
               {properties.map((p) => (<option key={p.id} value={p.id}>{p.label}</option>))}
             </select>
           </label>

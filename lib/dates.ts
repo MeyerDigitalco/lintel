@@ -1,9 +1,9 @@
 import type { QuarterlyPeriod } from "@/lib/mtd";
 
 export const fmtDate = (d: string | Date | null | undefined) => {
-  if (!d) return "—";
+  if (!d) return "-";
   const date = typeof d === "string" ? new Date(d) : d;
-  if (isNaN(date.getTime())) return "—";
+  if (isNaN(date.getTime())) return "-";
   return date.toLocaleDateString("en-GB", {
     day: "numeric",
     month: "short",
@@ -22,7 +22,7 @@ export function daysUntil(date: string | Date | null | undefined): number | null
 }
 
 /**
- * MTD quarterly periods for a given tax year (6 Apr – 5 Apr).
+ * MTD quarterly periods for a given tax year (6 Apr - 5 Apr).
  * Periods end 5 Jul, 5 Oct, 5 Jan, 5 Apr.
  */
 export function quarterlyPeriods(taxYearStart: number): QuarterlyPeriod[] {

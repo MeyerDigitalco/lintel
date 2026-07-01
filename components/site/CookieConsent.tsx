@@ -12,7 +12,7 @@ export function CookieConsent() {
     try {
       if (!localStorage.getItem(KEY)) setShow(true);
     } catch {
-      // storage unavailable — don't block the page
+      // storage unavailable, don't block the page
     }
   }, []);
 

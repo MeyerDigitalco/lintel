@@ -44,7 +44,7 @@ export default function Compliance() {
               <Row>
                 <View style={{ flex: 1 }}>
                   <Text style={{ fontWeight: "600", color: colors.ink }}>{c.label}</Text>
-                  <Text style={{ fontSize: font.tiny, color: colors.slate, marginTop: 2 }}>{c.properties?.label ?? "—"}</Text>
+                  <Text style={{ fontSize: font.tiny, color: colors.slate, marginTop: 2 }}>{c.properties?.label ?? "-"}</Text>
                 </View>
                 <Badge tone={tone as any}>{d === null ? "No date" : d < 0 ? "Expired" : `${d}d left`}</Badge>
               </Row>

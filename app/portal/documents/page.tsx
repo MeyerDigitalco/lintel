@@ -48,7 +48,7 @@ export default async function PortalDocuments() {
     <div className="space-y-4">
       <h1 className="font-heading text-xl font-semibold tracking-tight">Documents</h1>
       <p className="text-xs text-slate">
-        Documents your landlord has shared with you — agreement, certificates and
+        Documents your landlord has shared with you, agreement, certificates and
         any required notices.
       </p>
 

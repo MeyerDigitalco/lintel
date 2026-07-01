@@ -90,7 +90,7 @@ export default async function DashboardOverview() {
               <Badge tone="mint">{pct}% complete</Badge>
             </div>
             <p className="mt-1 text-sm text-slate">
-              A few minutes now saves hours later — finish setting up your portfolio.
+              A few minutes now saves hours later, finish setting up your portfolio.
             </p>
             <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-hairline">
               <div className="h-2 rounded-full bg-evergreen transition-all" style={{ width: `${pct}%` }} />
@@ -131,7 +131,7 @@ export default async function DashboardOverview() {
                 </div>
                 <p className="mt-3 text-sm text-slate">
                   Based on {gbp(income)} property income this year.{" "}
-                  {mtd.mandated ? `You fall in the ${gbp(mtd.band!)} threshold band.` : "Below the £20,000 band — keep records ready."}
+                  {mtd.mandated ? `You fall in the ${gbp(mtd.band!)} threshold band.` : "Below the £20,000 band, keep records ready."}
                 </p>
                 <Link href="/dashboard/tax" className="mt-4 inline-block text-sm text-evergreen hover:underline">View tax & MTD →</Link>
               </>

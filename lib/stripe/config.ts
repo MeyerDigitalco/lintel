@@ -21,7 +21,7 @@ export interface PlanItem {
 export const PLAN: Record<Feature, PlanItem> = {
   core: {
     feature: "core",
-    label: "Core — MTD record-keeping",
+    label: "Core, MTD record-keeping",
     pricePerMonth: 9.99,
     priceEnv: "STRIPE_PRICE_CORE",
     isBase: true,

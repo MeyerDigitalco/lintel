@@ -57,7 +57,7 @@ export default async function CourtReadinessReport() {
       <p className="mt-4 text-xs text-slate">
         Scored on deposit protection timing, prescribed documents served,
         certificate validity, landlord registration and (England) Right to Rent.
-        Indicator only — confirm with a solicitor before relying on a tenancy in
+        Indicator only, confirm with a solicitor before relying on a tenancy in
         possession proceedings.
       </p>
     </ReportShell>

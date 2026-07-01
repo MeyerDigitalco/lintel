@@ -1,8 +1,8 @@
 /**
- * Tenancy/compliance toolkit — shared types.
+ * Tenancy/compliance toolkit, shared types.
  *
  * Everything here is template-assisted and informational. The UI must always
- * show a prominent "not legal advice — verify or consult a solicitor"
+ * show a prominent "not legal advice, verify or consult a solicitor"
  * disclaimer and link to the underlying legislation. Templates are versioned so
  * we can track which legislative text a generated notice was based on.
  */
@@ -10,14 +10,14 @@
 import type { JurisdictionKey } from "@/lib/jurisdictions";
 
 export type NoticeKind =
-  | "section_8" // England — grounds for possession
-  | "section_13" // England — rent increase
-  | "pet_request" // England — pet request decision
-  | "info_sheet" // England — RRA information sheet / How to Rent served
-  | "s173" // Wales — landlord's no-fault notice
-  | "written_statement" // Wales — occupation contract written statement
-  | "notice_to_leave" // Scotland — PRT possession
-  | "prt_agreement" // Scotland — tenancy agreement
+  | "section_8" // England, grounds for possession
+  | "section_13" // England, rent increase
+  | "pet_request" // England, pet request decision
+  | "info_sheet" // England, RRA information sheet / How to Rent served
+  | "s173" // Wales, landlord's no-fault notice
+  | "written_statement" // Wales, occupation contract written statement
+  | "notice_to_leave" // Scotland, PRT possession
+  | "prt_agreement" // Scotland, tenancy agreement
   | "notice_to_quit"; // Northern Ireland
 
 export interface PossessionGround {

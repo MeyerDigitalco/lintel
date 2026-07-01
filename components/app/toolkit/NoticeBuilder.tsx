@@ -75,7 +75,7 @@ export function NoticeBuilder({
     if (grounds && selectedGrounds.length) {
       const chosen = grounds.filter((g) => selectedGrounds.includes(g.ref));
       out.grounds = chosen
-        .map((g) => `Ground ${g.ref} — ${g.label} (${g.type})`)
+        .map((g) => `Ground ${g.ref}, ${g.label} (${g.type})`)
         .join("\n");
     }
 
@@ -145,7 +145,7 @@ export function NoticeBuilder({
               value={propertyId}
               onChange={(e) => setPropertyId(e.target.value)}
             >
-              <option value="">— Select —</option>
+              <option value="">- Select -</option>
               {properties.map((p) => (
                 <option key={p.id} value={p.id}>{p.label}</option>
               ))}
@@ -183,7 +183,7 @@ export function NoticeBuilder({
                   />
                   <span>
                     <span className="font-medium text-ink">
-                      Ground {g.ref} — {g.label}
+                      Ground {g.ref}, {g.label}
                     </span>{" "}
                     <Badge tone={g.type === "mandatory" ? "evergreen" : "default"}>
                       {g.type}

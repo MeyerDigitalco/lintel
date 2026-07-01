@@ -53,7 +53,7 @@ export default async function FaultTranscriptReport() {
                 {r.is_hazard && <span className="ml-2 text-xs text-red">hazard</span>}
               </h2>
               <p className="mb-3 text-xs text-slate">
-                {r.properties?.label ?? "—"} · {r.category ?? "general"} · {r.priority} ·
+                {r.properties?.label ?? "-"} · {r.category ?? "general"} · {r.priority} ·
                 reported {ts(r.created_at)} · status {humanStatus(r.status)}
               </p>
               <ol className="space-y-2 border-l border-hairline pl-4 text-sm">

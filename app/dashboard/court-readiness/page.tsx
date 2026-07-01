@@ -88,7 +88,7 @@ export default async function CourtReadinessPage() {
       )}
 
       <p className="mt-4 text-xs text-slate">
-        Indicator only — not legal advice. Based on deposit protection, prescribed
+        Indicator only, not legal advice. Based on deposit protection, prescribed
         documents, certificates, registration and (England) Right to Rent.
       </p>
     </div>

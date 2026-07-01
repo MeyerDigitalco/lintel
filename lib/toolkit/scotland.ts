@@ -1,7 +1,7 @@
 import type { PossessionGround, Template, ToolDescriptor } from "./types";
 
 /**
- * Scotland — Private Housing (Tenancies) (Scotland) Act 2016, Schedule 3.
+ * Scotland, Private Housing (Tenancies) (Scotland) Act 2016, Schedule 3.
  * Possession of a Private Residential Tenancy runs through a Notice to Leave on
  * one of 18 grounds, then an application to the First-tier Tribunal. Notice
  * period is 28 days (tenant resident < 6 months) or 84 days (>= 6 months),
@@ -38,7 +38,7 @@ export const SCOTLAND_TEMPLATES: Template[] = [
     version: "PHT-2016.1",
     title: "Notice to Leave (Private Residential Tenancy)",
     prescribedForm: "Notice to Leave",
-    statutoryBasis: "Private Housing (Tenancies) (Scotland) Act 2016 s.50–52, Sch 3",
+    statutoryBasis: "Private Housing (Tenancies) (Scotland) Act 2016 s.50-52, Sch 3",
     legislationUrl: "https://www.legislation.gov.uk/asp/2016/19/contents",
     body: `NOTICE TO LEAVE
 (Private Housing (Tenancies) (Scotland) Act 2016)

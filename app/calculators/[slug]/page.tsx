@@ -16,8 +16,8 @@ export function generateMetadata({
   params: { slug: string };
 }): Metadata {
   const meta = metaFor(params.slug);
-  if (!meta) return { title: "Calculator — Lintel" };
-  return { title: `${meta.title} — Lintel`, description: meta.blurb };
+  if (!meta) return { title: "Calculator, Lintel" };
+  return { title: `${meta.title}, Lintel`, description: meta.blurb };
 }
 
 export default function CalculatorPage({

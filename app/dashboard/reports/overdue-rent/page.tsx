@@ -33,7 +33,7 @@ export default async function OverdueRentReport() {
   const grandTotal = overdue.reduce((s, r) => s + Number(r.amount_due), 0);
 
   return (
-    <ReportShell title="Overdue rent — arrears schedule" subtitle="Section 8-ready" orgName={org?.name}>
+    <ReportShell title="Overdue rent, arrears schedule" subtitle="Section 8-ready" orgName={org?.name}>
       {overdue.length === 0 ? (
         <p className="text-sm text-slate">No rent is currently in arrears.</p>
       ) : (
@@ -47,7 +47,7 @@ export default async function OverdueRentReport() {
           {Array.from(byTenancy.entries()).map(([tid, rows]) => {
             const info = propFor.get(tid)!;
             const total = rows.reduce((s, r) => s + Number(r.amount_due), 0);
-            const months = info.rent ? (total / info.rent).toFixed(1) : "—";
+            const months = info.rent ? (total / info.rent).toFixed(1) : "-";
             return (
               <section key={tid} className="mb-6">
                 <h2 className="font-heading text-base font-semibold">{info.label}</h2>

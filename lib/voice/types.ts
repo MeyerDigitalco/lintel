@@ -1,7 +1,7 @@
 /**
  * Voice assistant intents.
  *
- * The assistant is deliberately scoped — it never moves money, sends messages
+ * The assistant is deliberately scoped, it never moves money, sends messages
  * or serves notices on its own. Every actionable intent is surfaced to the user
  * for an explicit confirm step before anything is written, and all writes are
  * audit-logged.

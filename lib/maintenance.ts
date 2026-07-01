@@ -1,7 +1,7 @@
 import type { JurisdictionKey } from "@/lib/jurisdictions";
 
 /**
- * Maintenance domain helpers — SLA / hazard-response timers and status flow.
+ * Maintenance domain helpers, SLA / hazard-response timers and status flow.
  *
  * Hazard-response reflects Awaab's-Law-style duties: where a property has a
  * serious hazard, the landlord must act on a tight statutory-style clock. We

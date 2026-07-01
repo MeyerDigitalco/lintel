@@ -56,7 +56,7 @@ export default function Assistant() {
         body: JSON.stringify({ question: question.trim() }),
       });
       const json = await resp.json();
-      setAnswer(json?.answer ?? json?.error ?? "Couldn't get an answer — please try again.");
+      setAnswer(json?.answer ?? json?.error ?? "Couldn't get an answer, please try again.");
     } catch {
       setAnswer("Something went wrong reaching the assistant. Please try again.");
     } finally {
@@ -103,7 +103,7 @@ export default function Assistant() {
             <Badge tone="mint">AI</Badge>
           </Row>
           <Text style={{ color: colors.ink, marginTop: 8 }}>{answer}</Text>
-          <Text style={{ fontSize: font.tiny, color: colors.slate, marginTop: 8 }}>Information only — not formal legal or tax advice.</Text>
+          <Text style={{ fontSize: font.tiny, color: colors.slate, marginTop: 8 }}>Information only, not formal legal or tax advice.</Text>
         </Card>
       ) : null}
 

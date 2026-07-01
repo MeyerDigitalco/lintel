@@ -3,7 +3,7 @@
  *
  * Maps Lintel's internal SA105 category keys to the HMRC "UK Property" period
  * summary JSON shape (income / expenses objects). This mapping is the single
- * thing most in need of accountant sign-off — see Lintel-accountant-questions.docx.
+ * thing most in need of accountant sign-off, see Lintel-accountant-questions.docx.
  *
  * NOTE on Section 24: residential finance costs are reported under
  * `expenses.residentialFinancialCost` and are NOT deducted from profit; HMRC

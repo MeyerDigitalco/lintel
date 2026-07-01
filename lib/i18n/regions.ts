@@ -124,7 +124,7 @@ export const COUNTRIES: CountryInfo[] = [
   { code: "ZA", name: "South Africa", currency: "ZAR", taxLabel: "ITR12 / provisional tax", tenancyTerm: "lease", depositTerm: "deposit", regions: ZA_PROVINCES },
   { code: "AU", name: "Australia", currency: "AUD", taxLabel: "ATO rental schedule", tenancyTerm: "tenancy", depositTerm: "bond", regions: AU_STATES },
   { code: "NZ", name: "New Zealand", currency: "NZD", taxLabel: "IR3 rental income", tenancyTerm: "tenancy", depositTerm: "bond", regions: NZ_REGIONS },
-  { code: "CA", name: "Canada", currency: "CAD", taxLabel: "T776 — Statement of Real Estate Rentals", tenancyTerm: "tenancy", depositTerm: "deposit", regions: CA_PROVINCES },
+  { code: "CA", name: "Canada", currency: "CAD", taxLabel: "T776, Statement of Real Estate Rentals", tenancyTerm: "tenancy", depositTerm: "deposit", regions: CA_PROVINCES },
   { code: "IE", name: "Ireland", currency: "EUR", taxLabel: "Form 11 rental income (Revenue)", tenancyTerm: "tenancy", depositTerm: "deposit", regions: IE_REGIONS },
   { code: "DE", name: "Germany", currency: "EUR", taxLabel: "Anlage V (income tax return)", tenancyTerm: "tenancy (Mietvertrag)", depositTerm: "deposit (Kaution)", regions: DE_STATES },
   { code: "ES", name: "Spain", currency: "EUR", taxLabel: "IRPF rental income", tenancyTerm: "lease (contrato de arrendamiento)", depositTerm: "deposit (fianza)", regions: ES_REGIONS },
@@ -144,7 +144,7 @@ export const COUNTRIES: CountryInfo[] = [
   { code: "SA", name: "Saudi Arabia", currency: "SAR", taxLabel: "No personal income tax; VAT records", tenancyTerm: "lease (Ejar contract)", depositTerm: "security deposit", regions: SA_REGIONS },
   { code: "QA", name: "Qatar", currency: "QAR", taxLabel: "No personal income tax", tenancyTerm: "lease contract", depositTerm: "security deposit", regions: QA_MUNICIPALITIES },
   { code: "HK", name: "Hong Kong", currency: "HKD", taxLabel: "Property tax (IRD)", tenancyTerm: "tenancy agreement", depositTerm: "deposit", regions: HK_REGIONS },
-  { code: "IL", name: "Israel", currency: "ILS", taxLabel: "Rental income (Form 1301) — 10% track or marginal", tenancyTerm: "lease (חוזה שכירות)", depositTerm: "security deposit (פיקדון)", regions: IL_DISTRICTS },
+  { code: "IL", name: "Israel", currency: "ILS", taxLabel: "Rental income (Form 1301), 10% track or marginal", tenancyTerm: "lease (חוזה שכירות)", depositTerm: "security deposit (פיקדון)", regions: IL_DISTRICTS },
 ];
 
 export function countryByCode(code?: string | null): CountryInfo {

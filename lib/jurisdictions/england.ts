@@ -2,7 +2,7 @@ import type { JurisdictionRules } from "./types";
 import { SHARED_COMPLIANCE } from "./shared";
 
 /**
- * England — Renters' Rights Act 2025.
+ * England, Renters' Rights Act 2025.
  * No-fault eviction (Section 21) abolished from 1 May 2026; Section 8 grounds
  * only. Tenancies are periodic assured. Right to Rent applies (England only).
  */

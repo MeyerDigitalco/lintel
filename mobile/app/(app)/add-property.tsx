@@ -121,9 +121,9 @@ export default function AddProperty() {
       if (f.end_date) { setEndDate(f.end_date); tenant = true; }
       if (tenant) setShowTenant(true);
       const got = Object.keys(f).length;
-      setAiNote(got > 0 ? `Autofilled ${got} field${got > 1 ? "s" : ""} — check below.` : "Couldn't read details — enter them manually.");
+      setAiNote(got > 0 ? `Autofilled ${got} field${got > 1 ? "s" : ""}, check below.` : "Couldn't read details, enter them manually.");
     } catch {
-      setAiNote("Couldn't read the contract — enter details manually.");
+      setAiNote("Couldn't read the contract, enter details manually.");
     } finally {
       setReading(false);
     }
@@ -205,7 +205,7 @@ export default function AddProperty() {
 
       {/* Quick start: AI reads the tenancy contract */}
       <Card style={{ borderColor: colors.evergreen, borderWidth: 1, backgroundColor: colors.mintBg }}>
-        <Text style={{ fontWeight: "600", color: colors.ink }}>Quick start — upload the contract</Text>
+        <Text style={{ fontWeight: "600", color: colors.ink }}>Quick start, upload the contract</Text>
         <Text style={{ fontSize: font.tiny, color: colors.slate, marginTop: 2 }}>We&apos;ll read the address, tenant and rent and fill the form. PDF or photo. Optional.</Text>
         <View style={{ marginTop: 10 }}>
           <Button title={reading ? "Reading…" : contract ? contract.name : "Upload tenancy contract"} variant="outline" onPress={pickContract} disabled={reading} />

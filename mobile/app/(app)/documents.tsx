@@ -70,7 +70,7 @@ export default function Documents() {
               <View style={{ flex: 1 }}>
                 <Text style={{ fontWeight: "600", color: colors.ink }}>{d.label}</Text>
                 <Text style={{ fontSize: font.tiny, color: colors.slate, marginTop: 2 }}>
-                  {d.properties?.label ?? "—"}{d.expires_at ? ` · expires ${fmtDate(d.expires_at)}` : ""}
+                  {d.properties?.label ?? "-"}{d.expires_at ? ` · expires ${fmtDate(d.expires_at)}` : ""}
                 </Text>
               </View>
               <View style={{ alignItems: "flex-end", gap: 4 }}>

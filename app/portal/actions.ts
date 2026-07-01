@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { requireTenant } from "@/lib/tenant-auth";
 import { createClient } from "@/lib/supabase/server";
 
-/** Tenant marks a rent period as paid (log only — landlord confirms separately). */
+/** Tenant marks a rent period as paid (log only, landlord confirms separately). */
 export async function markRentPaid(formData: FormData) {
   const { userId } = await requireTenant();
   const supabase = createClient();

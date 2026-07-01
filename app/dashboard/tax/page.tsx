@@ -78,7 +78,7 @@ export default async function TaxPage() {
                   <p className="mt-1 text-sm text-slate">
                     Qualifying property income {gbp(yearIncome)}.{" "}
                     {mtd.mandated
-                      ? `You fall in the ${gbp(mtd.band!)} band — MTD applies from ${mtd.from}.`
+                      ? `You fall in the ${gbp(mtd.band!)} band, MTD applies from ${mtd.from}.`
                       : "Below the £20,000 band; keep digital records ready."}
                   </p>
                 </div>

@@ -19,7 +19,7 @@ export async function sendEmail({ to, subject, html, text }: SendEmailArgs) {
   const apiKey = process.env.SENDGRID_API_KEY;
   if (!apiKey) {
     // In dev without a key, log instead of throwing so flows still work.
-    console.warn("[sendgrid] SENDGRID_API_KEY not set — skipping send:", subject);
+    console.warn("[sendgrid] SENDGRID_API_KEY not set, skipping send:", subject);
     return { skipped: true };
   }
 

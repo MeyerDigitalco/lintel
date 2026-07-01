@@ -101,7 +101,7 @@ export function AddressAutocomplete({
       });
       setQuery(place.formattedAddress ?? s.placePrediction?.text?.text ?? "");
     } catch {
-      // ignore — fields can be filled manually
+      // ignore, fields can be filled manually
     }
     setOpen(false);
     setSuggestions([]);

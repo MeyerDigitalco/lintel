@@ -88,7 +88,7 @@ export default function MaintenanceDetail() {
           <Badge tone={TONE[req.status] ?? "default"}>{req.status.replace(/_/g, " ")}</Badge>
         </Row>
         <Text style={{ fontSize: font.tiny, color: colors.slate, marginTop: 4 }}>
-          {req.properties?.label ?? "—"} · {fmtDate(req.created_at)}
+          {req.properties?.label ?? "-"} · {fmtDate(req.created_at)}
         </Text>
         {req.description ? <Text style={{ marginTop: 10, color: colors.ink, fontSize: font.small }}>{req.description}</Text> : null}
         <Row style={{ justifyContent: "flex-start", gap: 8, marginTop: 10 }}>

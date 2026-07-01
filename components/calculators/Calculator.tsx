@@ -39,7 +39,7 @@ export function Calculator({ kind }: { kind: CalcKind }) {
       <CardBody>
         {renderCalculator(kind)}
         <p className="mt-6 border-t border-hairline pt-4 text-xs text-slate">
-          Indicative estimate only — not tax, legal or financial advice. Rates
+          Indicative estimate only, not tax, legal or financial advice. Rates
           for the 2025/26 tax year. Verify with a qualified professional.
         </p>
       </CardBody>
@@ -126,7 +126,7 @@ function IncomeTax() {
   return (
     <Grid>
       <div className="space-y-4">
-        <Field label="Taxable income (rUK)" prefix="£" value={income} onChange={(e) => setIncome(e.target.value)} help="Scotland has separate bands — coming soon." />
+        <Field label="Taxable income (rUK)" prefix="£" value={income} onChange={(e) => setIncome(e.target.value)} help="Scotland has separate bands, coming soon." />
       </div>
       <Results>
         <Result label="Income tax" value={gbp(tax, { decimals: true })} emphasis />
@@ -264,9 +264,9 @@ function EpcChecker() {
         />
       </div>
       <Results>
-        <Result label="Meets current MEES (min E)" value={canLet ? "Yes" : "No — cannot let"} emphasis />
+        <Result label="Meets current MEES (min E)" value={canLet ? "Yes" : "No, cannot let"} emphasis />
         <Result label="Meets proposed min C" value={meetsProposedC ? "Yes" : "Not yet"} />
-        <Result label="Note" value="MEES is tightening — watch for a future minimum of C." />
+        <Result label="Note" value="MEES is tightening, watch for a future minimum of C." />
       </Results>
     </Grid>
   );

@@ -112,7 +112,7 @@ export function AddTransactionForm({
               name="description"
               value={vendor}
               onChange={(e) => setVendor(e.target.value)}
-              placeholder="e.g. British Gas — boiler service"
+              placeholder="e.g. British Gas, boiler service"
               className={inputCls}
             />
           </label>
@@ -120,7 +120,7 @@ export function AddTransactionForm({
           <label className="block">
             <span className="mb-1 block text-sm text-ink">Property (optional)</span>
             <select name="property_id" className={inputCls} defaultValue="">
-              <option value="">— Unassigned —</option>
+              <option value="">- Unassigned -</option>
               {properties.map((p) => (
                 <option key={p.id} value={p.id}>{p.label}</option>
               ))}
@@ -132,7 +132,7 @@ export function AddTransactionForm({
               Receipt (photo or PDF)
               {ocrState === "scanning" && <Badge tone="amber">Scanning…</Badge>}
               {ocrState === "done" && <Badge tone="mint">Fields pre-filled</Badge>}
-              {ocrState === "error" && <Badge tone="red">OCR failed — enter manually</Badge>}
+              {ocrState === "error" && <Badge tone="red">OCR failed, enter manually</Badge>}
             </span>
             <input
               name="receipt"

@@ -1,8 +1,8 @@
 /**
- * Public calculator engine — UK property tax & finance.
+ * Public calculator engine, UK property tax & finance.
  *
  * Rates current for the 2025/26 tax year (verified June 2026). These are
- * indicative tools, not advice — every calculator UI must carry a
+ * indicative tools, not advice, every calculator UI must carry a
  * "not tax/financial advice" disclaimer. Keep rate tables here so they can be
  * updated in one place each Budget.
  */
@@ -30,7 +30,7 @@ export function applyBands(value: number, bands: Band[]): number {
 }
 
 // ---------------------------------------------------------------------------
-// SDLT (England & Northern Ireland) — 2025/26
+// SDLT (England & Northern Ireland), 2025/26
 // ---------------------------------------------------------------------------
 const SDLT_STANDARD: Band[] = [
   { upTo: 125000, rate: 0 },
@@ -62,7 +62,7 @@ export function calcSDLT(
 }
 
 // ---------------------------------------------------------------------------
-// LBTT (Scotland) — 2025/26
+// LBTT (Scotland), 2025/26
 // ---------------------------------------------------------------------------
 const LBTT_STANDARD: Band[] = [
   { upTo: 145000, rate: 0 },
@@ -92,7 +92,7 @@ export function calcLBTT(
 }
 
 // ---------------------------------------------------------------------------
-// LTT (Wales) — 2025/26 (no first-time buyer relief)
+// LTT (Wales), 2025/26 (no first-time buyer relief)
 // ---------------------------------------------------------------------------
 const LTT_STANDARD: Band[] = [
   { upTo: 225000, rate: 0 },
@@ -136,7 +136,7 @@ export function calcTransactionTax(
 }
 
 // ---------------------------------------------------------------------------
-// Income tax (rUK bands) — 2025/26
+// Income tax (rUK bands), 2025/26
 // ---------------------------------------------------------------------------
 export const PERSONAL_ALLOWANCE = 12570;
 const PA_TAPER_THRESHOLD = 100000;
@@ -161,7 +161,7 @@ export function calcIncomeTax(taxableIncome: number): number {
 }
 
 // ---------------------------------------------------------------------------
-// CGT on residential property — 2025/26
+// CGT on residential property, 2025/26
 // ---------------------------------------------------------------------------
 export const CGT_ANNUAL_EXEMPT = 3000;
 export const CGT_BASIC_RATE = 0.18;
@@ -183,7 +183,7 @@ export function calcCGT(
 }
 
 // ---------------------------------------------------------------------------
-// Section 24 — finance-cost relief as a 20% basic-rate tax reducer
+// Section 24, finance-cost relief as a 20% basic-rate tax reducer
 // ---------------------------------------------------------------------------
 export const SECTION_24_REDUCER = 0.2;
 
@@ -268,13 +268,13 @@ export function calcDepositCap(
       // Wales & NI are set per contract/scheme; show a 5-week guide.
       return {
         cap: Math.round(weeklyRent * 5 * 100) / 100,
-        basis: "Guide only — set per contract / deposit scheme",
+        basis: "Guide only, set per contract / deposit scheme",
       };
   }
 }
 
 // ---------------------------------------------------------------------------
-// MTD ITSA estimator — which mandation band & when
+// MTD ITSA estimator, which mandation band & when
 // ---------------------------------------------------------------------------
 export function mtdMandation(qualifyingIncome: number): {
   mandated: boolean;

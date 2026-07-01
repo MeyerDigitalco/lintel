@@ -83,7 +83,7 @@ export default async function InvoicesPage({
                 {filtered.map((i: any) => (
                   <tr key={i.id} className="border-b border-hairline last:border-0">
                     <td className="px-4 py-3 text-ink">{i.number}</td>
-                    <td className="px-4 py-3 text-slate">{i.contacts?.name ?? i.properties?.label ?? "—"}</td>
+                    <td className="px-4 py-3 text-slate">{i.contacts?.name ?? i.properties?.label ?? "-"}</td>
                     <td className="px-4 py-3 text-slate">{fmtDate(i.due_date)}</td>
                     <td className="px-4 py-3 text-right tabular-nums">{gbp(Number(i.amount), { decimals: true })}</td>
                     <td className="px-4 py-3"><Badge tone={tone(i.status) as any}>{i.status}</Badge></td>

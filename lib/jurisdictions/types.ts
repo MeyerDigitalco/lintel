@@ -1,5 +1,5 @@
 /**
- * Jurisdiction rules engine — shared type contracts.
+ * Jurisdiction rules engine, shared type contracts.
  *
  * Each nation module implements `JurisdictionRules`. The UI and server read
  * ONLY the active module for a property, so e.g. a Welsh landlord never sees an

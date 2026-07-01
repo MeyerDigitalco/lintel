@@ -133,7 +133,7 @@ export default async function PropertyDetail({ params }: { params: { id: string 
                     {d.url ? (
                       <a href={d.url} target="_blank" rel="noopener noreferrer" className="text-sm text-evergreen hover:underline">Download</a>
                     ) : (
-                      <span className="text-xs text-slate">—</span>
+                      <span className="text-xs text-slate">-</span>
                     )}
                   </li>
                 ))}

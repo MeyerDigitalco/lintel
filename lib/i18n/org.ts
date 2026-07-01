@@ -1,7 +1,7 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
 
-/** Fetch an org's currency (defensive — defaults GBP if column/row missing). */
+/** Fetch an org's currency (defensive, defaults GBP if column/row missing). */
 export async function orgCurrency(orgId: string, client?: any): Promise<string> {
   try {
     const supabase = client ?? createClient();

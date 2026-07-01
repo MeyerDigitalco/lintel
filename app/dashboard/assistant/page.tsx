@@ -14,7 +14,7 @@ export default async function AssistantPage() {
     <div>
       <PageHeader
         title="Voice assistant"
-        subtitle="Ask anything, log rent and expenses, check your portfolio, and draft messages — by voice or text."
+        subtitle="Ask anything, log rent and expenses, check your portfolio, and draft messages, by voice or text."
         action={voiceOn ? <Badge tone="mint">Voice add-on on</Badge> : undefined}
       />
 
@@ -27,7 +27,7 @@ export default async function AssistantPage() {
             <p className="mt-1 text-sm text-slate">
               Enable the Voice assistant (£2/mo) to log income and expenses, query
               your rent roll, arrears and certificate expiries, and draft tenant
-              messages — always with a confirm step, never autonomous.
+              messages, always with a confirm step, never autonomous.
             </p>
           </CardBody>
         </Card>

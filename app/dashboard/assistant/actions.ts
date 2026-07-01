@@ -99,7 +99,7 @@ export async function voiceQuery(kind: QueryKind): Promise<QueryResult> {
     const overdue = (data ?? []).filter(
       (r: any) => new Date(r.due_on) < new Date()
     );
-    if (overdue.length === 0) return { kind, rows: [{ label: "Arrears", value: "None — all up to date" }] };
+    if (overdue.length === 0) return { kind, rows: [{ label: "Arrears", value: "None, all up to date" }] };
     return {
       kind,
       rows: overdue.map((r: any) => ({

@@ -1,7 +1,7 @@
 import type { Template, ToolDescriptor } from "./types";
 
 /**
- * Northern Ireland — Private Tenancies Act (NI) 2022.
+ * Northern Ireland, Private Tenancies Act (NI) 2022.
  * Possession runs through a Notice to Quit. The minimum notice period scales
  * with how long the tenant has lived in the property.
  */

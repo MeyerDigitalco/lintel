@@ -60,7 +60,7 @@ export default async function AccountantPage() {
     <div>
       <PageHeader
         title="Accountant pack"
-        subtitle={`Everything your accountant needs for ${yStart}/${(yStart + 1) % 100} — SA105 breakdown, evidence and queries.`}
+        subtitle={`Everything your accountant needs for ${yStart}/${(yStart + 1) % 100}, SA105 breakdown, evidence and queries.`}
         action={
           <a href={`/api/export/csv?year=${yStart}`}>
             <Button size="sm">Export SA105 CSV</Button>

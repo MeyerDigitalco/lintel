@@ -1,7 +1,7 @@
 import type { Template, ToolDescriptor } from "./types";
 
 /**
- * Wales — Renting Homes (Wales) Act 2016.
+ * Wales, Renting Homes (Wales) Act 2016.
  * Occupiers are "contract-holders". A written statement of the occupation
  * contract must be provided within 14 days of occupation. The landlord's
  * no-fault notice is under section 173: minimum 6 months' notice, and it cannot
@@ -54,7 +54,7 @@ guidance before serving.`,
     jurisdiction: "wales",
     version: "RHW-2016.1",
     title: "Written statement of the occupation contract",
-    statutoryBasis: "Renting Homes (Wales) Act 2016 — provide within 14 days",
+    statutoryBasis: "Renting Homes (Wales) Act 2016, provide within 14 days",
     legislationUrl: "https://www.legislation.gov.uk/anaw/2016/1/contents",
     body: `WRITTEN STATEMENT OF OCCUPATION CONTRACT
 

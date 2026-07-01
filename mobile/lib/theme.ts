@@ -1,4 +1,4 @@
-// Midnight & Sky — shared design tokens (mirrors the web app).
+// Midnight & Sky, shared design tokens (mirrors the web app).
 export const colors = {
   evergreen: "#16233A", // deep navy (primary / brand)
   mint: "#3B82F6",      // sky blue (accent / CTA)

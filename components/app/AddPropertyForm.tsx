@@ -88,11 +88,11 @@ export function AddPropertyForm({ region }: { region: JurisdictionKey }) {
       const got = Object.keys(f).length;
       setAiNote(
         got > 0
-          ? `Autofilled ${got} field${got > 1 ? "s" : ""} from the contract — check and edit below.`
-          : "Couldn't read details automatically — please enter them below."
+          ? `Autofilled ${got} field${got > 1 ? "s" : ""} from the contract, check and edit below.`
+          : "Couldn't read details automatically, please enter them below."
       );
     } catch {
-      setAiNote("Couldn't read the contract — please enter details manually below.");
+      setAiNote("Couldn't read the contract, please enter details manually below.");
     } finally {
       setReading(false);
     }
@@ -115,7 +115,7 @@ export function AddPropertyForm({ region }: { region: JurisdictionKey }) {
 
           {/* Quick start: AI reads the tenancy contract */}
           <div className="rounded-lintel border border-evergreen/30 bg-evergreen/5 p-4">
-            <p className="text-sm font-medium text-ink">Quick start — upload the tenancy contract</p>
+            <p className="text-sm font-medium text-ink">Quick start, upload the tenancy contract</p>
             <p className="mt-0.5 text-xs text-slate">
               We&apos;ll read the address, tenant and rent details and fill the form for you. PDF or photo. Optional.
             </p>
@@ -154,7 +154,7 @@ export function AddPropertyForm({ region }: { region: JurisdictionKey }) {
 
           <label className="block">
             <span className={labelCls}>Property name *</span>
-            <input name="label" required value={label} onChange={(e) => { setLabel(e.target.value); setLabelTouched(e.target.value.length > 0); }} placeholder="Auto-fills from the address — or type your own" className={inputCls} />
+            <input name="label" required value={label} onChange={(e) => { setLabel(e.target.value); setLabelTouched(e.target.value.length > 0); }} placeholder="Auto-fills from the address, or type your own" className={inputCls} />
           </label>
 
           <div className="grid gap-4 sm:grid-cols-2">

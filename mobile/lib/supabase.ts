@@ -6,7 +6,7 @@ const url = process.env.EXPO_PUBLIC_SUPABASE_URL ?? "";
 const anon = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? "";
 
 if (!url || !anon) {
-  console.warn("Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — set them in mobile/.env");
+  console.warn("Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY, set them in mobile/.env");
 }
 
 export const supabase = createClient(url, anon, {

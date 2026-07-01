@@ -104,7 +104,7 @@ export default async function TokenTenantPage({ params }: { params: { token: str
           <Card>
             <CardBody>
               <div className="flex items-center justify-between">
-                <h2 className="font-heading text-sm font-semibold tracking-tight">Your home — safety &amp; compliance</h2>
+                <h2 className="font-heading text-sm font-semibold tracking-tight">Your home, safety &amp; compliance</h2>
                 <Badge tone={readiness.rag === "green" ? "mint" : readiness.rag === "amber" ? "amber" : "red"}>
                   {readiness.rag === "green" ? "All in order" : "Being sorted"}
                 </Badge>
@@ -116,7 +116,7 @@ export default async function TokenTenantPage({ params }: { params: { token: str
                     <li key={c.key} className="flex items-center gap-2">
                       <span className={ok ? "text-evergreen" : "text-amber"}>{ok ? "✓" : "•"}</span>
                       <span className="text-ink">{c.label}</span>
-                      {!ok && <span className="text-xs text-slate">— your landlord has been notified</span>}
+                      {!ok && <span className="text-xs text-slate">- your landlord has been notified</span>}
                     </li>
                   );
                 })}
@@ -167,7 +167,7 @@ export default async function TokenTenantPage({ params }: { params: { token: str
                       <span className="text-ink">{d.label}</span>
                       <span className="block text-xs text-slate">Added {fmtDate(d.created_at)}</span>
                     </span>
-                    {d.url ? <a href={d.url} target="_blank" rel="noopener noreferrer" className="text-sm text-evergreen hover:underline">View</a> : <span className="text-xs text-slate">—</span>}
+                    {d.url ? <a href={d.url} target="_blank" rel="noopener noreferrer" className="text-sm text-evergreen hover:underline">View</a> : <span className="text-xs text-slate">-</span>}
                   </li>
                 ))}
               </ul>
@@ -212,7 +212,7 @@ export default async function TokenTenantPage({ params }: { params: { token: str
         </Card>
 
         <p className="text-center text-xs text-slate">
-          Your private tenant page from Lintel. No login needed — bookmark it. All
+          Your private tenant page from Lintel. No login needed, bookmark it. All
           repairs you report are recorded with a timestamp.
         </p>
       </main>

@@ -2,7 +2,7 @@ import type { JurisdictionRules } from "./types";
 import { SHARED_COMPLIANCE } from "./shared";
 
 /**
- * Scotland — Private Housing (Tenancies) (Scotland) Act 2016.
+ * Scotland, Private Housing (Tenancies) (Scotland) Act 2016.
  * The Private Residential Tenancy (PRT) is open-ended. No no-fault eviction;
  * possession only on one of 18 grounds via the First-tier Tribunal (Housing &
  * Property Chamber). Landlords must register with their local council
@@ -32,14 +32,14 @@ export const scotland: JurisdictionRules = {
       key: "repairing_standard",
       label: "Repairing Standard check",
       cadence: "ongoing",
-      statutoryBasis: "Housing (Scotland) Act 2006 — Repairing Standard",
+      statutoryBasis: "Housing (Scotland) Act 2006, Repairing Standard",
       reminderDaysBefore: [30],
     },
     {
       key: "tolerable_standard",
       label: "Tolerable Standard check",
       cadence: "ongoing",
-      statutoryBasis: "Housing (Scotland) Act 1987 — Tolerable Standard",
+      statutoryBasis: "Housing (Scotland) Act 1987, Tolerable Standard",
       reminderDaysBefore: [30],
     },
   ],
@@ -71,7 +71,7 @@ export const scotland: JurisdictionRules = {
       key: "notice_to_leave",
       label: "Notice to Leave (PRT)",
       noticePeriodDays: null,
-      statutoryBasis: "Private Housing (Tenancies) (Scotland) Act 2016 — 18 grounds",
+      statutoryBasis: "Private Housing (Tenancies) (Scotland) Act 2016, 18 grounds",
       description:
         "Served to begin possession on one of the 18 grounds. Notice period (28 or 84 days) depends on the ground and length of tenancy. Application is then made to the First-tier Tribunal.",
     },

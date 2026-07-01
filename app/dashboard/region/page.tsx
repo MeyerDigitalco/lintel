@@ -15,7 +15,7 @@ export default async function RegionRulesPage() {
     <div className="space-y-6">
       <PageHeader
         title="Region rules"
-        subtitle={`${r.subregionName ? `${r.subregionName}, ` : ""}${r.countryName} — how Lintel tailors your account.`}
+        subtitle={`${r.subregionName ? `${r.subregionName}, ` : ""}${r.countryName}, how Lintel tailors your account.`}
         action={<Badge tone="mint">{cur?.symbol} {currency}</Badge>}
       />
 
@@ -105,7 +105,7 @@ export default async function RegionRulesPage() {
           <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-slate">
             {r.notes.map((n, i) => (<li key={i}>{n}</li>))}
           </ul>
-          <p className="mt-4 text-xs text-slate">Guidance only — Lintel provides software, not legal or tax advice.</p>
+          <p className="mt-4 text-xs text-slate">Guidance only, Lintel provides software, not legal or tax advice.</p>
         </CardBody>
       </Card>
     </div>

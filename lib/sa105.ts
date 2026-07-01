@@ -30,10 +30,10 @@ export function categoriesFor(direction: Direction) {
 }
 
 export function categoryLabel(key: string | null) {
-  return SA105_CATEGORIES.find((c) => c.key === key)?.label ?? key ?? "—";
+  return SA105_CATEGORIES.find((c) => c.key === key)?.label ?? key ?? "-";
 }
 
-/** HMRC approved mileage rates (cars/vans) — first 10,000 miles then above. */
+/** HMRC approved mileage rates (cars/vans), first 10,000 miles then above. */
 export const MILEAGE_RATE_FIRST_10K = 0.45;
 export const MILEAGE_RATE_ABOVE_10K = 0.25;
 

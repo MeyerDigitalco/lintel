@@ -26,7 +26,7 @@ export default async function NoticeGeneratorPage() {
     <div>
       <PageHeader
         title="Notice generator"
-        subtitle={`Fill in, print or save as PDF — ${ruleset.countryName} notice templates.`}
+        subtitle={`Fill in, print or save as PDF, ${ruleset.countryName} notice templates.`}
       />
       <NoticeGenerator
         notices={ruleset.notices}

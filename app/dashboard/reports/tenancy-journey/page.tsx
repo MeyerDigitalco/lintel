@@ -57,7 +57,7 @@ export default async function TenancyJourneyReport() {
                 {events.map((e, i) => (
                   <li key={i} className="relative">
                     <span className="absolute -left-[19px] top-1.5 h-1.5 w-1.5 rounded-full bg-evergreen" />
-                    <span className="text-xs text-slate">{e.date ? fmtDate(e.date) : "—"}</span>{" "}
+                    <span className="text-xs text-slate">{e.date ? fmtDate(e.date) : "-"}</span>{" "}
                     <span className="text-ink">{e.label}</span>
                   </li>
                 ))}

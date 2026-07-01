@@ -1,10 +1,10 @@
 import type { PossessionGround, Template, ToolDescriptor } from "./types";
 
 /**
- * England — Renters' Rights Act 2025.
+ * England, Renters' Rights Act 2025.
  * Section 21 (no-fault) abolished from 1 May 2026; possession is via Section 8
  * grounds only, served on the new prescribed Form 3A. Notice periods below
- * reflect the post-RRA position and are indicative — always confirm against the
+ * reflect the post-RRA position and are indicative, always confirm against the
  * current prescribed form before serving.
  */
 
@@ -79,7 +79,7 @@ export const ENGLAND_TEMPLATES: Template[] = [
     statutoryBasis: "Housing Act 1988 s.8, as amended by the Renters' Rights Act 2025",
     legislationUrl: "https://www.legislation.gov.uk/ukpga/2025/renters-rights",
     body: `NOTICE SEEKING POSSESSION OF A PROPERTY LET ON AN ASSURED TENANCY
-(Section 8, Housing Act 1988 — prescribed Form 3A)
+(Section 8, Housing Act 1988, prescribed Form 3A)
 
 To: {{tenant_name}}
 Address of property: {{property_address}}
@@ -128,7 +128,7 @@ the First-tier Tribunal. Verify against the current prescribed form.`,
     jurisdiction: "england",
     version: "RRA-2025.1",
     title: "Response to a tenant's request to keep a pet",
-    statutoryBasis: "Renters' Rights Act 2025 — implied term not to unreasonably refuse pets",
+    statutoryBasis: "Renters' Rights Act 2025, implied term not to unreasonably refuse pets",
     legislationUrl: "https://www.legislation.gov.uk/ukpga/2025/renters-rights",
     body: `RESPONSE TO REQUEST TO KEEP A PET
 

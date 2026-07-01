@@ -110,7 +110,7 @@ export async function sendLandlordMessage(formData: FormData) {
   revalidatePath(`/dashboard/tenancies/${tenancyId}`);
 }
 
-/** Revoke the tenant link — the magic link stops working immediately. */
+/** Revoke the tenant link, the magic link stops working immediately. */
 export async function revokePortalLink(formData: FormData) {
   const tenancyId = String(formData.get("tenancy_id"));
   await assertTenancyOwner(tenancyId);

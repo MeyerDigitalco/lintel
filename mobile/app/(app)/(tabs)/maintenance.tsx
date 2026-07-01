@@ -54,7 +54,7 @@ export default function Maintenance() {
               <View style={{ flex: 1 }}>
                 <Text style={{ fontWeight: "600", color: colors.ink }}>{r.title}</Text>
                 <Text style={{ fontSize: font.tiny, color: colors.slate, marginTop: 2 }}>
-                  {r.properties?.label ?? "—"} · {fmtDate(r.created_at)}
+                  {r.properties?.label ?? "-"} · {fmtDate(r.created_at)}
                 </Text>
               </View>
               <View style={{ alignItems: "flex-end", gap: 4 }}>

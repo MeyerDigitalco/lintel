@@ -45,7 +45,7 @@ export default async function TenancyManage({ params }: { params: { id: string }
       <Link href="/dashboard/rent" className="text-sm text-slate hover:text-ink">← Rent ledger</Link>
       <div className="mt-3">
         <PageHeader
-          title={`Manage tenancy — ${propertyLabel}`}
+          title={`Manage tenancy, ${propertyLabel}`}
           subtitle="Court-readiness, tenant access, documents and messages."
           action={portalOn ? <Badge tone="mint">Tenant portal on</Badge> : undefined}
         />

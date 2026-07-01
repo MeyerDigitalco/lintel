@@ -2,7 +2,7 @@ import "server-only";
 import { createServiceClient } from "@/lib/supabase/server";
 
 /**
- * Server-only HMRC connection status. Returns non-sensitive fields only —
+ * Server-only HMRC connection status. Returns non-sensitive fields only -
  * tokens never leave the server. Used by the Tax page to show whether the org
  * has connected to HMRC, without granting any client access to the tokens.
  */

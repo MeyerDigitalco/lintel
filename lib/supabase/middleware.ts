@@ -8,7 +8,7 @@ export async function updateSession(request: NextRequest) {
   const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   // If Supabase isn't configured (e.g. env vars missing on the host), don't
-  // crash the whole site in middleware — let requests through. Page-level
+  // crash the whole site in middleware, let requests through. Page-level
   // guards (requireSession) still protect server components.
   if (!url || !anon) return response;
 
@@ -48,7 +48,7 @@ export async function updateSession(request: NextRequest) {
 
     return res;
   } catch {
-    // Never take the site down from middleware — fail open.
+    // Never take the site down from middleware, fail open.
     return response;
   }
 }

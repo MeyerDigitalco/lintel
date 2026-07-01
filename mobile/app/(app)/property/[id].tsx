@@ -160,7 +160,7 @@ export default function PropertyDetail() {
                   <Text style={{ fontWeight: "600", color: colors.ink }}>{r.scheme}</Text>
                   <Text style={{ fontSize: font.tiny, color: colors.slate, marginTop: 2 }}>{r.reference}</Text>
                 </View>
-                <Badge tone={tone as any}>{d === null ? "—" : d < 0 ? "Expired" : `${d}d`}</Badge>
+                <Badge tone={tone as any}>{d === null ? "-" : d < 0 ? "Expired" : `${d}d`}</Badge>
               </Row>
               {r.renews_at ? <Text style={{ fontSize: font.small, color: colors.slate, marginTop: 6 }}>Renews {fmtDate(r.renews_at)}</Text> : null}
             </Card>
@@ -177,7 +177,7 @@ export default function PropertyDetail() {
             <Card key={c.id} style={{ marginBottom: 10 }}>
               <Row>
                 <Text style={{ fontWeight: "600", color: colors.ink }}>{c.label ?? String(c.item_key)}</Text>
-                <Badge tone={tone as any}>{d === null ? "—" : d < 0 ? "Expired" : `${d}d left`}</Badge>
+                <Badge tone={tone as any}>{d === null ? "-" : d < 0 ? "Expired" : `${d}d left`}</Badge>
               </Row>
               <Text style={{ fontSize: font.small, color: colors.slate, marginTop: 6 }}>Expires {fmtDate(c.expires_at)}</Text>
             </Card>

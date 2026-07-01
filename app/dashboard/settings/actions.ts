@@ -292,7 +292,7 @@ export async function openBillingPortal() {
     .eq("org_id", orgId)
     .maybeSingle();
   if (!sub?.stripe_customer_id) {
-    throw new Error("No billing account yet — start a subscription first.");
+    throw new Error("No billing account yet, start a subscription first.");
   }
   const base = process.env.NEXT_PUBLIC_APP_URL ?? "";
   const session = await stripe.billingPortal.sessions.create({

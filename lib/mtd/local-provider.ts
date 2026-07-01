@@ -3,7 +3,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 import type { MtdProvider, QuarterlyPeriod, QuarterlySummary } from "./index";
 
 /**
- * Local MTD provider — computes quarterly summaries from the local ledger.
+ * Local MTD provider, computes quarterly summaries from the local ledger.
  * Cannot submit to HMRC until recognition is granted (canSubmit() === false).
  */
 export class LocalMtdProvider implements MtdProvider {

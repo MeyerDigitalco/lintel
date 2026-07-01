@@ -40,11 +40,11 @@ const INTL: TaxCategory[] = [
 ];
 
 const BY_COUNTRY: Record<string, TaxCategory[]> = {
-  // United Kingdom — SA105 (kept from the canonical source).
+  // United Kingdom, SA105 (kept from the canonical source).
   GB: SA105_CATEGORIES as TaxCategory[],
 
-  // United States — Schedule E.
-  // Israel — rental income (Form 1301). Deductions/depreciation apply on the
+  // United States, Schedule E.
+  // Israel, rental income (Form 1301). Deductions/depreciation apply on the
   // marginal track; the 10% flat track allows none.
   IL: [
     inc("rents", "Rental income (דמי שכירות)"), inc("other_property_income", "Other property income"),
@@ -68,7 +68,7 @@ const BY_COUNTRY: Record<string, TaxCategory[]> = {
     exp("other_expenses", "Other expenses"),
   ],
 
-  // Canada — T776 Statement of Real Estate Rentals.
+  // Canada, T776 Statement of Real Estate Rentals.
   CA: [
     ...INCOME,
     exp("advertising", "Advertising"),
@@ -82,7 +82,7 @@ const BY_COUNTRY: Record<string, TaxCategory[]> = {
     exp("other_expenses", "Other expenses"),
   ],
 
-  // Australia — ATO rental schedule.
+  // Australia, ATO rental schedule.
   AU: [
     ...INCOME,
     exp("advertising", "Advertising for tenants"),
@@ -107,7 +107,7 @@ const BY_COUNTRY: Record<string, TaxCategory[]> = {
     exp("other_expenses", "Other expenses"),
   ],
 
-  // Ireland — Form 11 rental.
+  // Ireland, Form 11 rental.
   IE: [
     ...INCOME,
     exp("rent_rates_insurance", "Insurance"),
@@ -118,7 +118,7 @@ const BY_COUNTRY: Record<string, TaxCategory[]> = {
     exp("other_expenses", "Other expenses"),
   ],
 
-  // Germany — Anlage V.
+  // Germany, Anlage V.
   DE: [
     inc("rents", "Rental income (Mieteinnahmen)"), inc("other_property_income", "Other income"),
     exp("depreciation", "Depreciation (AfA)"),
@@ -143,7 +143,7 @@ const BY_COUNTRY: Record<string, TaxCategory[]> = {
     exp("other_expenses", "Other deductible expenses"),
   ],
 
-  // India — Income from House Property.
+  // India, Income from House Property.
   IN: [
     ...INCOME,
     exp("taxes", "Municipal taxes paid"),
@@ -153,7 +153,7 @@ const BY_COUNTRY: Record<string, TaxCategory[]> = {
     exp("other_expenses", "Other expenses"),
   ],
 
-  // France — revenus fonciers (régime réel).
+  // France, revenus fonciers (régime réel).
   FR: [
     inc("rents", "Rents (loyers)"), inc("other_property_income", "Other income"),
     exp("taxes", "Property tax (taxe foncière)"),
@@ -197,7 +197,7 @@ const BY_COUNTRY: Record<string, TaxCategory[]> = {
     exp("other_expenses", "Other expenses"),
   ],
 
-  // Portugal — Categoria F.
+  // Portugal, Categoria F.
   PT: [
     ...INCOME,
     exp("taxes", "Property tax (IMI)"),
@@ -331,7 +331,7 @@ const BY_COUNTRY: Record<string, TaxCategory[]> = {
     exp("other_expenses", "Other costs"),
   ],
 
-  // Hong Kong — Property Tax.
+  // Hong Kong, Property Tax.
   HK: [
     ...INCOME,
     exp("taxes", "Rates paid by owner"),
@@ -352,7 +352,7 @@ export function categoriesForRegion(country: string | null | undefined, directio
 
 /** Human label for a stored category key, region-aware with safe fallbacks. */
 export function categoryLabelForRegion(country: string | null | undefined, key: string | null): string {
-  if (!key) return "—";
+  if (!key) return "-";
   const set = setFor(country);
   return set.find((c) => c.key === key)?.label ?? GLOBAL_LABELS[key] ?? key;
 }

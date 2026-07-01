@@ -60,7 +60,7 @@ export default async function TransactionsPage() {
       <div className="mb-6 grid gap-4 sm:grid-cols-4">
         <Stat label="Income (year)" value={gbp(income)} tone="evergreen" />
         <Stat label="Expenses (year)" value={gbp(expenses)} />
-        <Stat label="Finance costs" value={gbp(finance)} hint={country === "GB" ? "Section 24 — 20% reducer" : "Interest & finance"} />
+        <Stat label="Finance costs" value={gbp(finance)} hint={country === "GB" ? "Section 24, 20% reducer" : "Interest & finance"} />
         <Stat label="Net (excl. finance)" value={gbp(income - expenses)} />
       </div>
 
@@ -90,7 +90,7 @@ export default async function TransactionsPage() {
                     <td className="px-4 py-3 text-slate">{fmtDate(t.occurred_on)}</td>
                     <td className="px-4 py-3 text-ink">
                       <span className="flex items-center gap-2">
-                        {t.description || "—"}
+                        {t.description || "-"}
                         {t.receipt_url && (receiptUrls[t.id] ? (
                           <a href={receiptUrls[t.id]} target="_blank" rel="noopener noreferrer" className="text-xs text-evergreen hover:underline">View receipt</a>
                         ) : <Badge>Receipt</Badge>)}

@@ -42,11 +42,11 @@ export async function answerQuestion(
   const money = (n: number) => formatMoney(n, ctx.currency, { decimals: true });
   const ruleset = ctx.country === "GB" ? resolveRegion("GB", ctx.region) : resolveRegion(ctx.country, ctx.region, ctx.regionCode);
 
-  const propLines = (props ?? []).map((p: any) => `- ${p.label}${p.city ? `, ${p.city}` : ""}${p.is_hmo ? " (HMO)" : ""} — ${p.status ?? "unknown"}`).join("\n") || "None yet.";
+  const propLines = (props ?? []).map((p: any) => `- ${p.label}${p.city ? `, ${p.city}` : ""}${p.is_hmo ? " (HMO)" : ""}, ${p.status ?? "unknown"}`).join("\n") || "None yet.";
   const tenLines = (tens ?? []).map((t: any) => `- ${t.tenant_name ?? "Tenant"} at ${t.properties?.label ?? "property"}: ${t.rent_amount ? money(Number(t.rent_amount)) + "/" + (t.rent_period === "weekly" ? "wk" : "mo") : "rent not set"}`).join("\n") || "None recorded.";
   const compLines = (comp ?? []).map((c: any) => `- ${c.label} (${c.properties?.label ?? "property"}) expires ${c.expires_at}`).join("\n") || "Nothing within 60 days.";
   const arrears = (ledger ?? []).filter((r: any) => new Date(r.due_on) < today);
-  const arrearsLine = arrears.length ? arrears.map((r: any) => `- ${r.period}: ${money(Number(r.amount_due))} due ${r.due_on}`).join("\n") : "None — rent is up to date.";
+  const arrearsLine = arrears.length ? arrears.map((r: any) => `- ${r.period}: ${money(Number(r.amount_due))} due ${r.due_on}`).join("\n") : "None, rent is up to date.";
 
   const context =
     `REGION: ${ruleset.subregionName ? ruleset.subregionName + ", " : ""}${ruleset.countryName}\n` +
@@ -62,5 +62,5 @@ export async function answerQuestion(
       `If the answer isn't in the context and you're unsure, say so plainly.\n\nCONTEXT:\n${context}\n\nQUESTION: ${question.trim()}`,
     { system: "You are Lintel's assistant for landlords: accurate, concise, plain-English. You never invent figures; use only the provided context for portfolio facts.", maxTokens: 600 }
   );
-  return answer?.trim() || "I couldn't generate an answer just now — please try rephrasing.";
+  return answer?.trim() || "I couldn't generate an answer just now, please try rephrasing.";
 }

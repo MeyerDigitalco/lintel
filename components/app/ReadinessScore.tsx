@@ -51,7 +51,7 @@ export function ReadinessScore({ result }: { result: ReadinessResult }) {
           ))}
         </ul>
         <p className="mt-4 text-xs text-slate">
-          Indicator only — not legal advice. Address anything flagged before
+          Indicator only, not legal advice. Address anything flagged before
           relying on the tenancy in a possession claim.
         </p>
       </CardBody>

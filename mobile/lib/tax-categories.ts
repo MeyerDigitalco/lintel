@@ -67,7 +67,7 @@ export function categoriesForRegion(country: string | null | undefined, directio
   return setFor(country).filter((c) => c.direction === direction);
 }
 export function categoryLabelForRegion(country: string | null | undefined, key: string | null): string {
-  if (!key) return "—";
+  if (!key) return "-";
   const set = setFor(country);
   return set.find((c) => c.key === key)?.label ?? GLOBAL_LABELS[key] ?? key;
 }

@@ -2,7 +2,7 @@ import type { JurisdictionRules } from "./types";
 import { SHARED_COMPLIANCE } from "./shared";
 
 /**
- * Northern Ireland — Private Tenancies Act (NI) 2022 (and Private Tenancies
+ * Northern Ireland, Private Tenancies Act (NI) 2022 (and Private Tenancies
  * (NI) Order 2006). No Section 21 / Section 8 regime; possession runs through a
  * notice-to-quit regime with statutory minimum periods. Landlords must register
  * with the Landlord Registration Scheme. No Right to Rent.
@@ -31,14 +31,14 @@ export const northernIreland: JurisdictionRules = {
       key: "fitness_standard_ni",
       label: "Fitness standard check",
       cadence: "ongoing",
-      statutoryBasis: "Housing (Northern Ireland) Order 1981 — fitness standard",
+      statutoryBasis: "Housing (Northern Ireland) Order 1981, fitness standard",
       reminderDaysBefore: [30],
     },
     {
       key: "tenancy_terms_statement",
       label: "Written statement of tenancy terms provided",
       cadence: "once",
-      statutoryBasis: "Private Tenancies Act (NI) 2022 — within 28 days",
+      statutoryBasis: "Private Tenancies Act (NI) 2022, within 28 days",
       reminderDaysBefore: [],
     },
   ],
@@ -59,7 +59,7 @@ export const northernIreland: JurisdictionRules = {
       label: "Notice to Quit",
       noticePeriodDays: null,
       statutoryBasis:
-        "Private Tenancies Act (NI) 2022 — notice period scales with length of tenancy (up to 12 weeks)",
+        "Private Tenancies Act (NI) 2022, notice period scales with length of tenancy (up to 12 weeks)",
       description:
         "Ends a private tenancy. Minimum notice period depends on how long the tenant has lived in the property (4, 8 or 12 weeks).",
     },

@@ -1,7 +1,7 @@
 import type { ParsedCommand, VoiceIntent, QueryKind } from "./types";
 
 /**
- * Deterministic, rule-based intent parser. No external model — utterances are
+ * Deterministic, rule-based intent parser. No external model, utterances are
  * matched against keyword/regex rules so behaviour is predictable and testable.
  * Anything we can't confidently parse returns `unknown` rather than guessing.
  */

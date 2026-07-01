@@ -7,7 +7,7 @@ import { sendPushToOrg } from "@/lib/push";
 import type { JurisdictionKey } from "@/lib/jurisdictions";
 
 /**
- * Tenant reports a fault via their tokenised link — no account. The token is the
+ * Tenant reports a fault via their tokenised link, no account. The token is the
  * credential; everything runs through the service-role client after validating
  * it against the tenancy.
  */

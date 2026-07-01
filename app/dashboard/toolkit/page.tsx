@@ -28,7 +28,7 @@ export default async function ToolkitPage() {
     <div>
       <PageHeader
         title="Tenancy toolkit"
-        subtitle="Jurisdiction-correct notices and agreements. Template-assisted — not legal advice."
+        subtitle="Jurisdiction-correct notices and agreements. Template-assisted, not legal advice."
         action={<Badge tone="mint">{rules.name}</Badge>}
       />
 

@@ -69,7 +69,7 @@ export default function RegionRules() {
         <Expandable key={n.label} title={n.label} badge={n.period} subtitle={n.when} detail={(n as any).detail ?? n.when} />
       ))}
 
-      <Text style={{ fontSize: font.tiny, color: colors.slate }}>Guidance only — Lintel provides software, not legal or tax advice.</Text>
+      <Text style={{ fontSize: font.tiny, color: colors.slate }}>Guidance only, Lintel provides software, not legal or tax advice.</Text>
     </Screen>
   );
 }

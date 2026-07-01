@@ -47,9 +47,9 @@ export function AddContactForm() {
       if (f.kind) setKind(f.kind);
       if (!f.name && f.company) setName(f.company); // fall back to company as the contact name
       const got = Object.keys(f).length;
-      setAiNote(got > 0 ? `Read ${got} field${got > 1 ? "s" : ""} from the photo — check and edit below.` : "Couldn't read the photo — enter details manually.");
+      setAiNote(got > 0 ? `Read ${got} field${got > 1 ? "s" : ""} from the photo, check and edit below.` : "Couldn't read the photo, enter details manually.");
     } catch {
-      setAiNote("Couldn't read the photo — enter details manually.");
+      setAiNote("Couldn't read the photo, enter details manually.");
     } finally {
       setReading(false);
     }

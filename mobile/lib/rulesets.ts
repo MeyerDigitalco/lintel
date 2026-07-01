@@ -16,7 +16,7 @@ export interface RegionRuleset {
 
 const US: RegionRuleset = {
   countryName: "United States",
-  governingLaw: "State landlord–tenant law + the federal Fair Housing Act",
+  governingLaw: "State landlord-tenant law + the federal Fair Housing Act",
   tenancyTerm: "lease", depositTerm: "security deposit", taxLabel: "Schedule E (Form 1040)",
   tenancyTypes: [
     { label: "Fixed-term lease", description: "Set term (often 12 months) that renews or ends." },
@@ -29,7 +29,7 @@ const US: RegionRuleset = {
     { label: "Security deposit handling", note: "Caps & itemised deductions vary.", detail: "Many states cap the deposit (1-2 months), require a separate/interest account, and an itemised statement within 14-30 days. Late = forfeit deductions." },
     { label: "Fair Housing compliance", note: "Anti-discrimination rules.", detail: "Fair Housing Act bans bias on race, color, religion, sex, origin, disability, familial status; many states add more. Screen everyone identically." },
   ],
-  deposit: { cap: "Varies by state — often 1–2 months' rent.", protection: "Return within the state deadline with an itemised statement." },
+  deposit: { cap: "Varies by state, often 1-2 months' rent.", protection: "Return within the state deadline with an itemised statement." },
   checklist: ["Written lease", "Lead paint disclosure (pre-1978)", "Move-in inspection", "State-required disclosures"],
   notices: [
     { label: "Notice to Pay Rent or Quit", when: "Rent unpaid", period: "3-14 days (state-specific)", detail: "Served when rent is overdue. Cure window is state-set (3-14 days), in writing with the exact amount due, before you can file." },
@@ -46,7 +46,7 @@ const AE: RegionRuleset = {
   tenancyTypes: [{ label: "Annual tenancy contract", description: "12-month contract, renewable; registered." }],
   compliance: [
     { label: "Ejari / Tawtheeq registration", note: "Tenancy contracts must be registered.", detail: "Tenancy contracts must be registered (Ejari in Dubai via the DLD, Tawtheeq in Abu Dhabi). Registration is needed for visas, DEWA and to file a dispute." },
-    { label: "RERA rental index", note: "Rent increases capped by the official index.", detail: "Rent increases are capped by the RERA rental index calculator and Decree No. 43 of 2013 — no increase is allowed unless the index shows the rent is below market by set thresholds." },
+    { label: "RERA rental index", note: "Rent increases capped by the official index.", detail: "Rent increases are capped by the RERA rental index calculator and Decree No. 43 of 2013, no increase is allowed unless the index shows the rent is below market by set thresholds." },
     { label: "Eviction notice", note: "Generally 12 months' notarised notice on valid grounds.", detail: "Eviction on valid grounds (owner use, sale, demolition, major works) requires 12 months' notice via notary public or registered mail under Law No. 33 of 2008." },
   ],
   deposit: { cap: "Typically 5% (unfurnished) or 10% (furnished) of annual rent.", protection: "Refundable at end of contract less damages." },
@@ -55,7 +55,7 @@ const AE: RegionRuleset = {
     { label: "Eviction notice", when: "Valid grounds", period: "12 months, notarised", detail: "12 months' notarised or registered notice on valid statutory grounds; it must be served through a notary or registered mail to be enforceable." },
     { label: "Non-renewal / vary terms", when: "Change rent or terms", period: "90 days before expiry" },
   ],
-  notes: ["Rent commonly paid by 1–4 post-dated cheques.", "No personal income tax; residential leases generally VAT-exempt."],
+  notes: ["Rent commonly paid by 1-4 post-dated cheques.", "No personal income tax; residential leases generally VAT-exempt."],
 };
 
 const ZA: RegionRuleset = {
@@ -72,7 +72,7 @@ const ZA: RegionRuleset = {
     { label: "Incoming & outgoing inspections", note: "Joint inspections required; defects recorded.", detail: "Joint incoming and outgoing inspections are required; the outgoing inspection supports any deductions." },
     { label: "Consumer Protection Act", note: "Fair terms, cancellation rights, disclosures.", detail: "The Consumer Protection Act governs most leases (fair terms, 20-business-day cancellation, disclosures)." },
   ],
-  deposit: { cap: "No statutory cap (commonly 1–2 months' rent).", protection: "Held in interest-bearing account; returned with interest within 7–14 days after outgoing inspection." },
+  deposit: { cap: "No statutory cap (commonly 1-2 months' rent).", protection: "Held in interest-bearing account; returned with interest within 7-14 days after outgoing inspection." },
   checklist: ["Written lease", "Incoming inspection report", "Deposit receipt", "House rules"],
   notices: [
     { label: "Breach notice", when: "Tenant breach", period: "20 business days to remedy", detail: "A breach notice gives the tenant 20 business days to remedy (e.g. arrears) before cancellation." },
@@ -93,7 +93,7 @@ const AU: RegionRuleset = {
   compliance: [
     { label: "Minimum housing standards", note: "Each state sets safety/weatherproofing standards.", detail: "Each state sets minimum standards (structural soundness, weatherproofing, working facilities); Victoria and Queensland have detailed rental minimum standards." },
     { label: "Smoke alarms", note: "Compliant smoke alarms required.", detail: "Compliant, regularly tested smoke alarms are mandatory; some states (e.g. QLD) require interconnected photoelectric alarms." },
-    { label: "Bond lodged with authority", note: "Lodged with the state bond authority (RTBA, RTA, Rental Bonds Online).", detail: "The bond must be lodged with the state authority (RTBA in VIC, RTA in QLD, Rental Bonds Online in NSW) within set days — never held by the landlord." },
+    { label: "Bond lodged with authority", note: "Lodged with the state bond authority (RTBA, RTA, Rental Bonds Online).", detail: "The bond must be lodged with the state authority (RTBA in VIC, RTA in QLD, Rental Bonds Online in NSW) within set days, never held by the landlord." },
     { label: "Entry condition report", note: "Required at move-in.", detail: "A condition report at move-in (and exit) is required to support any bond claim." },
   ],
   deposit: { cap: "Bond typically 4 weeks' rent (varies by state).", protection: "Lodged with the state bond authority; released after the exit report." },
@@ -448,14 +448,14 @@ const IL: RegionRuleset = {
   countryName: "Israel",
   governingLaw: "Hire and Loan Law 1971 + the Fair Rental Law (2017 amendment)",
   tenancyTerm: "lease (חוזה שכירות)", depositTerm: "security deposit (פיקדון)",
-  taxLabel: "Rental income (Form 1301) — 10% track or marginal",
+  taxLabel: "Rental income (Form 1301), 10% track or marginal",
   tenancyTypes: [
-    { label: "Unprotected residential lease (שכירות בלתי מוגנת)", description: "The standard modern lease — usually a fixed 12-month term, freely negotiated, no key money." },
-    { label: "Protected tenancy (דייר מוגן)", description: "Legacy key-money tenancies with strong, near-permanent rights — rare in new lettings." },
+    { label: "Unprotected residential lease (שכירות בלתי מוגנת)", description: "The standard modern lease, usually a fixed 12-month term, freely negotiated, no key money." },
+    { label: "Protected tenancy (דייר מוגן)", description: "Legacy key-money tenancies with strong, near-permanent rights, rare in new lettings." },
   ],
   compliance: [
-    { label: "Fair Rental Law standards", note: "Dwelling must be fit to live in (2017).", detail: "The Fair Rental Law requires a residential dwelling to be fit for living — drainage, electricity, ventilation, no danger — and defects disclosed before signing." },
-    { label: "Repairs within statutory time", note: "Fix defects within 30 days (3 if urgent).", detail: "The landlord must repair their defects within a reasonable time — about 30 days, or 3 days if the defect blocks reasonable use — or the tenant may repair and deduct." },
+    { label: "Fair Rental Law standards", note: "Dwelling must be fit to live in (2017).", detail: "The Fair Rental Law requires a residential dwelling to be fit for living, drainage, electricity, ventilation, no danger, and defects disclosed before signing." },
+    { label: "Repairs within statutory time", note: "Fix defects within 30 days (3 if urgent).", detail: "The landlord must repair their defects within a reasonable time, about 30 days, or 3 days if the defect blocks reasonable use, or the tenant may repair and deduct." },
     { label: "Guarantee cap", note: "Capped at the lower of 3 months' rent or 1/3 of the lease.", detail: "Total guarantees a landlord can require are capped at the lower of three months' rent or one-third of the total lease value." },
     { label: "Limits on charges", note: "Landlord bears building insurance, management and their own broker.", detail: "The landlord cannot pass building insurance, management fees or their own broker fee to the tenant." },
   ],
@@ -500,11 +500,11 @@ function uk(region?: string | null): RegionRuleset {
 
 
 const SUBREGION_RULES: Record<string, { name: string; depositCap?: string; depositReturn?: string; extra: { label: string; note: string }[]; notes: string[] }> = {
-  us_ca: { name: "California", depositCap: "Max 1 month's rent (2 for small landlords) — AB 12.", depositReturn: "Itemised return within 21 days.", extra: [{ label: "Just-cause & rent cap", note: "AB 1482: increases capped 5% + CPI (max 10%)." }, { label: "State disclosures", note: "Lead, Megan's Law, mold, bed bugs, flood, Prop 65." }], notes: ["Notice: 30 days (<1 yr), 60 days (≥1 yr).", "LA & SF add local rent control."] },
+  us_ca: { name: "California", depositCap: "Max 1 month's rent (2 for small landlords), AB 12.", depositReturn: "Itemised return within 21 days.", extra: [{ label: "Just-cause & rent cap", note: "AB 1482: increases capped 5% + CPI (max 10%)." }, { label: "State disclosures", note: "Lead, Megan's Law, mold, bed bugs, flood, Prop 65." }], notes: ["Notice: 30 days (<1 yr), 60 days (≥1 yr).", "LA & SF add local rent control."] },
   us_tx: { name: "Texas", depositCap: "No statutory cap.", depositReturn: "Itemised return within 30 days.", extra: [{ label: "Security devices", note: "Statutory locks and smoke detectors required." }], notes: ["Notice: 30 days.", "No state rent control."] },
-  us_ny: { name: "New York", depositCap: "Max 1 month's rent — HSTPA 2019.", depositReturn: "Itemised return within 14 days.", extra: [{ label: "Rent stabilization", note: "NYC stabilized units have renewal & increase limits." }], notes: ["Notice: 30/60/90 days by length.", "Good-cause eviction in NYC & opt-in areas."] },
+  us_ny: { name: "New York", depositCap: "Max 1 month's rent, HSTPA 2019.", depositReturn: "Itemised return within 14 days.", extra: [{ label: "Rent stabilization", note: "NYC stabilized units have renewal & increase limits." }], notes: ["Notice: 30/60/90 days by length.", "Good-cause eviction in NYC & opt-in areas."] },
   us_fl: { name: "Florida", depositCap: "No statutory cap.", depositReturn: "15 days (no deductions) or 30 with notice.", extra: [{ label: "Deposit holding disclosure", note: "Disclose where the deposit is held within 30 days." }], notes: ["Notice: 30 days (15 weekly).", "No state rent control."] },
-  us_il: { name: "Illinois", depositCap: "No state cap.", depositReturn: "30–45 days; interest in larger buildings.", extra: [{ label: "Chicago RLTO", note: "Adds deposit interest, receipts and summaries." }], notes: ["Notice: 30 days.", "No statewide rent control."] },
+  us_il: { name: "Illinois", depositCap: "No state cap.", depositReturn: "30-45 days; interest in larger buildings.", extra: [{ label: "Chicago RLTO", note: "Adds deposit interest, receipts and summaries." }], notes: ["Notice: 30 days.", "No statewide rent control."] },
   us_wa: { name: "Washington", depositCap: "No statutory cap.", depositReturn: "Itemised return within 21 days.", extra: [{ label: "Just cause to end", note: "Statewide just-cause required (2021)." }], notes: ["Rent increase notice: 60 days.", "Seattle adds protections."] },
   us_ga: { name: "Georgia", depositCap: "No statutory cap.", depositReturn: "Itemised return within 30 days.", extra: [{ label: "Move-in/out inspection", note: "Required where a deposit is held." }], notes: ["Notice: 30 days (landlord 60).", "No rent control."] },
   us_nj: { name: "New Jersey", depositCap: "Max 1.5 months' rent.", depositReturn: "30 days, with interest.", extra: [{ label: "Truth in Renting", note: "Provide the statement (non-owner-occupied)." }], notes: ["Local rent control is common.", "Notice to quit varies by ground."] },
@@ -520,7 +520,7 @@ const SUBREGION_RULES: Record<string, { name: string; depositCap?: string; depos
   ae_abu_dhabi: { name: "Abu Dhabi", depositCap: "5% (unfurnished) / 10% (furnished).", depositReturn: "Refunded at end less damages.", extra: [{ label: "Tawtheeq registration", note: "Contracts registered via Tawtheeq (ADM)." }], notes: ["Check current ADREC rent-cap rules.", "Cheque-based rent is standard."] },
   ae_sharjah: { name: "Sharjah", extra: [{ label: "Municipality registration", note: "Contracts attested via Sharjah Municipality." }], notes: ["Disputes via the Sharjah rent committee."] },
 
-  za_gauteng: { name: "Gauteng", extra: [{ label: "Gauteng Rental Housing Tribunal", note: "Free dispute resolution; provincial regulations apply." }], notes: ["Deposit + interest returned within 7–14 days after outgoing inspection."] },
+  za_gauteng: { name: "Gauteng", extra: [{ label: "Gauteng Rental Housing Tribunal", note: "Free dispute resolution; provincial regulations apply." }], notes: ["Deposit + interest returned within 7-14 days after outgoing inspection."] },
   za_western_cape: { name: "Western Cape", extra: [{ label: "Western Cape Rental Housing Tribunal", note: "Free dispute resolution; provincial regulations apply." }], notes: ["Deposit must be invested; interest to the tenant."] },
   za_kwazulu_natal: { name: "KwaZulu-Natal", extra: [{ label: "KZN Rental Housing Tribunal", note: "Free dispute resolution; provincial regulations apply." }], notes: ["Joint incoming and outgoing inspections required."] },
 
