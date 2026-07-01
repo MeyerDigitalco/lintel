@@ -50,9 +50,9 @@ export function Sidebar({
   );
   return (
     <aside className="hidden w-60 shrink-0 border-r border-hairline bg-surface md:flex md:flex-col">
-      <div className="px-5 py-5">
-        <Link href="/dashboard" aria-label="Lintel">
-          <Logo />
+      <div className="border-b border-hairline px-5 py-6">
+        <Link href="/dashboard" aria-label="Lintel" className="block">
+          <Logo iconSize={44} wordmarkClassName="text-3xl" className="gap-3" />
         </Link>
       </div>
       <nav className="flex-1 overflow-y-auto px-3 pb-4">

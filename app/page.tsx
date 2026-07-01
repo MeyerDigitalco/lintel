@@ -48,7 +48,7 @@ export default function HomePage() {
         <div className="relative mx-auto max-w-6xl px-5 pb-20 pt-16 text-center md:pt-24">
           <span className="inline-flex items-center gap-2 rounded-full border border-hairline bg-surface px-3 py-1 text-xs text-slate">
             <span className="h-1.5 w-1.5 rounded-full bg-mint" />
-            Now in {COUNTRIES.length}+ countries · {currencyCount} currencies · {langCount} languages
+            Expanding to {COUNTRIES.length} countries · {currencyCount} currencies · {langCount} languages
           </span>
           <h1 className="mx-auto mt-6 max-w-4xl font-heading text-4xl font-semibold leading-[1.04] tracking-tight text-ink md:text-6xl">
             Run your rentals like a pro — anywhere in the world.
@@ -65,7 +65,7 @@ export default function HomePage() {
 
           <div className="mx-auto mt-12 grid max-w-3xl grid-cols-2 gap-px overflow-hidden rounded-lintel border border-hairline bg-hairline text-center sm:grid-cols-4">
             {[
-              [`${COUNTRIES.length}+`, "Countries"],
+              [`${COUNTRIES.length}`, "Countries, expanding"],
               [`${currencyCount}`, "Currencies"],
               [`${langCount}`, "Languages"],
               ["Free", "until 31 Aug 2026"],
@@ -128,7 +128,7 @@ export default function HomePage() {
             <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
               <div className="max-w-2xl">
                 <span className="text-xs font-semibold uppercase tracking-wide text-mint">The Lintel difference</span>
-                <h2 className="mt-2 font-heading text-2xl font-semibold tracking-tight text-ink">Always know if you&apos;d win in court.</h2>
+                <h2 className="mt-2 font-heading text-2xl font-semibold tracking-tight text-ink">Always know if you&apos;re ready for court.</h2>
                 <p className="mt-3 text-slate">
                   Most tools tell you a certificate expired. Lintel scores every tenancy on how evidence-ready it is —
                   deposit protected in time, prescribed documents served, certificates in date, registration valid —
@@ -151,7 +151,7 @@ export default function HomePage() {
           <h2 className="font-heading text-3xl font-semibold tracking-tight text-ink">Correct in every market.</h2>
           <p className="mt-3 max-w-2xl text-slate">
             Pick your country and region per property. Lintel loads the right currency, tenancy type, compliance items,
-            notice templates and tax framing — from {COUNTRIES.length}+ countries and counting.
+            notice templates and tax framing — expanding to {COUNTRIES.length} countries and counting.
           </p>
           <div className="mt-8 flex flex-wrap gap-2">
             {COUNTRIES.map((c) => (

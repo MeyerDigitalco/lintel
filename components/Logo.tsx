@@ -3,15 +3,19 @@ import { cn } from "@/lib/cn";
 export function Logo({
   className,
   showWordmark = true,
+  iconSize = 28,
+  wordmarkClassName = "text-lg",
 }: {
   className?: string;
   showWordmark?: boolean;
+  iconSize?: number;
+  wordmarkClassName?: string;
 }) {
   return (
     <span className={cn("inline-flex items-center gap-2", className)}>
       <svg
-        width="28"
-        height="28"
+        width={iconSize}
+        height={iconSize}
         viewBox="0 0 40 40"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -28,7 +32,7 @@ export function Logo({
         <text x="32" y="14" fontSize="12" fontWeight="800" fill="#3B82F6" textAnchor="middle" fontFamily="system-ui, sans-serif">2</text>
       </svg>
       {showWordmark && (
-        <span className="font-heading text-lg font-semibold tracking-tight text-ink">
+        <span className={cn("font-heading font-semibold tracking-tight text-ink", wordmarkClassName)}>
           Lintel<sup className="ml-0.5 align-super text-[0.62em] font-bold text-[#3B82F6]">2</sup>
         </span>
       )}
