@@ -21,11 +21,18 @@ export default function Login() {
     <Screen scroll={false} padded={false}>
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1, justifyContent: "center", padding: 24, gap: 16 }}>
         <View style={{ marginBottom: 8 }}>
-          <View style={{ width: 44, height: 44, borderRadius: 12, backgroundColor: colors.evergreen, alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
-            <Text style={{ color: colors.mint, fontWeight: "800", fontSize: 22 }}>n</Text>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 10, marginBottom: 18 }}>
+            <View style={{ width: 46, height: 46, borderRadius: 12, backgroundColor: colors.evergreen }}>
+              <View style={{ position: "absolute", top: 12, left: 11, width: 24, height: 3, borderRadius: 2, backgroundColor: colors.mint }} />
+              <View style={{ position: "absolute", top: 17, left: 12, width: 22, height: 17, borderColor: "#F6F8FB", borderWidth: 2.4, borderBottomWidth: 0, borderTopLeftRadius: 4, borderTopRightRadius: 4 }} />
+              <Text style={{ position: "absolute", top: 4, right: 5, color: colors.mint, fontWeight: "800", fontSize: 12 }}>2</Text>
+            </View>
+            <Text style={{ fontSize: 26, fontWeight: "800", color: colors.ink, letterSpacing: -0.5 }}>
+              Lintel<Text style={{ color: colors.mint, fontSize: 15, fontWeight: "800" }}>2</Text>
+            </Text>
           </View>
           <Text style={{ fontSize: font.h1, fontWeight: "700", color: colors.ink }}>Welcome back</Text>
-          <Text style={{ fontSize: font.small, color: colors.slate, marginTop: 4 }}>Sign in to your Lintel account.</Text>
+          <Text style={{ fontSize: font.small, color: colors.slate, marginTop: 4 }}>Sign in to your Lintel² account.</Text>
         </View>
         <Field label="Email" value={email} onChangeText={setEmail} placeholder="you@example.com" keyboardType="email-address" autoCapitalize="none" />
         <Field label="Password" value={password} onChangeText={setPassword} placeholder="Your password" secureTextEntry />

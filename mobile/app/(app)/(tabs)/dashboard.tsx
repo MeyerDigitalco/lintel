@@ -6,6 +6,9 @@ import { useAuth } from "@/providers/AuthProvider";
 import { supabase } from "@/lib/supabase";
 import { formatMoney, REGION_LABEL, daysUntil } from "@/lib/format";
 import { scheduleReminders } from "@/lib/notifications";
+import { resolveRegion } from "@/lib/rulesets";
+
+const TAX_AUTHORITY: Record<string,string> = { GB:"HMRC", US:"IRS", ZA:"SARS", AU:"ATO", NZ:"Inland Revenue", CA:"CRA", IE:"Revenue", DE:"Finanzamt", ES:"AEAT", IN:"Income Tax Dept", FR:"DGFiP", NL:"Belastingdienst", SG:"IRAS", IT:"Agenzia Entrate", PT:"AT", CH:"Tax office", JP:"NTA", MX:"SAT", BR:"Receita Federal", BE:"FPS Finance", AT:"Finanzamt", PL:"KAS", SA:"ZATCA", QA:"GTA", HK:"IRD", IL:"ITA" };
 
 function taxYearStartISO(): string {
   const now = new Date();
@@ -15,7 +18,8 @@ function taxYearStartISO(): string {
 }
 
 export default function Dashboard() {
-  const { orgId, orgName, region, currency } = useAuth();
+  const { orgId, orgName, region, regionCode, country, currency } = useAuth();
+  const ruleset = resolveRegion(country, region, regionCode);
   const gbp = (n: number, d = false) => formatMoney(n, currency, d);
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -68,13 +72,27 @@ export default function Dashboard() {
       </Row>
 
       <Card>
-        <Row>
-          <Text style={{ fontSize: font.h3, fontWeight: "600", color: colors.ink }}>MTD for Income Tax</Text>
-          <Badge>{stats.income < 20000 ? "Not yet mandated" : "In scope"}</Badge>
-        </Row>
-        <Text style={{ marginTop: 6, fontSize: font.small, color: colors.slate }}>
-          Based on {gbp(stats.income)} property income this year. Keep your digital records ready.
-        </Text>
+        {country === "GB" ? (
+          <>
+            <Row>
+              <Text style={{ fontSize: font.h3, fontWeight: "600", color: colors.ink }}>MTD for Income Tax</Text>
+              <Badge>{stats.income < 20000 ? "Not yet mandated" : "In scope"}</Badge>
+            </Row>
+            <Text style={{ marginTop: 6, fontSize: font.small, color: colors.slate }}>
+              Based on {gbp(stats.income)} property income this year. Keep your digital records ready.
+            </Text>
+          </>
+        ) : (
+          <>
+            <Row>
+              <Text style={{ fontSize: font.h3, fontWeight: "600", color: colors.ink }}>Tax records</Text>
+              <Badge tone="mint">{TAX_AUTHORITY[country] ?? "Tax authority"}</Badge>
+            </Row>
+            <Text style={{ marginTop: 6, fontSize: font.small, color: colors.slate }}>
+              Based on {gbp(stats.income)} property income this year. Records ready for {ruleset.taxLabel}.
+            </Text>
+          </>
+        )}
       </Card>
 
       <Card onPress={() => router.push("/(app)/compliance")}>
