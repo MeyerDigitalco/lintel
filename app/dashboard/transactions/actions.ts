@@ -7,6 +7,16 @@ import { mileageAllowance } from "@/lib/sa105";
 
 const RECEIPTS_BUCKET = "receipts";
 
+/** Insert transaction rows; if the optional `recurring` column is missing, retry without it. */
+async function insertTx(supabase: any, rows: Record<string, unknown>[]) {
+  let res = await supabase.from("transactions").insert(rows);
+  if (res.error && /recurring/i.test(String(res.error.message ?? ""))) {
+    const stripped = rows.map((r) => { const { recurring, ...rest } = r as any; return rest; });
+    res = await supabase.from("transactions").insert(stripped);
+  }
+  if (res.error) throw new Error(res.error.message);
+}
+
 /** Add n months to a YYYY-MM-DD date, clamping to the end of the target month. */
 function addMonthsISO(dateStr: string, n: number): string {
   const [y, m, d] = dateStr.split("-").map(Number);
@@ -57,16 +67,9 @@ export async function createTransaction(formData: FormData) {
       receipt_url: i === 0 ? receiptUrl : null, // receipt only on the first entry
       recurring: true,
     }));
-    const { error } = await supabase.from("transactions").insert(rows);
-    if (error) throw new Error(error.message);
+    await insertTx(supabase, rows);
   } else {
-    const { error } = await supabase.from("transactions").insert({
-      ...base,
-      occurred_on: startDate,
-      receipt_url: receiptUrl,
-      recurring: false,
-    });
-    if (error) throw new Error(error.message);
+    await insertTx(supabase, [{ ...base, occurred_on: startDate, receipt_url: receiptUrl, recurring: false }]);
   }
 
   revalidatePath("/dashboard/transactions");
@@ -91,6 +94,29 @@ export async function logMileage(formData: FormData) {
   });
   if (error) throw new Error(error.message);
 
+  revalidatePath("/dashboard/transactions");
+}
+
+/** Edit an existing transaction. Writers only. */
+export async function updateTransaction(formData: FormData) {
+  const { orgId, role } = await requireSession();
+  if (!isWriterRole(role)) throw new Error("You don't have permission to edit entries.");
+  const supabase = createClient();
+  const id = String(formData.get("id"));
+  const amount = parseFloat(String(formData.get("amount") ?? "0"));
+  const { error } = await supabase
+    .from("transactions")
+    .update({
+      property_id: String(formData.get("property_id") ?? "") || null,
+      direction: String(formData.get("direction") ?? "expense"),
+      sa105_category: String(formData.get("sa105_category") ?? "") || null,
+      amount: isNaN(amount) ? 0 : amount,
+      occurred_on: String(formData.get("occurred_on") ?? "") || new Date().toISOString().slice(0, 10),
+      description: String(formData.get("description") ?? "") || null,
+    })
+    .eq("id", id)
+    .eq("org_id", orgId);
+  if (error) throw new Error(error.message);
   revalidatePath("/dashboard/transactions");
 }
 

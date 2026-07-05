@@ -19,6 +19,7 @@ export const SA105_CATEGORIES: Sa105Category[] = [
   { key: "other_property_income", label: "Other property income", direction: "income" },
   { key: "rent_rates_insurance", label: "Rent, rates, insurance, ground rents", direction: "expense" },
   { key: "repairs_maintenance", label: "Property repairs & maintenance", direction: "expense" },
+  { key: "replacing_domestic_items", label: "Replacement of domestic items (residential, like-for-like)", direction: "expense" },
   { key: "finance_costs", label: "Loan interest & other finance costs", direction: "expense", financeCost: true },
   { key: "legal_management_other", label: "Legal, management & other professional fees", direction: "expense" },
   { key: "services_provided", label: "Costs of services provided, incl. wages", direction: "expense" },

@@ -27,6 +27,9 @@ export const SA105_TO_HMRC: Record<string, { group: "income" | "expenses"; field
   other_property_income: { group: "income", field: "otherIncome" },
   rent_rates_insurance: { group: "expenses", field: "premisesRunningCosts" },
   repairs_maintenance: { group: "expenses", field: "repairsAndMaintenance" },
+  // Box 36: residential replacement-of-domestic-items relief. Deductible (unlike Section 24).
+  // Placed in the itemised "other" bucket pending accountant sign-off on the exact MTD field.
+  replacing_domestic_items: { group: "expenses", field: "other" },
   finance_costs: { group: "expenses", field: "residentialFinancialCost" },
   legal_management_other: { group: "expenses", field: "professionalFees" },
   services_provided: { group: "expenses", field: "costOfServices" },
