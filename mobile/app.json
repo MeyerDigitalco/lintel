@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Lintel",
+    "name": "Lintel Squared",
     "slug": "lintel",
     "version": "1.0.0",
     "scheme": "lintel",
@@ -19,8 +19,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.meyerdigital.lintel",
       "infoPlist": {
-        "NSCameraUsageDescription": "Lintel uses the camera to photograph receipts and document property maintenance.",
-        "NSPhotoLibraryUsageDescription": "Lintel attaches photos to expenses, documents and maintenance reports.",
+        "CFBundleDisplayName": "Lintel²",
+        "NSCameraUsageDescription": "Lintel Squared uses the camera to photograph receipts and document property maintenance.",
+        "NSPhotoLibraryUsageDescription": "Lintel Squared attaches photos to expenses, documents and maintenance reports.",
         "ITSAppUsesNonExemptEncryption": false
       }
     },
@@ -41,7 +42,7 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Allow Lintel to attach photos from your library."
+          "photosPermission": "Allow Lintel Squared to attach photos from your library."
         }
       ],
       "expo-notifications"
