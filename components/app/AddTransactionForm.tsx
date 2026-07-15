@@ -24,6 +24,9 @@ export function AddTransactionForm({
   const [date, setDate] = useState("");
   const [vendor, setVendor] = useState("");
   const [ocrState, setOcrState] = useState<"idle" | "scanning" | "done" | "error">("idle");
+  const [repeatMode, setRepeatMode] = useState<"none" | "forward" | "back">("none");
+  const [repeatFreq, setRepeatFreq] = useState("monthly");
+  const [repeatCount, setRepeatCount] = useState("12");
 
   async function handleReceipt(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -146,13 +149,42 @@ export function AddTransactionForm({
             </span>
           </label>
 
-          <label className="flex items-start gap-3 rounded-lintel border border-hairline bg-paper p-3 sm:col-span-2">
-            <input type="checkbox" name="recurring" className="mt-0.5 h-4 w-4 rounded border-hairline" />
-            <span>
-              <span className="block text-sm font-medium text-ink">Repeat monthly</span>
-              <span className="mt-0.5 block text-xs text-slate">Creates this entry and the next 11 months on the same day, so it recurs going forward. Each one is editable and deletable.</span>
-            </span>
-          </label>
+          <div className="rounded-lintel border border-hairline bg-paper p-3 sm:col-span-2">
+            <span className="mb-2 block text-sm font-medium text-ink">Repeat or backdate</span>
+            <div className="grid gap-3 sm:grid-cols-3">
+              <label className="block">
+                <span className="mb-1 block text-xs text-slate">Mode</span>
+                <select name="repeat_mode" value={repeatMode} onChange={(e) => setRepeatMode(e.target.value as any)} className={inputCls}>
+                  <option value="none">Just this entry</option>
+                  <option value="forward">Repeat forward (future)</option>
+                  <option value="back">Backdate (past)</option>
+                </select>
+              </label>
+              {repeatMode !== "none" && (
+                <>
+                  <label className="block">
+                    <span className="mb-1 block text-xs text-slate">Every</span>
+                    <select name="repeat_freq" value={repeatFreq} onChange={(e) => setRepeatFreq(e.target.value)} className={inputCls}>
+                      <option value="monthly">Month</option>
+                      <option value="quarterly">Quarter</option>
+                      <option value="yearly">Year</option>
+                    </select>
+                  </label>
+                  <label className="block">
+                    <span className="mb-1 block text-xs text-slate">How many</span>
+                    <input name="repeat_count" type="number" min="1" max="60" value={repeatCount} onChange={(e) => setRepeatCount(e.target.value)} className={inputCls} />
+                  </label>
+                </>
+              )}
+            </div>
+            <p className="mt-2 text-xs text-slate">
+              {repeatMode === "none"
+                ? "Creates a single entry on the date above."
+                : repeatMode === "forward"
+                ? `Creates ${repeatCount || 0} entries of the same amount going forward, one per ${repeatFreq === "yearly" ? "year" : repeatFreq === "quarterly" ? "quarter" : "month"}, starting on the date above.`
+                : `Backdates ${repeatCount || 0} entries of the same amount, one per ${repeatFreq === "yearly" ? "year" : repeatFreq === "quarterly" ? "quarter" : "month"}, working back from the date above. Each one is editable and deletable.`}
+            </p>
+          </div>
 
           <div className="flex gap-2 sm:col-span-2">
             <Button type="submit">Save</Button>

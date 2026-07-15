@@ -48,7 +48,14 @@ export async function createTransaction(formData: FormData) {
     }
   }
 
-  const recurring = formData.get("recurring") === "on";
+  // Repeat / backdate. Legacy `recurring=on` (mobile) still means forward 12 months.
+  const legacyRecurring = formData.get("recurring") === "on";
+  const mode = String(formData.get("repeat_mode") ?? "") || (legacyRecurring ? "forward" : "none");
+  const freq = String(formData.get("repeat_freq") ?? "monthly");
+  const stepMonths = freq === "yearly" ? 12 : freq === "quarterly" ? 3 : 1;
+  let count = parseInt(String(formData.get("repeat_count") ?? "12"), 10);
+  if (!isFinite(count) || count < 1) count = 1;
+  count = Math.min(count, 60); // safety cap
   const startDate = String(formData.get("occurred_on") ?? "") || new Date().toISOString().slice(0, 10);
   const base = {
     org_id: orgId,
@@ -59,12 +66,13 @@ export async function createTransaction(formData: FormData) {
     description: String(formData.get("description") ?? "") || null,
   };
 
-  if (recurring) {
-    // Create this month plus the next 11 months (a rolling year forward).
-    const rows = Array.from({ length: 12 }, (_, i) => ({
+  if (mode === "forward" || mode === "back") {
+    // Generate `count` entries from the anchor date, forwards or backwards.
+    const sign = mode === "back" ? -1 : 1;
+    const rows = Array.from({ length: count }, (_, i) => ({
       ...base,
-      occurred_on: addMonthsISO(startDate, i),
-      receipt_url: i === 0 ? receiptUrl : null, // receipt only on the first entry
+      occurred_on: addMonthsISO(startDate, sign * i * stepMonths),
+      receipt_url: i === 0 ? receiptUrl : null, // receipt only on the anchor entry
       recurring: true,
     }));
     await insertTx(supabase, rows);
