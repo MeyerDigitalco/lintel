@@ -11,6 +11,7 @@ import { COUNTRIES } from "@/lib/i18n/regions";
 import { LANGUAGES } from "@/lib/i18n/dictionaries";
 
 const FEATURES = [
+ { title: "Tenancy agreements, per region", body: "Draft the agreement itself, with every detail your region actually requires, from deposit schemes and How to Rent in England to Healthy Homes in New Zealand and Ejari in Dubai. Download as PDF or Word, or email it to the tenant." },
  { title: "Tax-ready record-keeping", body: "Income, expenses, receipts and mileage, organised and export-ready for your accountant or filing. SA105, Schedule E, VAT, ITR12 and more, by country." },
  { title: "Rent & arrears tracking", body: "Log rent due and received, generate receipts, and auto-flag arrears by age. No bank links, no card processing, your data stays simple and yours." },
  { title: "Compliance, on autopilot", body: "The right certificates for your country are auto-added to each property, with reminders at 60, 30 and 7 days before anything expires." },
@@ -26,6 +27,7 @@ const FAQ = [
  { q: "Which countries do you support?", a: `${COUNTRIES.length}+ countries across the UK, US, Europe, the Middle East, Africa, Asia and Oceania, each with the correct currency, tenancy rules, compliance items and tax framing.` },
  { q: "Is my data private?", a: "Yes. Every account is isolated with row-level security, and your portfolio data is never shared or sold." },
  { q: "What happens after 31 August 2026?", a: "We'll share simple pricing well before then. Nothing is charged automatically, and you'll always be able to export or delete your data." },
+ { q: "Are the tenancy agreements legally binding?", a: "They are professionally drafted against the law of your region and cite the statute they are built on, but they are a drafting tool and not legal advice. Some regions require an official prescribed form, and we tell you when yours does and link you to it. Have any agreement checked by a lawyer where you let before you rely on it." },
  { q: "Can my accountant get involved?", a: "Yes, invite them to a read-only seat with an accountant pack and export, so they see exactly what they need and nothing they shouldn't." },
 ];
 
@@ -85,7 +87,7 @@ export default function HomePage() {
      <h2 className="font-heading text-3xl font-semibold tracking-tight text-ink">Everything a landlord needs. Nothing they don&apos;t.</h2>
      <p className="mt-3 text-slate">One workspace replaces the spreadsheets, the folder of certificates, the chasing and the guesswork, and it speaks your jurisdiction, not a generic one.</p>
     </div>
-    <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
      {FEATURES.map((f) => (
       <Card key={f.title} className="h-full">
        <CardBody>
@@ -103,7 +105,7 @@ export default function HomePage() {
      <div>
       <h2 className="font-heading text-3xl font-semibold tracking-tight text-ink">Free until 31 August 2026. Everything switched on.</h2>
       <p className="mt-3 max-w-xl text-slate">
-       No tiers, no card, nothing to puzzle over. Voice assistant, tenant portal, maintenance, documents and reports, 
+       No tiers, no card, nothing to puzzle over. Tenancy agreements, voice assistant, tenant portal, maintenance, documents and reports, 
        every feature is on the moment you sign up, and completely free for everyone until 31 August 2026.
       </p>
       <div className="mt-6"><Link href="/signup"><Button>Get started, it&apos;s free</Button></Link></div>
@@ -112,7 +114,7 @@ export default function HomePage() {
       <CardBody>
        <p className="text-xs uppercase tracking-wide text-slate">Included free for everyone</p>
        <ul className="mt-3 space-y-2 text-sm text-ink">
-        {["Tax records, rent & arrears", "Compliance vault & reminders", "Voice assistant & receipt scanning", "Tenant portal & maintenance", "Reports, tasks & court-readiness", "iPhone & Android app"].map((x) => (
+        {["Tenancy agreements, PDF or Word", "Tax records, rent & arrears", "Compliance vault & reminders", "Voice assistant & receipt scanning", "Tenant portal & maintenance", "Reports, tasks & court-readiness", "iPhone & Android app"].map((x) => (
          <li key={x} className="flex items-center gap-2"><span className="text-mint">✓</span> {x}</li>
         ))}
        </ul>
