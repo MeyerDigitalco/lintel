@@ -8,14 +8,23 @@ import "server-only";
  * avoid pulling in the full @sendgrid/mail dependency for the scaffold.
  */
 
+export interface EmailAttachment {
+  /** Base64-encoded file content. */
+  content: string;
+  filename: string;
+  type: string;
+  disposition?: "attachment" | "inline";
+}
+
 interface SendEmailArgs {
   to: string;
   subject: string;
   html: string;
   text?: string;
+  attachments?: EmailAttachment[];
 }
 
-export async function sendEmail({ to, subject, html, text }: SendEmailArgs) {
+export async function sendEmail({ to, subject, html, text, attachments }: SendEmailArgs) {
   const apiKey = process.env.SENDGRID_API_KEY;
   if (!apiKey) {
     // In dev without a key, log instead of throwing so flows still work.
@@ -40,6 +49,16 @@ export async function sendEmail({ to, subject, html, text }: SendEmailArgs) {
         ...(text ? [{ type: "text/plain", value: text }] : []),
         { type: "text/html", value: html },
       ],
+      ...(attachments?.length
+        ? {
+            attachments: attachments.map((a) => ({
+              content: a.content,
+              filename: a.filename,
+              type: a.type,
+              disposition: a.disposition ?? "attachment",
+            })),
+          }
+        : {}),
     }),
   });
 

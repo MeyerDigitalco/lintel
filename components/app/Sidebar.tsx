@@ -19,6 +19,7 @@ const NAV = [
   { href: "/dashboard/maintenance", key: "nav.maintenance", writerOnly: true },
   { href: "/dashboard/tasks", key: "nav.tasks" },
   { href: "/dashboard/notice-generator", key: "nav.notice", writerOnly: true },
+  { href: "/dashboard/tenancy-agreement", key: "nav.agreement", writerOnly: true },
   { href: "/dashboard/compliance", key: "nav.compliance" },
   { href: "/dashboard/region", key: "nav.region" },
   { href: "/dashboard/documents", key: "nav.documents" },
