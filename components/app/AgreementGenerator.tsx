@@ -206,7 +206,7 @@ export function AgreementGenerator({
       <Card>
         <CardBody>
           <div className="mb-4 flex flex-wrap items-center gap-2">
-            <Badge tone="mint">{spec.documentTitle}</Badge>
+            <Badge tone="moss">{spec.documentTitle}</Badge>
             <Badge>{[spec.regionName, spec.countryName].filter(Boolean).join(", ")}</Badge>
             <Badge>Template {spec.version}</Badge>
           </div>

@@ -47,7 +47,7 @@ export default async function TenancyManage({ params }: { params: { id: string }
         <PageHeader
           title={`Manage tenancy, ${propertyLabel}`}
           subtitle="Court-readiness, tenant access, documents and messages."
-          action={portalOn ? <Badge tone="mint">Tenant portal on</Badge> : undefined}
+          action={portalOn ? <Badge tone="moss">Tenant portal on</Badge> : undefined}
         />
       </div>
 
@@ -88,7 +88,7 @@ export default async function TenancyManage({ params }: { params: { id: string }
             {members && members.length > 0 ? (
               <ul className="my-3 space-y-1 text-sm">
                 {members.map((m) => (
-                  <li key={m.user_id} className="flex justify-between rounded-lintel bg-paper px-3 py-2"><span className="text-ink">Tenant linked</span><Badge tone="mint">{m.role}</Badge></li>
+                  <li key={m.user_id} className="flex justify-between rounded-lintel bg-paper px-3 py-2"><span className="text-ink">Tenant linked</span><Badge tone="moss">{m.role}</Badge></li>
                 ))}
               </ul>
             ) : (<p className="my-3 text-sm text-slate">No tenant linked yet.</p>)}

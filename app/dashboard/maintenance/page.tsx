@@ -29,7 +29,7 @@ export default async function MaintenancePage() {
       <PageHeader
         title="Maintenance"
         subtitle="Triage repairs, assign contractors and track SLAs."
-        action={portalOn ? <Badge tone="mint">Maintenance portal on</Badge> : undefined}
+        action={portalOn ? <Badge tone="moss">Maintenance portal on</Badge> : undefined}
       />
 
       {!portalOn && (

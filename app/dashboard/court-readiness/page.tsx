@@ -7,7 +7,7 @@ import { tenancyReadiness } from "@/lib/court-readiness-server";
 
 export const dynamic = "force-dynamic";
 
-const ragTone = { green: "mint", amber: "amber", red: "red" } as const;
+const ragTone = { green: "moss", amber: "amber", red: "red" } as const;
 const ragLabel = { green: "Strong", amber: "Needs attention", red: "At risk" } as const;
 
 export default async function CourtReadinessPage() {

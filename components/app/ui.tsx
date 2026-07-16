@@ -73,14 +73,14 @@ export function Badge({
   tone = "default",
 }: {
   children: React.ReactNode;
-  tone?: "default" | "evergreen" | "amber" | "red" | "mint";
+  tone?: "default" | "evergreen" | "amber" | "red" | "moss";
 }) {
   const cls = {
     default: "bg-ink/5 text-slate",
     evergreen: "bg-evergreen/10 text-evergreen",
     amber: "bg-amber/10 text-amber",
     red: "bg-red/10 text-red",
-    mint: "bg-mint/15 text-evergreen",
+    moss: "bg-moss/15 text-evergreen",
   }[tone];
   return (
     <span className={cn("inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium", cls)}>

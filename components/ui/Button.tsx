@@ -1,6 +1,6 @@
 import { cn } from "@/lib/cn";
 
-type Variant = "primary" | "mint" | "ghost" | "outline";
+type Variant = "primary" | "moss" | "ghost" | "outline";
 type Size = "sm" | "md" | "lg";
 
 const base =
@@ -8,7 +8,7 @@ const base =
 
 const variants: Record<Variant, string> = {
   primary: "bg-evergreen text-paper hover:bg-evergreen/90",
-  mint: "bg-mint text-paper hover:bg-mint/90",
+  moss: "bg-moss text-paper hover:bg-moss/90",
   ghost: "text-ink hover:bg-ink/5",
   outline: "border border-hairline bg-surface text-ink hover:bg-ink/5",
 };

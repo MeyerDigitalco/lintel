@@ -48,7 +48,7 @@ export default async function PortalRent() {
                   </div>
                   <div className="text-right">
                     {r.status === "confirmed" ? (
-                      <Badge tone="mint">Confirmed</Badge>
+                      <Badge tone="moss">Confirmed</Badge>
                     ) : r.status === "marked" ? (
                       <Badge tone="amber">Awaiting confirmation</Badge>
                     ) : overdue ? (

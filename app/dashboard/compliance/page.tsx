@@ -14,7 +14,7 @@ function statusBadge(days: number | null) {
   if (days <= 7) return <Badge tone="red">{days}d left</Badge>;
   if (days <= 30) return <Badge tone="amber">{days}d left</Badge>;
   if (days <= 60) return <Badge tone="amber">{days}d left</Badge>;
-  return <Badge tone="mint">Valid</Badge>;
+  return <Badge tone="moss">Valid</Badge>;
 }
 
 export default async function CompliancePage() {

@@ -1,10 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Inter_Tight } from "next/font/google";
+import { Inter, Inter_Tight, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap",
+});
+
+/**
+ * Marketing display face. Inter and Inter Tight stay for the dashboard, where a
+ * serif would hurt density and legibility at small sizes.
+ */
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  variable: "--font-instrument-serif",
+  weight: ["400"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -52,7 +64,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en-GB" className={`${inter.variable} ${interTight.variable}`}>
+    <html lang="en-GB" className={`${inter.variable} ${interTight.variable} ${instrumentSerif.variable}`}>
       <body className="font-sans antialiased">{children}<CookieConsent /></body>
     </html>
   );

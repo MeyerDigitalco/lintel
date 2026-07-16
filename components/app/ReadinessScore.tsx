@@ -28,7 +28,7 @@ export function ReadinessScore({ result }: { result: ReadinessResult }) {
           <h2 className="font-heading text-base font-semibold tracking-tight">
             Court-readiness
           </h2>
-          <Badge tone={result.rag === "green" ? "mint" : result.rag === "amber" ? "amber" : "red"}>
+          <Badge tone={result.rag === "green" ? "moss" : result.rag === "amber" ? "amber" : "red"}>
             {result.rag === "green" ? "Strong" : result.rag === "amber" ? "Needs attention" : "At risk"}
           </Badge>
         </div>

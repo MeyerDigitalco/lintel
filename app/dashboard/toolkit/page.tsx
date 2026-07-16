@@ -29,7 +29,7 @@ export default async function ToolkitPage() {
       <PageHeader
         title="Tenancy toolkit"
         subtitle="Jurisdiction-correct notices and agreements. Template-assisted, not legal advice."
-        action={<Badge tone="mint">{rules.name}</Badge>}
+        action={<Badge tone="moss">{rules.name}</Badge>}
       />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

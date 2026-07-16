@@ -134,7 +134,7 @@ export function AddTransactionForm({
             <span className="mb-1 flex items-center gap-2 text-sm text-ink">
               Receipt (photo or PDF)
               {ocrState === "scanning" && <Badge tone="amber">Scanning…</Badge>}
-              {ocrState === "done" && <Badge tone="mint">Fields pre-filled</Badge>}
+              {ocrState === "done" && <Badge tone="moss">Fields pre-filled</Badge>}
               {ocrState === "error" && <Badge tone="red">OCR failed, enter manually</Badge>}
             </span>
             <input

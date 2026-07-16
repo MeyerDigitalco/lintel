@@ -12,22 +12,22 @@ const UPDATED = "27 June 2026";
 
 export default function TermsPage() {
  return (
-  <div className="min-h-screen bg-paper">
-   <header className="border-b border-hairline">
+  <div className="min-h-screen bg-bone">
+   <header className="border-b border-sepia">
     <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-5">
      <Link href="/"><Logo /></Link>
-     <Link href="/" className="text-sm text-slate hover:text-ink">← Home</Link>
+     <Link href="/" className="text-sm text-umber hover:text-char">← Home</Link>
     </div>
    </header>
    <main className="mx-auto max-w-3xl px-5 py-12">
-    <h1 className="font-heading text-3xl font-semibold tracking-tight text-ink">Terms of Use</h1>
-    <p className="mt-2 text-sm text-slate">Last updated: {UPDATED}</p>
+    <h1 className="font-display text-3xl font-semibold tracking-tight text-char">Terms of Use</h1>
+    <p className="mt-2 text-sm text-umber">Last updated: {UPDATED}</p>
 
-    <div className="mt-8 space-y-6 text-sm leading-6 [&_h2]:mt-8 [&_h2]:font-heading [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-ink [&_p]:text-slate [&_li]:text-slate [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1">
+    <div className="mt-8 space-y-6 text-sm leading-6 [&_h2]:mt-8 [&_h2]:font-display [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-char [&_p]:text-umber [&_li]:text-umber [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1">
      <p>These Terms of Use (&quot;Terms&quot;) govern your access to and use of Lintel (the &quot;Service&quot;). By creating an account or using the Service, you agree to these Terms. If you do not agree, do not use the Service.</p>
 
      <h2>Who we are</h2>
-     <p>The Service is provided by <strong>Blake Residential Limited</strong>, trading as Lintel Squared, registered in England and Wales, registered office 20-22 Wenlock Road, London, N1 7GU. Registered with the Information Commissioner&apos;s Office under reference <strong>ZC043378</strong>. Contact: <a className="text-evergreen hover:underline" href="mailto:support@lintelsquared.com">support@lintelsquared.com</a>.</p>
+     <p>The Service is provided by <strong>Blake Residential Limited</strong>, trading as Lintel Squared, registered in England and Wales, registered office 20-22 Wenlock Road, London, N1 7GU. Registered with the Information Commissioner&apos;s Office under reference <strong>ZC043378</strong>. Contact: <a className="text-char hover:underline" href="mailto:support@lintelsquared.com">support@lintelsquared.com</a>.</p>
 
      <h2>The Service</h2>
      <p>Lintel is software that helps landlords manage properties, tenancies, rent, compliance, documents and records, with region-specific guidance. It is a tool only and does not provide legal, tax, financial or other professional advice.</p>
@@ -81,9 +81,9 @@ export default function TermsPage() {
      <p>These Terms are governed by the laws of England and Wales. The courts of England and Wales have exclusive jurisdiction over any dispute arising out of or in connection with them.</p>
 
      <h2>Contact</h2>
-     <p>Questions: <a className="text-evergreen hover:underline" href="mailto:support@lintelsquared.com">support@lintelsquared.com</a>.</p>
+     <p>Questions: <a className="text-char hover:underline" href="mailto:support@lintelsquared.com">support@lintelsquared.com</a>.</p>
 
-     <p className="text-xs text-slate">These Terms are a starting template and should be reviewed by a qualified lawyer for your jurisdiction and business structure before launch.</p>
+     <p className="text-xs text-umber">These Terms are a starting template and should be reviewed by a qualified lawyer for your jurisdiction and business structure before launch.</p>
     </div>
    </main>
    <SiteFooter />

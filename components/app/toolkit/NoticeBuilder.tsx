@@ -220,7 +220,7 @@ export function NoticeBuilder({
               <Button onClick={() => handleSave(false)} variant="outline">Save draft</Button>
               <Button onClick={() => handleSave(true)}>Save & mark served</Button>
               {saved !== "idle" && (
-                <Badge tone="mint">{saved === "served" ? "Saved as served" : "Draft saved"}</Badge>
+                <Badge tone="moss">{saved === "served" ? "Saved as served" : "Draft saved"}</Badge>
               )}
             </div>
           </CardBody>

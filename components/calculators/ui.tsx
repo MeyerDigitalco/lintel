@@ -16,17 +16,17 @@ export function Field({
 } & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <label className="block">
-      <span className="mb-1 block text-sm text-ink">{label}</span>
-      <span className="flex items-center rounded-lintel border border-hairline bg-surface focus-within:ring-2 focus-within:ring-evergreen/30">
-        {prefix && <span className="pl-3 text-sm text-slate">{prefix}</span>}
+      <span className="mb-1 block text-sm text-char">{label}</span>
+      <span className="flex items-center rounded-edge border border-sepia bg-surface focus-within:ring-2 focus-within:ring-char/30">
+        {prefix && <span className="pl-3 text-sm text-umber">{prefix}</span>}
         <input
           className="h-11 w-full bg-transparent px-3 text-sm tabular-nums outline-none"
           inputMode="decimal"
           {...props}
         />
-        {suffix && <span className="pr-3 text-sm text-slate">{suffix}</span>}
+        {suffix && <span className="pr-3 text-sm text-umber">{suffix}</span>}
       </span>
-      {help && <span className="mt-1 block text-xs text-slate">{help}</span>}
+      {help && <span className="mt-1 block text-xs text-umber">{help}</span>}
     </label>
   );
 }
@@ -41,9 +41,9 @@ export function Select({
 } & React.SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <label className="block">
-      <span className="mb-1 block text-sm text-ink">{label}</span>
+      <span className="mb-1 block text-sm text-char">{label}</span>
       <select
-        className="h-11 w-full rounded-lintel border border-hairline bg-surface px-3 text-sm outline-none focus:ring-2 focus:ring-evergreen/30"
+        className="h-11 w-full rounded-edge border border-sepia bg-surface px-3 text-sm outline-none focus:ring-2 focus:ring-char/30"
         {...props}
       >
         {options.map((o) => (
@@ -69,12 +69,12 @@ export function Toggle({
     <button
       type="button"
       onClick={() => onChange(!checked)}
-      className="flex items-center gap-2 text-sm text-ink"
+      className="flex items-center gap-2 text-sm text-char"
     >
       <span
         className={cn(
           "flex h-5 w-9 items-center rounded-full p-0.5 transition-colors",
-          checked ? "bg-evergreen" : "bg-hairline"
+          checked ? "bg-char" : "bg-hairline"
         )}
       >
         <span
@@ -99,14 +99,14 @@ export function Result({
   emphasis?: boolean;
 }) {
   return (
-    <div className="flex items-baseline justify-between border-b border-hairline py-2 last:border-0">
-      <span className="text-sm text-slate">{label}</span>
+    <div className="flex items-baseline justify-between border-b border-sepia py-2 last:border-0">
+      <span className="text-sm text-umber">{label}</span>
       <span
         className={cn(
           "tabular-nums",
           emphasis
-            ? "font-heading text-xl font-semibold text-evergreen"
-            : "text-sm text-ink"
+            ? "font-heading text-xl font-semibold text-char"
+            : "text-sm text-char"
         )}
       >
         {value}

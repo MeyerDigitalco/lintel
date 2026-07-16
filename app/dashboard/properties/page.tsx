@@ -85,7 +85,7 @@ export default async function PropertiesPage() {
                     <p className="mt-1 text-sm text-slate">{[p.city, p.postcode].filter(Boolean).join(", ") || "No address"}</p>
 
                     <div className="mt-3 flex flex-wrap items-center gap-2">
-                      <Badge tone="mint">{j.name}</Badge>
+                      <Badge tone="moss">{j.name}</Badge>
                       <Badge tone={m.compliance_status.tone}>{m.compliance_status.label}</Badge>
                       <Badge tone={m.occupied ? "evergreen" : "default"}>{m.occupied ? "Rented" : "Unoccupied"}</Badge>
                     </div>

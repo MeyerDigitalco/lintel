@@ -82,7 +82,7 @@ export default async function TaxPage() {
                       : "Below the £20,000 band; keep digital records ready."}
                   </p>
                 </div>
-                <Badge tone={mtd.mandated ? "amber" : "mint"}>
+                <Badge tone={mtd.mandated ? "amber" : "moss"}>
                   {mtd.mandated ? `From ${mtd.from}` : "Not yet mandated"}
                 </Badge>
               </div>
@@ -100,7 +100,7 @@ export default async function TaxPage() {
                   expenses organised and export-ready for {ruleset.taxLabel}.
                 </p>
               </div>
-              <Badge tone="mint">{ruleset.countryName}</Badge>
+              <Badge tone="moss">{ruleset.countryName}</Badge>
             </div>
           )}
         </CardBody>

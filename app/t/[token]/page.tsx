@@ -105,7 +105,7 @@ export default async function TokenTenantPage({ params }: { params: { token: str
             <CardBody>
               <div className="flex items-center justify-between">
                 <h2 className="font-heading text-sm font-semibold tracking-tight">Your home, safety &amp; compliance</h2>
-                <Badge tone={readiness.rag === "green" ? "mint" : readiness.rag === "amber" ? "amber" : "red"}>
+                <Badge tone={readiness.rag === "green" ? "moss" : readiness.rag === "amber" ? "amber" : "red"}>
                   {readiness.rag === "green" ? "All in order" : "Being sorted"}
                 </Badge>
               </div>
@@ -143,7 +143,7 @@ export default async function TokenTenantPage({ params }: { params: { token: str
                       <tr key={i} className="border-b border-hairline last:border-0">
                         <td className="py-1.5">{r.period}</td>
                         <td className="py-1.5 tabular-nums">{gbp(Number(r.amount_due), { decimals: true })}</td>
-                        <td className="py-1.5 text-right">{r.status === "confirmed" ? <Badge tone="mint">Paid</Badge> : overdue ? <Badge tone="red">Overdue</Badge> : <Badge tone="amber">Due</Badge>}</td>
+                        <td className="py-1.5 text-right">{r.status === "confirmed" ? <Badge tone="moss">Paid</Badge> : overdue ? <Badge tone="red">Overdue</Badge> : <Badge tone="amber">Due</Badge>}</td>
                       </tr>
                     );
                   })}

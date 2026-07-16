@@ -57,7 +57,7 @@ export default async function PropertyDetail({ params }: { params: { id: string 
         <PageHeader
           title={property.label}
           subtitle={[property.address_line1, property.city, property.postcode].filter(Boolean).join(", ")}
-          action={<Badge tone="mint">{j.name}</Badge>}
+          action={<Badge tone="moss">{j.name}</Badge>}
         />
       </div>
 
@@ -167,7 +167,7 @@ export default async function PropertyDetail({ params }: { params: { id: string 
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
-                      {tn.status ? <Badge tone={tn.status === "active" ? "mint" : "default"}>{tn.status}</Badge> : null}
+                      {tn.status ? <Badge tone={tn.status === "active" ? "moss" : "default"}>{tn.status}</Badge> : null}
                       <Link href={`/dashboard/tenancies/${tn.id}`} className="text-sm text-evergreen hover:underline">Manage</Link>
                     </div>
                   </li>

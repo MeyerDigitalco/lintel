@@ -25,14 +25,14 @@ export function CookieConsent() {
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-50 px-3 pb-3">
-      <div className="mx-auto flex max-w-3xl flex-col items-start gap-3 rounded-lintel border border-hairline bg-surface p-4 shadow-card sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-slate">
+      <div className="mx-auto flex max-w-3xl flex-col items-start gap-3 rounded-edge border border-sepia bg-white p-4 shadow-card sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-umber">
           We use essential cookies to keep you signed in and remember preferences like language. See our{" "}
-          <Link href="/privacy" className="text-evergreen hover:underline">Privacy Policy</Link>.
+          <Link href="/privacy" className="text-clay hover:underline">Privacy Policy</Link>.
         </p>
         <button
           onClick={accept}
-          className="shrink-0 rounded-lintel bg-evergreen px-4 py-2 text-sm font-medium text-paper hover:opacity-90"
+          className="shrink-0 rounded-edge bg-char px-4 py-2 text-sm font-medium text-bone transition-colors hover:bg-clay"
         >
           Got it
         </button>

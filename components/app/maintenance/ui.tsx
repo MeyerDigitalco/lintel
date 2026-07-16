@@ -5,7 +5,7 @@ import { fmtDate } from "@/lib/dates";
 export function StatusBadge({ status }: { status: string }) {
   const tone =
     status === "completed" || status === "closed"
-      ? "mint"
+      ? "moss"
       : status === "raised"
         ? "amber"
         : "default";
@@ -20,7 +20,7 @@ export function SlaBadge({
   status: string;
 }) {
   const state = slaState(dueAt, status as RequestStatus);
-  if (state === "done") return <Badge tone="mint">Resolved</Badge>;
+  if (state === "done") return <Badge tone="moss">Resolved</Badge>;
   if (state === "breached") return <Badge tone="red">SLA breached</Badge>;
   if (state === "due_soon") return <Badge tone="amber">Due soon</Badge>;
   return <Badge>On track</Badge>;
@@ -49,7 +49,7 @@ export function Timeline({ events }: { events: TimelineEvent[] }) {
             {e.kind === "status_change" && e.new_status && (
               <Badge>{humanStatus(e.new_status)}</Badge>
             )}
-            {e.kind === "photo" && <Badge tone="mint">Photo</Badge>}
+            {e.kind === "photo" && <Badge tone="moss">Photo</Badge>}
             <span className="text-xs text-slate">{fmtDate(e.created_at)}</span>
           </div>
           {e.body && <p className="mt-1 text-sm text-ink">{e.body}</p>}

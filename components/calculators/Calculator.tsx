@@ -38,7 +38,7 @@ export function Calculator({ kind }: { kind: CalcKind }) {
     <Card>
       <CardBody>
         {renderCalculator(kind)}
-        <p className="mt-6 border-t border-hairline pt-4 text-xs text-slate">
+        <p className="mt-6 border-t border-sepia pt-4 text-xs text-umber">
           Indicative estimate only, not tax, legal or financial advice. Rates
           for the 2025/26 tax year. Verify with a qualified professional.
         </p>
@@ -278,7 +278,7 @@ function Grid({ children }: { children: React.ReactNode }) {
 }
 function Results({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-lintel bg-paper p-4">
+    <div className="rounded-edge bg-bone p-4">
       <div className="space-y-1">{children}</div>
     </div>
   );

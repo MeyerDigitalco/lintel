@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 
 const STATUSES = ["all", "draft", "sent", "viewed", "overdue", "partial", "paid", "void"];
 const nextStatus: Record<string, string> = { draft: "sent", sent: "paid", viewed: "paid", overdue: "paid", partial: "paid" };
-const tone = (s: string) => (s === "paid" ? "mint" : s === "overdue" ? "red" : s === "void" ? "default" : "amber");
+const tone = (s: string) => (s === "paid" ? "moss" : s === "overdue" ? "red" : s === "void" ? "default" : "amber");
 
 export default async function InvoicesPage({
   searchParams,

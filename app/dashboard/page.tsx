@@ -87,7 +87,7 @@ export default async function DashboardOverview() {
           <CardBody>
             <div className="flex items-center justify-between">
               <h2 className="font-heading text-base font-semibold tracking-tight">{t("dash.getting_started")}</h2>
-              <Badge tone="mint">{pct}% complete</Badge>
+              <Badge tone="moss">{pct}% complete</Badge>
             </div>
             <p className="mt-1 text-sm text-slate">
               A few minutes now saves hours later, finish setting up your portfolio.
@@ -127,7 +127,7 @@ export default async function DashboardOverview() {
               <>
                 <div className="flex items-center justify-between">
                   <h2 className="font-heading text-base font-semibold tracking-tight">MTD for Income Tax</h2>
-                  <Badge tone={mtd.mandated ? "amber" : "mint"}>{mtd.mandated ? `From ${mtd.from}` : "Not yet mandated"}</Badge>
+                  <Badge tone={mtd.mandated ? "amber" : "moss"}>{mtd.mandated ? `From ${mtd.from}` : "Not yet mandated"}</Badge>
                 </div>
                 <p className="mt-3 text-sm text-slate">
                   Based on {gbp(income)} property income this year.{" "}
@@ -139,7 +139,7 @@ export default async function DashboardOverview() {
               <>
                 <div className="flex items-center justify-between">
                   <h2 className="font-heading text-base font-semibold tracking-tight">Tax records</h2>
-                  <Badge tone="mint">{TAX_AUTHORITY[country] ?? "Tax authority"}</Badge>
+                  <Badge tone="moss">{TAX_AUTHORITY[country] ?? "Tax authority"}</Badge>
                 </div>
                 <p className="mt-3 text-sm text-slate">
                   Based on {gbp(income)} property income this year. We keep your records ready for {ruleset.taxLabel}.

@@ -12,36 +12,36 @@ const UPDATED = "30 June 2026 · Trial Period Edition";
 
 export default function PrivacyPage() {
  return (
-  <div className="min-h-screen bg-paper">
-   <header className="border-b border-hairline">
+  <div className="min-h-screen bg-bone">
+   <header className="border-b border-sepia">
     <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-5">
      <Link href="/"><Logo /></Link>
-     <Link href="/" className="text-sm text-slate hover:text-ink">← Home</Link>
+     <Link href="/" className="text-sm text-umber hover:text-char">← Home</Link>
     </div>
    </header>
 
    <main className="mx-auto max-w-3xl px-5 py-12">
-    <h1 className="font-heading text-3xl font-semibold tracking-tight text-ink">Privacy Statement</h1>
-    <p className="mt-2 text-sm text-slate">Last updated: {UPDATED}</p>
+    <h1 className="font-display text-3xl font-semibold tracking-tight text-char">Privacy Statement</h1>
+    <p className="mt-2 text-sm text-umber">Last updated: {UPDATED}</p>
 
-    <div className="mt-6 rounded-lintel border border-evergreen/20 bg-evergreen/5 p-4 text-sm text-ink">
+    <div className="mt-6 rounded-edge border border-clay/25 bg-clay/5 p-4 text-sm text-char">
      Lintel Squared² is currently in a free trial period. This statement reflects what we collect and how we use it during
      the trial. We will update it before any payment processing begins, and will notify trial users by email of any material change.
     </div>
 
-    <div className="mt-8 space-y-6 text-sm leading-6 [&_h2]:mt-8 [&_h2]:font-heading [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-ink [&_h3]:mt-4 [&_h3]:font-semibold [&_h3]:text-ink [&_p]:text-slate [&_li]:text-slate [&_ul]:mt-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1">
+    <div className="mt-8 space-y-6 text-sm leading-6 [&_h2]:mt-8 [&_h2]:font-display [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-char [&_h3]:mt-4 [&_h3]:font-semibold [&_h3]:text-char [&_p]:text-umber [&_li]:text-umber [&_ul]:mt-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1">
 
      <section>
       <h2>1. Who We Are</h2>
-      <div className="mt-3 overflow-hidden rounded-lintel border border-hairline">
+      <div className="mt-3 overflow-hidden rounded-edge border border-sepia">
        <table className="w-full text-sm">
-        <tbody className="[&_td]:border-b [&_td]:border-hairline [&_td]:px-3 [&_td]:py-2 [&_tr:last-child_td]:border-0">
-         <tr><td className="font-medium text-ink">Data controller</td><td className="text-slate">Blake Residential Limited</td></tr>
-         <tr><td className="font-medium text-ink">Registered address</td><td className="text-slate">20-22 Wenlock Road, London, N1 7GU</td></tr>
-         <tr><td className="font-medium text-ink">Trading as</td><td className="text-slate">Lintel Squared²</td></tr>
-         <tr><td className="font-medium text-ink">ICO registration reference</td><td className="text-slate">ZC043378</td></tr>
-         <tr><td className="font-medium text-ink">Website</td><td className="text-slate">lintelsquared.com / lintelsquared.co.uk</td></tr>
-         <tr><td className="font-medium text-ink">Contact</td><td className="text-slate"><a className="text-evergreen hover:underline" href="mailto:privacy@lintelsquared.com">privacy@lintelsquared.com</a></td></tr>
+        <tbody className="[&_td]:border-b [&_td]:border-sepia [&_td]:px-3 [&_td]:py-2 [&_tr:last-child_td]:border-0">
+         <tr><td className="font-medium text-char">Data controller</td><td className="text-umber">Blake Residential Limited</td></tr>
+         <tr><td className="font-medium text-char">Registered address</td><td className="text-umber">20-22 Wenlock Road, London, N1 7GU</td></tr>
+         <tr><td className="font-medium text-char">Trading as</td><td className="text-umber">Lintel Squared²</td></tr>
+         <tr><td className="font-medium text-char">ICO registration reference</td><td className="text-umber">ZC043378</td></tr>
+         <tr><td className="font-medium text-char">Website</td><td className="text-umber">lintelsquared.com / lintelsquared.co.uk</td></tr>
+         <tr><td className="font-medium text-char">Contact</td><td className="text-umber"><a className="text-char hover:underline" href="mailto:privacy@lintelsquared.com">privacy@lintelsquared.com</a></td></tr>
         </tbody>
        </table>
       </div>
@@ -154,7 +154,7 @@ export default function PrivacyPage() {
        <li><strong>Portability</strong>: request your data in a structured, commonly used format</li>
        <li><strong>Objection</strong>: object to processing based on legitimate interests</li>
       </ul>
-      <p>To exercise any of these rights, contact us at <a className="text-evergreen hover:underline" href="mailto:privacy@lintelsquared.com">privacy@lintelsquared.com</a>. We will respond within one calendar month.</p>
+      <p>To exercise any of these rights, contact us at <a className="text-char hover:underline" href="mailto:privacy@lintelsquared.com">privacy@lintelsquared.com</a>. We will respond within one calendar month.</p>
       <p>If you are unhappy with how we have handled your data, you have the right to complain to the Information Commissioner&apos;s Office (ICO) at ico.org.uk or by calling 0303 123 1113.</p>
      </section>
 
@@ -180,7 +180,7 @@ export default function PrivacyPage() {
       <p>This is a trial-stage statement, written to be honest about where Lintel Squared² is today rather than describing features or processes that are not yet live. If anything here is unclear, or you would like more detail on any point, please contact us directly.</p>
      </section>
 
-     <p className="border-t border-hairline pt-4 text-xs text-slate">Lintel Squared² · lintelsquared.com · Blake Residential Limited · ICO ZC043378 · June 2026</p>
+     <p className="border-t border-sepia pt-4 text-xs text-umber">Lintel Squared² · lintelsquared.com · Blake Residential Limited · ICO ZC043378 · June 2026</p>
     </div>
    </main>
    <SiteFooter />

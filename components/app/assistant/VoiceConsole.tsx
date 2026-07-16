@@ -137,7 +137,7 @@ export function VoiceConsole() {
           <div className="flex items-center gap-2">
             <Button
               onClick={listening ? stopListening : startListening}
-              variant={listening ? "mint" : "primary"}
+              variant={listening ? "moss" : "primary"}
             >
               {listening ? "Listening… tap to stop" : "Speak"}
             </Button>
@@ -176,7 +176,7 @@ export function VoiceConsole() {
           <CardBody>
             <div className="flex items-center justify-between">
               <h3 className="font-heading text-sm font-semibold tracking-tight">Assistant</h3>
-              <Badge tone="mint">AI</Badge>
+              <Badge tone="moss">AI</Badge>
             </div>
             {asking ? (
               <p className="mt-3 text-sm text-slate">Thinking…</p>
@@ -269,7 +269,7 @@ export function VoiceConsole() {
       )}
 
       {saved && (
-        <Card className="border-mint/40">
+        <Card className="border-moss/40">
           <CardBody>
             <p className="text-sm text-evergreen">{saved}</p>
           </CardBody>

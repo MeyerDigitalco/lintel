@@ -47,11 +47,11 @@ export default async function BillingPage({
       <PageHeader
         title="Plan & add-ons"
         subtitle={stripeConfigured ? "Manage your subscription and add-ons." : "Switch features on or off. Changes apply immediately."}
-        action={<Badge tone="mint">{money(monthly)}/mo</Badge>}
+        action={<Badge tone="moss">{money(monthly)}/mo</Badge>}
       />
 
       {sub?.status === "trialing" && (
-        <Card className="border-mint/40">
+        <Card className="border-moss/40">
           <CardBody>
             <p className="text-sm text-evergreen">
               You&apos;re on your free trial, every add-on is on{sub.trial_ends_at ? ` until ${fmtDate(sub.trial_ends_at)}` : ""}.
@@ -62,7 +62,7 @@ export default async function BillingPage({
       )}
 
       {searchParams?.checkout === "success" && (
-        <Card className="border-mint/40">
+        <Card className="border-moss/40">
           <CardBody><p className="text-sm text-evergreen">Subscription started, it can take a few seconds for add-ons to switch on.</p></CardBody>
         </Card>
       )}
@@ -81,7 +81,7 @@ export default async function BillingPage({
             </div>
             <div className="text-right">
               <p className="font-heading text-lg font-semibold tnum">{money(localPrice("core", currency))}<span className="text-xs font-normal text-slate">/mo</span></p>
-              <Badge tone="mint">Included</Badge>
+              <Badge tone="moss">Included</Badge>
             </div>
           </div>
           {sub && (
@@ -146,7 +146,7 @@ export default async function BillingPage({
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
                           <h3 className="font-heading text-sm font-semibold tracking-tight">{PLAN[f].label}</h3>
-                          {on ? <Badge tone="mint">On</Badge> : <Badge>Off</Badge>}
+                          {on ? <Badge tone="moss">On</Badge> : <Badge>Off</Badge>}
                         </div>
                         <p className="mt-1 text-xs text-slate">{BLURB[f]}</p>
                       </div>

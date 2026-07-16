@@ -14,7 +14,7 @@ import { translate } from "@/lib/i18n/dictionaries";
 
 export const dynamic = "force-dynamic";
 
-const STATUS_TONE: Record<DocStatusKey, "default" | "mint" | "amber" | "red" | "evergreen"> = {
+const STATUS_TONE: Record<DocStatusKey, "default" | "moss" | "amber" | "red" | "evergreen"> = {
   valid: "evergreen", expiring: "amber", expired: "red", filed: "default",
 };
 
@@ -76,7 +76,7 @@ export default async function DocumentsPage({
                   <div className="flex items-start justify-between gap-2">
                     <span className="text-sm font-medium text-ink">{d.label}</span>
                     <div className="flex items-center gap-1">
-                      {(d as any).visible_to_tenant ? <Badge tone="mint">Tenant</Badge> : null}
+                      {(d as any).visible_to_tenant ? <Badge tone="moss">Tenant</Badge> : null}
                       <Badge tone={STATUS_TONE[st.key]}>{st.label}</Badge>
                     </div>
                   </div>

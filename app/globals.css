@@ -5,7 +5,14 @@
 :root {
   --ink: #0e141f;
   --evergreen: #16233a;
-  --mint: #3b82f6;
+  --moss: #3d6b4f;
+
+  /* Editorial palette, public marketing site only. */
+  --char: #14130f;
+  --clay: #8a3324;
+  --bone: #faf8f3;
+  --sepia: #e3ddd0;
+  --umber: #4a4842;
   --paper: #f6f8fb;
   --surface: #ffffff;
   --slate: #5a6573;
@@ -41,6 +48,19 @@
 }
 
 @layer components {
+  /* Marketing display type. Instrument Serif runs large and light, so it wants
+     tighter tracking and a shorter leading than the sans stack. */
+  .display {
+    @apply font-display tracking-tight;
+    font-weight: 400;
+    line-height: 1.02;
+  }
+
+  /* A rule, not a card. The editorial layout separates with lines. */
+  .rule {
+    @apply border-t border-sepia;
+  }
+
   .card {
     @apply rounded-lintel border border-hairline bg-surface;
   }

@@ -92,7 +92,7 @@ export default async function AccountantPage() {
               <ul className="my-3 space-y-1 text-sm">
                 {accountants.map((a) => (
                   <li key={a.user_id} className="flex items-center justify-between rounded-lintel bg-paper px-3 py-2">
-                    <span className="text-ink">Accountant linked <Badge tone="mint">read-only</Badge></span>
+                    <span className="text-ink">Accountant linked <Badge tone="moss">read-only</Badge></span>
                     <form action={revokeAccountant}>
                       <input type="hidden" name="user_id" value={a.user_id} />
                       <button type="submit" className="text-xs text-red hover:underline">Revoke</button>

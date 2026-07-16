@@ -14,7 +14,7 @@ export function Topbar({
     <header className="flex h-14 items-center justify-between border-b border-hairline bg-paper/80 px-5 backdrop-blur">
       <div className="flex items-center gap-2 text-sm text-slate">
         {orgName && <span className="font-medium text-ink">{orgName}</span>}
-        {regionName && <Badge tone="mint">{regionName}</Badge>}
+        {regionName && <Badge tone="moss">{regionName}</Badge>}
       </div>
       <div className="flex items-center gap-4">
         <span className="hidden text-sm text-slate sm:block">{email}</span>

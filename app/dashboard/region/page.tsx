@@ -16,7 +16,7 @@ export default async function RegionRulesPage() {
       <PageHeader
         title="Region rules"
         subtitle={`${r.subregionName ? `${r.subregionName}, ` : ""}${r.countryName}, how Lintel tailors your account.`}
-        action={<Badge tone="mint">{cur?.symbol} {currency}</Badge>}
+        action={<Badge tone="moss">{cur?.symbol} {currency}</Badge>}
       />
 
       <Card>
@@ -26,7 +26,7 @@ export default async function RegionRulesPage() {
           <div className="mt-3 flex flex-wrap gap-2">
             <Badge>{r.tenancyTerm}</Badge>
             <Badge>{r.depositTerm}</Badge>
-            <Badge tone="mint">{r.taxLabel}</Badge>
+            <Badge tone="moss">{r.taxLabel}</Badge>
           </div>
         </CardBody>
       </Card>

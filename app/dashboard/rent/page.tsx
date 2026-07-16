@@ -103,7 +103,7 @@ export default async function RentPage() {
                               <td className="py-2 text-slate">due {fmtDate(r.due_on)}</td>
                               <td className="py-2">
                                 {r.status === "confirmed" ? (
-                                  <Badge tone="mint">Received</Badge>
+                                  <Badge tone="moss">Received</Badge>
                                 ) : r.status === "marked" ? (
                                   <Badge tone="amber">Tenant marked paid</Badge>
                                 ) : overdue ? (

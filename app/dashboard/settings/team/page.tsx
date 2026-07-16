@@ -106,7 +106,7 @@ export default async function TeamPage() {
                           <Button type="submit" variant="outline" size="sm">Update</Button>
                         </form>
                       ) : (
-                        <Badge tone={r.role === "accountant" ? "default" : "mint"}>{ROLE_LABEL[r.role] ?? r.role}</Badge>
+                        <Badge tone={r.role === "accountant" ? "default" : "moss"}>{ROLE_LABEL[r.role] ?? r.role}</Badge>
                       )}
                       {isAdmin && !isMe && !lastOwner && (
                         <form action={removeMember}>

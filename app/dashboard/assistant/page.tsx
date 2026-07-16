@@ -15,7 +15,7 @@ export default async function AssistantPage() {
       <PageHeader
         title="Voice assistant"
         subtitle="Ask anything, log rent and expenses, check your portfolio, and draft messages, by voice or text."
-        action={voiceOn ? <Badge tone="mint">Voice add-on on</Badge> : undefined}
+        action={voiceOn ? <Badge tone="moss">Voice add-on on</Badge> : undefined}
       />
 
       {!voiceOn ? (

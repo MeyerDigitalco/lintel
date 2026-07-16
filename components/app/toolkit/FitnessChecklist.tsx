@@ -20,7 +20,7 @@ export function FitnessChecklist() {
             <h3 className="font-heading text-sm font-semibold tracking-tight">
               Fitness for Human Habitation
             </h3>
-            <Badge tone={done === total ? "mint" : "amber"}>
+            <Badge tone={done === total ? "moss" : "amber"}>
               {done}/{total} complete
             </Badge>
           </div>
