@@ -316,7 +316,9 @@ export function AgreementGenerator({
                 onChange={(e) => setSaveToVault(e.target.checked)}
                 className="h-4 w-4 rounded border-hairline"
               />
-              <span className="text-sm text-slate">Save a copy to this property's documents and share it with the tenant</span>
+              <span className="text-sm text-slate">
+                Save a copy to this property&apos;s documents and share it with the tenant
+              </span>
             </label>
           )}
 
