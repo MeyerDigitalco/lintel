@@ -17,7 +17,25 @@ import { requestCallback } from "@/app/actions/lead";
 const field =
   "h-12 w-full rounded-edge border border-sepia bg-white px-4 text-[15px] text-char outline-none transition-colors placeholder:text-umber/60 focus:border-char focus:ring-2 focus:ring-char/15";
 
-export function CallbackForm({ id = "callback", token }: { id?: string; token: string }) {
+export function CallbackForm({
+  id = "callback",
+  token,
+  source = "home",
+  heading = "Speak to a Lintel partner",
+  blurb = "Leave your details and we will call you back, walk you through the platform and set up your portfolio with you. No obligation.",
+  scaleLabel = "How many properties",
+  scaleOptions = ["1", "2 to 5", "6 to 20", "21 or more"],
+  submitLabel = "Request a callback",
+}: {
+  id?: string;
+  token: string;
+  source?: string;
+  heading?: string;
+  blurb?: string;
+  scaleLabel?: string;
+  scaleOptions?: string[];
+  submitLabel?: string;
+}) {
   const [state, setState] = useState<{ ok: boolean; message: string } | null>(null);
   const [pending, setPending] = useState(false);
 
@@ -34,11 +52,10 @@ export function CallbackForm({ id = "callback", token }: { id?: string; token: s
       ) : (
         <>
           <h2 className="font-display text-[26px] leading-tight text-char md:text-[30px]">
-            Speak to a Lintel partner
+            {heading}
           </h2>
           <p className="mt-3 text-[16px] leading-relaxed text-umber">
-            Leave your details and we will call you back, walk you through the platform and set up
-            your portfolio with you. No obligation.
+            {blurb}
           </p>
 
           <form
@@ -51,6 +68,7 @@ export function CallbackForm({ id = "callback", token }: { id?: string; token: s
           >
             {/* Signed at render time; the action rejects instant or stale posts. */}
             <input type="hidden" name="t" value={token} />
+            <input type="hidden" name="source" value={source} />
 
             {/* Honeypot, hidden from people, filled by bots. */}
             <input
@@ -84,13 +102,12 @@ export function CallbackForm({ id = "callback", token }: { id?: string; token: s
                 <input name="country" autoComplete="country-name" placeholder="United Kingdom" className={field} />
               </label>
               <label className="block">
-                <span className="mb-1.5 block text-[14px] font-medium text-char">How many properties</span>
+                <span className="mb-1.5 block text-[14px] font-medium text-char">{scaleLabel}</span>
                 <select name="properties" defaultValue="" className={field}>
                   <option value="">Select</option>
-                  <option value="1">1</option>
-                  <option value="2-5">2 to 5</option>
-                  <option value="6-20">6 to 20</option>
-                  <option value="21+">21 or more</option>
+                  {scaleOptions.map((o) => (
+                    <option key={o} value={o}>{o}</option>
+                  ))}
                 </select>
               </label>
             </div>
@@ -106,7 +123,7 @@ export function CallbackForm({ id = "callback", token }: { id?: string; token: s
               disabled={pending}
               className="mt-1 inline-flex h-14 w-full items-center justify-center rounded-edge bg-clay text-[17px] font-medium text-bone transition-colors hover:bg-char disabled:pointer-events-none disabled:opacity-60"
             >
-              {pending ? "Sending..." : "Request a callback"}
+              {pending ? "Sending..." : submitLabel}
             </button>
 
             <p className="text-[13px] leading-relaxed text-umber">

@@ -50,6 +50,7 @@ export async function requestCallback(formData: FormData): Promise<LeadResult> {
   const country = clean(formData.get("country"), 80);
   const properties = clean(formData.get("properties"), 40);
   const note = clean(formData.get("note"), 1000);
+  const src = clean(formData.get("source"), 40) || "home";
 
   if (name.length < 2) return { ok: false, message: "Please enter your name." };
   if (!EMAIL_RE.test(email)) return { ok: false, message: "Please enter a valid email address." };
@@ -62,7 +63,7 @@ export async function requestCallback(formData: FormData): Promise<LeadResult> {
     const supabase = createServiceClient();
     const { error } = await supabase
       .from("leads")
-      .insert({ name, email, phone, country: country || null, properties: properties || null, note: note || null, source: "home" });
+      .insert({ name, email, phone, country: country || null, properties: properties || null, note: note || null, source: src });
     if (error) throw new Error(error.message);
   } catch {
     return { ok: false, message: "We couldn't send that just now. Please email hello@lintelsquared.com." };
@@ -74,7 +75,7 @@ export async function requestCallback(formData: FormData): Promise<LeadResult> {
     if (to) {
       await sendEmail({
         to,
-        subject: `Callback request: ${name}`,
+        subject: `${src === "accountant" ? "Accountant enquiry" : "Callback request"}: ${name}`,
         html:
           `<p><strong>${name}</strong> asked for a callback.</p>` +
           `<p>Email: ${email}<br/>Phone: ${phone}<br/>Country: ${country || "not given"}<br/>Portfolio: ${properties || "not given"}</p>` +
