@@ -1,7 +1,9 @@
 "use server";
 
+import { headers } from "next/headers";
 import { createServiceClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email/sendgrid";
+import { verifyFormToken, rateLimit, clientIp, looksLikeSpam } from "@/lib/spam";
 
 export interface LeadResult {
   ok: boolean;
@@ -23,9 +25,23 @@ const clean = (v: FormDataEntryValue | null, max = 200) =>
  * to `leads`, and we want the insert to succeed without ever exposing the table.
  */
 export async function requestCallback(formData: FormData): Promise<LeadResult> {
-  // Honeypot. Real people never fill a hidden field; bots fill everything.
-  if (clean(formData.get("company"))) {
-    return { ok: true, message: "Thanks. A Lintel partner will call you shortly." };
+  // Bot filtering. Every rejection returns the same success message a human
+  // sees, so a bot cannot tell which layer caught it and tune around it.
+  const decoy: LeadResult = { ok: true, message: "Thanks. A Lintel partner will call you shortly." };
+
+  // 1. Honeypot. Real people never fill a hidden field; bots fill everything.
+  if (clean(formData.get("company"))) return decoy;
+
+  // 2. Signed timing token: instant posts and replayed pages are not human.
+  const verdict = verifyFormToken(clean(formData.get("t"), 200));
+  if (verdict === "too-fast" || verdict === "bad-signature" || verdict === "missing") return decoy;
+  if (verdict === "expired") {
+    return { ok: false, message: "This form has been open a while. Please reload the page and try again." };
+  }
+
+  // 3. Rate limit per IP.
+  if (!rateLimit(`lead:${clientIp(headers())}`)) {
+    return { ok: false, message: "You've sent several requests already. Please email hello@lintelsquared.com and we'll pick it up." };
   }
 
   const name = clean(formData.get("name"), 120);
@@ -38,6 +54,9 @@ export async function requestCallback(formData: FormData): Promise<LeadResult> {
   if (name.length < 2) return { ok: false, message: "Please enter your name." };
   if (!EMAIL_RE.test(email)) return { ok: false, message: "Please enter a valid email address." };
   if (!PHONE_RE.test(phone)) return { ok: false, message: "Please enter a valid phone number." };
+
+  // 4. Content heuristics, after validation so we only scan plausible input.
+  if (looksLikeSpam({ name, note, country })) return decoy;
 
   try {
     const supabase = createServiceClient();
@@ -66,5 +85,5 @@ export async function requestCallback(formData: FormData): Promise<LeadResult> {
     // best effort
   }
 
-  return { ok: true, message: "Thanks. A Lintel partner will call you shortly." };
+  return decoy;
 }

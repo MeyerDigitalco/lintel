@@ -53,7 +53,7 @@ export function Sidebar({
     <aside className="hidden w-60 shrink-0 border-r border-hairline bg-surface md:flex md:flex-col">
       <div className="border-b border-hairline px-5 py-6">
         <Link href="/dashboard" aria-label="Lintel" className="block">
-          <Logo iconSize={44} wordmarkClassName="text-3xl" className="gap-3" />
+          <Logo iconSize={52} wordmarkClassName="text-[2rem]" className="gap-2.5" />
         </Link>
       </div>
       <nav className="flex-1 overflow-y-auto px-3 pb-4">

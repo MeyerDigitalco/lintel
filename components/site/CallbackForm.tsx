@@ -17,7 +17,7 @@ import { requestCallback } from "@/app/actions/lead";
 const field =
   "h-12 w-full rounded-edge border border-sepia bg-white px-4 text-[15px] text-char outline-none transition-colors placeholder:text-umber/60 focus:border-char focus:ring-2 focus:ring-char/15";
 
-export function CallbackForm({ id = "callback" }: { id?: string }) {
+export function CallbackForm({ id = "callback", token }: { id?: string; token: string }) {
   const [state, setState] = useState<{ ok: boolean; message: string } | null>(null);
   const [pending, setPending] = useState(false);
 
@@ -49,6 +49,9 @@ export function CallbackForm({ id = "callback" }: { id?: string }) {
             }}
             className="mt-6 grid gap-4"
           >
+            {/* Signed at render time; the action rejects instant or stale posts. */}
+            <input type="hidden" name="t" value={token} />
+
             {/* Honeypot, hidden from people, filled by bots. */}
             <input
               type="text"

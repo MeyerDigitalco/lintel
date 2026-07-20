@@ -3,6 +3,7 @@ import { SiteHeader } from "@/components/site/Header";
 import { SiteFooter } from "@/components/site/Footer";
 import { CallbackForm } from "@/components/site/CallbackForm";
 import { COUNTRIES } from "@/lib/i18n/regions";
+import { issueFormToken } from "@/lib/spam";
 
 /**
  * Public home page.
@@ -15,6 +16,13 @@ import { COUNTRIES } from "@/lib/i18n/regions";
  * Type is set larger and heavier than the previous draft: the smallest body
  * text here is 16px, and nothing structural sits below 14px.
  */
+
+/**
+ * Rendered per request, not at build time. The callback form carries a signed
+ * token minted at render; a statically generated page would freeze that token
+ * and every visitor would be told the form had expired.
+ */
+export const dynamic = "force-dynamic";
 
 const PILLARS = [
   {
@@ -36,6 +44,9 @@ const PILLARS = [
 ];
 
 export default function HomePage() {
+  // Minted per render, so a scraped copy of the page expires.
+  const formToken = issueFormToken();
+
   return (
     <div className="min-h-screen bg-bone">
       <SiteHeader />
@@ -77,7 +88,7 @@ export default function HomePage() {
           </div>
 
           <div className="md:pt-2">
-            <CallbackForm />
+            <CallbackForm token={formToken} />
           </div>
         </div>
       </section>
@@ -156,7 +167,7 @@ export default function HomePage() {
               the platform and help you set it up.
             </p>
           </div>
-          <CallbackForm id="callback-bottom" />
+          <CallbackForm id="callback-bottom" token={formToken} />
         </div>
       </section>
 

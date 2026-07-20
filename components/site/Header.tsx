@@ -5,7 +5,7 @@ import { Logo } from "@/components/Logo";
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-sepia bg-bone/85 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
+      <div className="mx-auto flex h-24 max-w-6xl items-center justify-between px-5">
         <Link href="/" aria-label="Lintel home">
           <Logo />
         </Link>

@@ -41,8 +41,8 @@ export async function sendEmail({ to, subject, html, text, attachments }: SendEm
     body: JSON.stringify({
       personalizations: [{ to: [{ email: to }] }],
       from: {
-        email: process.env.SENDGRID_FROM_EMAIL ?? "hello@lintel.app",
-        name: process.env.SENDGRID_FROM_NAME ?? "Lintel",
+        email: process.env.SENDGRID_FROM_EMAIL ?? "hello@lintelsquared.com",
+        name: process.env.SENDGRID_FROM_NAME ?? "Lintel Squared",
       },
       subject,
       content: [
