@@ -61,7 +61,7 @@ export default function HomePage() {
             <h1 className="display mt-5 text-[2.9rem] text-char md:text-[4rem]">
               One platform.
               <br />
-              <em className="text-clay">Everything handled.</em>
+              <span className="text-clay">Everything handled.</span>
             </h1>
             <p className="mt-6 max-w-[44ch] text-[19px] leading-relaxed text-char/80">
               Lintel looks after the agreements, the deadlines, the rent and the record keeping for

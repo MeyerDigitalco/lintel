@@ -52,8 +52,8 @@
      tighter tracking and a shorter leading than the sans stack. */
   .display {
     @apply font-display tracking-tight;
-    font-weight: 400;
-    line-height: 1.02;
+    font-weight: 500;
+    line-height: 1.06;
   }
 
   /* A rule, not a card. The editorial layout separates with lines. */

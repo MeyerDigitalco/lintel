@@ -48,7 +48,7 @@ const config: Config = {
       fontFamily: {
         // Marketing display face. A serif is the single biggest departure from
         // the stock look, and it suits a product that produces legal documents.
-        display: ["var(--font-instrument-serif)", "Instrument Serif", "Georgia", "serif"],
+        display: ["var(--font-display-serif)", "Newsreader", "Georgia", "serif"],
         heading: ["var(--font-inter-tight)", "Inter Tight", "system-ui", "sans-serif"],
         sans: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],
       },
