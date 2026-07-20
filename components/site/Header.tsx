@@ -9,18 +9,18 @@ export function SiteHeader() {
         <Link href="/" aria-label="Lintel home">
           <Logo />
         </Link>
-        <nav className="hidden items-center gap-8 text-[13px] text-umber md:flex">
+        <nav className="hidden items-center gap-8 text-[15px] text-umber md:flex">
           <Link href="/#features" className="transition-colors hover:text-clay">Features</Link>
           <Link href="/#regions" className="transition-colors hover:text-clay">Regions</Link>
           <Link href="/calculators" className="transition-colors hover:text-clay">Calculators</Link>
           <Link href="/#pricing" className="transition-colors hover:text-clay">Pricing</Link>
         </nav>
         <div className="flex items-center gap-4">
-          <Link href="/login" className="hidden text-[13px] text-umber transition-colors hover:text-clay sm:block">
+          <Link href="/login" className="hidden text-[15px] text-umber transition-colors hover:text-clay sm:block">
             Sign in
           </Link>
           <Link href="/signup">
-            <span className="inline-flex h-9 items-center rounded-edge bg-char px-4 text-[13px] font-medium text-bone transition-colors hover:bg-clay">
+            <span className="inline-flex h-9 items-center rounded-edge bg-char px-4 text-[15px] font-medium text-bone transition-colors hover:bg-clay">
               Start free
             </span>
           </Link>

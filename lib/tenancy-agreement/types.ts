@@ -48,6 +48,13 @@ export interface AgreementClause {
   defaultOn?: boolean;
   /** The provision this clause implements, shown in the provenance block. */
   basis?: string;
+  /**
+   * Id of a CORE clause this one supersedes. The universal clause set is
+   * written to be true nearly everywhere, but some regions need to say
+   * something incompatible with it (England's periodic-only tenancies, for
+   * example). Without this the document renders both and contradicts itself.
+   */
+  replaces?: string;
 }
 
 /**

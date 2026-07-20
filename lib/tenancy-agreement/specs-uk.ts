@@ -10,41 +10,86 @@ export const ENGLAND_SPEC: AgreementSpec = {
   key: "GB-ENG",
   countryName: "United Kingdom",
   regionName: "England",
-  documentTitle: "Assured Shorthold Tenancy Agreement",
-  version: "ENG-2024.1",
-  statutoryBasis: "Housing Act 1988, Housing Act 2004, Deregulation Act 2015, Homes (Fitness for Human Habitation) Act 2018, Tenant Fees Act 2019",
-  legislationUrl: "https://www.legislation.gov.uk/ukpga/1988/50/contents",
+  documentTitle: "Assured Periodic Tenancy Agreement",
+  version: "ENG-2026.1",
+  statutoryBasis:
+    "Housing Act 1988 as amended by the Renters' Rights Act 2025, Housing Act 2004, Homes (Fitness for Human Habitation) Act 2018, Tenant Fees Act 2019",
+  legislationUrl: "https://www.gov.uk/government/publications/the-renters-rights-act-information-sheet-2026",
   fields: [
-    { key: "deposit_scheme", label: "Deposit protection scheme", type: "select", options: ["Deposit Protection Service (DPS)", "MyDeposits", "Tenancy Deposit Scheme (TDS)"], required: true, hint: "The deposit must be protected within 30 days of receipt and the prescribed information given to the tenant. Miss this and you cannot serve a Section 21 notice, and the tenant can claim up to three times the deposit." },
-    { key: "deposit_ref", label: "Deposit scheme reference", type: "text", hint: "Add once the deposit is protected." },
+    { key: "written_statement_date", label: "Written statement of terms given on", type: "date", required: true, hint: "Section 12 requires the written statement to be given BEFORE the tenancy is entered into. Failure is a civil penalty of up to 7,000 pounds." },
+    { key: "deposit_scheme", label: "Deposit protection scheme", type: "select", options: ["Deposit Protection Service (DPS)", "MyDeposits", "Tenancy Deposit Scheme (TDS)"], required: true, hint: "Protect within 30 days of receipt and serve the prescribed information. Deposit rules are unchanged by the Renters' Rights Act." },
+    { key: "deposit_ref", label: "Deposit scheme reference", type: "text" },
     { key: "epc_rating", label: "EPC rating", type: "select", options: ["A", "B", "C", "D", "E", "F", "G"], required: true, hint: "It is unlawful to let a property rated F or G unless a valid exemption is registered." },
-    { key: "gas_safety_date", label: "Gas safety certificate date", type: "date", hint: "Required where there is any gas appliance. Must be given to the tenant before they move in." },
-    { key: "eicr_date", label: "EICR date", type: "date", required: true, hint: "Electrical Installation Condition Report, required every 5 years. A copy must go to the tenant before occupation." },
-    { key: "how_to_rent_date", label: "How to Rent guide served on", type: "date", required: true, hint: "The current version must be served. Serving an out of date version invalidates a later Section 21 notice." },
-    { key: "licence_type", label: "Property licence", type: "select", options: ["Not licensable", "Mandatory HMO licence", "Additional HMO licence", "Selective licence"], hint: "Check the local council. Letting an unlicensed licensable property blocks Section 21 and risks a rent repayment order." },
+    { key: "gas_safety_date", label: "Gas safety certificate date", type: "date", hint: "Required where there is any gas appliance. Give to the tenant before they move in." },
+    { key: "eicr_date", label: "EICR date", type: "date", required: true, hint: "Electrical Installation Condition Report, required every 5 years." },
+    { key: "info_sheet_date", label: "Renters' Rights information sheet given on", type: "date", required: true, hint: "The government information sheet replaced the How to Rent guide. It must be given to the tenant." },
+    { key: "licence_type", label: "Property licence", type: "select", options: ["Not licensable", "Mandatory HMO licence", "Additional HMO licence", "Selective licence"], hint: "Check with the local council. Letting an unlicensed licensable property risks a rent repayment order." },
     { key: "licence_number", label: "Licence number", type: "text" },
     { key: "right_to_rent_date", label: "Right to Rent check completed", type: "date", required: true, hint: "A civil penalty applies for letting to someone without the right to rent in England." },
+    { key: "prs_database_ref", label: "PRS Database entry", type: "text", hint: "The Private Rented Sector Database is rolling out from late 2026. Registration will become mandatory before you can market or let." },
   ],
   clauses: [
     {
       id: "eng_type",
       heading: "Type of tenancy",
       statutory: true,
-      basis: "Housing Act 1988 s.19A and Sch 2A",
+      replaces: "term",
+      basis: "Housing Act 1988 as amended by the Renters' Rights Act 2025 s.1-2",
       body:
-        "This agreement creates an assured shorthold tenancy within the meaning of the Housing Act 1988, as amended.\n\n" +
-        "The Tenant has security of tenure for the fixed term. After the fixed term ends the tenancy continues as a statutory periodic tenancy on the same terms until it is lawfully brought to an end.",
+        "This agreement creates an assured periodic tenancy under the Housing Act 1988 as amended by the Renters' Rights Act 2025.\n\n" +
+        "The tenancy is periodic from the outset. It has no fixed term and no end date. Assured shorthold tenancies were abolished on 1 May 2026 and it is no longer possible to create one. Any term purporting to create a fixed term, an assured shorthold tenancy, or a right for the Landlord to recover possession without a statutory ground has no effect.\n\n" +
+        "The rental period may not exceed one month. A tenancy with a longer rental period is not permitted.",
+    },
+    {
+      id: "eng_statement",
+      heading: "Written statement of terms",
+      statutory: true,
+      basis: "Renters' Rights Act 2025 s.12",
+      body:
+        "The Landlord gave the Tenant a written statement of terms on {{written_statement_date}}, before this tenancy was entered into, as section 12 requires.\n\n" +
+        "The statement sets out the Landlord's full name, an address in England or Wales at which the Tenant may serve notices on the Landlord, the date the tenancy begins, and the amount of rent and when it is due.\n\n" +
+        "Failing to give the written statement before the tenancy is entered into exposes the Landlord to a civil penalty of up to 7,000 pounds imposed by the local authority.",
+    },
+    {
+      id: "eng_rent",
+      heading: "Rent, rent in advance and rent increases",
+      statutory: true,
+      replaces: "rent",
+      basis: "Renters' Rights Act 2025; Housing Act 1988 s.13",
+      body:
+        "The rent is {{rent_amount}} {{rent_period}}, payable on {{rent_day}}.\n\n" +
+        "Rent in advance: the Landlord may not ask for or accept any payment of rent before this agreement is signed by all parties. Once it is signed, the Landlord may require at most one month's rent in advance, or 28 days' rent where the rental period is shorter than a month. Demanding more is unlawful.\n\n" +
+        "Rent bidding: the Landlord must state a fixed rent when advertising and may not invite, encourage or accept an offer above it.\n\n" +
+        "Rent increases may be made only by a section 13 notice, no more than once in any 12 month period, giving at least 2 months' notice. Rent review clauses that increase the rent automatically have no effect. The Tenant may challenge a proposed increase at the First-tier Tribunal before it takes effect, and the Tribunal may not set a rent higher than the one proposed.",
     },
     {
       id: "eng_deposit",
       heading: "Deposit protection",
       statutory: true,
-      basis: "Housing Act 2004 ss.213-215",
+      replaces: "deposit",
+      basis: "Housing Act 2004 ss.213-215; Tenant Fees Act 2019",
       body:
-        "The deposit of {{deposit_amount}} will be protected in the {{deposit_scheme}} within 30 days of receipt. Scheme reference: {{deposit_ref}}.\n\n" +
-        "The Landlord will give the Tenant the prescribed information about the scheme within the same 30 days.\n\n" +
-        "The deposit is capped by the Tenant Fees Act 2019 at five weeks' rent where the annual rent is under 50,000 pounds, or six weeks' rent where it is 50,000 pounds or more.\n\n" +
-        "At the end of the tenancy the deposit will be returned within 10 days of the parties agreeing the amount due. If the parties do not agree, the scheme's free dispute resolution service may decide the matter.",
+        "The deposit of {{deposit_amount}} will be protected in the {{deposit_scheme}} within 30 days of receipt. Scheme reference: {{deposit_ref}}. The Landlord will give the Tenant the prescribed information within the same 30 days.\n\n" +
+        "The deposit is capped at five weeks' rent where the annual rent is under 50,000 pounds, or six weeks' rent where the annual rent is between 50,000 and 100,000 pounds.\n\n" +
+        "At the end of the tenancy the deposit will be returned within 10 days of the parties agreeing the amount due. If they do not agree, the scheme's free dispute resolution service may decide the matter.",
+    },
+    {
+      id: "eng_pets",
+      heading: "Pets",
+      statutory: true,
+      basis: "Renters' Rights Act 2025",
+      body:
+        "The Tenant has a right to request permission to keep a pet at the Property. The request must be made in writing.\n\n" +
+        "The Landlord must respond in writing within 28 days and may not refuse unreasonably. Where the Landlord is a leaseholder whose own lease forbids pets, that is a reasonable ground to refuse.\n\n" +
+        "The Landlord may not require the Tenant to take out pet insurance, and may not charge a pet deposit or any additional pet rent. Any term in this agreement purporting to ban pets outright, or to impose such a charge, has no effect.",
+    },
+    {
+      id: "eng_discrimination",
+      heading: "No discrimination",
+      statutory: true,
+      basis: "Renters' Rights Act 2025",
+      body:
+        "The Landlord may not refuse to let the Property, or treat the Tenant less favourably, because the Tenant receives benefits or has children. Advertising that excludes benefit claimants or families is unlawful.",
     },
     {
       id: "eng_fees",
@@ -52,50 +97,60 @@ export const ENGLAND_SPEC: AgreementSpec = {
       statutory: true,
       basis: "Tenant Fees Act 2019",
       body:
-        "The Landlord may only require the Tenant to make payments permitted by the Tenant Fees Act 2019. These are the rent, a capped tenancy deposit, a capped holding deposit, payments on variation or assignment at the Tenant's request capped at 50 pounds unless higher costs are evidenced, payments on early termination at the Tenant's request, utilities, communication services, television licence and council tax, and a default fee for a lost key or for interest on rent more than 14 days late.\n\n" +
-        "Any other fee is a prohibited payment. If the Landlord charges one, it must be repaid, and a Section 21 notice cannot be served until it is.",
+        "The Landlord may only require payments permitted by the Tenant Fees Act 2019: the rent, a capped tenancy deposit, a capped holding deposit, payments on variation or assignment at the Tenant's request capped at 50 pounds unless higher costs are evidenced, payments on early termination at the Tenant's request, utilities, communication services, television licence and council tax, and a default fee for a lost key or for interest on rent more than 14 days late.\n\n" +
+        "Any other fee is a prohibited payment and must be repaid.",
     },
     {
       id: "eng_fitness",
-      heading: "Fitness for human habitation",
+      heading: "Fitness for human habitation and repairs",
       statutory: true,
       basis: "Homes (Fitness for Human Habitation) Act 2018; Landlord and Tenant Act 1985 s.11",
       body:
         "The Landlord must ensure the Property is fit for human habitation at the start of the tenancy and throughout it. The Tenant may enforce this directly in the county court and may seek an order for works and damages.\n\n" +
-        "The Landlord must keep in repair the structure and exterior, and the installations for water, gas, electricity, sanitation, space heating and water heating.",
+        "The Landlord must keep in repair the structure and exterior, and the installations for water, gas, electricity, sanitation, space heating and water heating.\n\n" +
+        "The Decent Homes Standard and Awaab's Law are being extended to the private rented sector. The Landlord will investigate and remedy reported hazards, including damp and mould, within the timescales those rules require once they apply.",
     },
     {
       id: "eng_safety",
       heading: "Safety obligations",
       statutory: true,
-      basis: "Gas Safety (Installation and Use) Regulations 1998; Electrical Safety Standards Regulations 2020; Smoke and Carbon Monoxide Alarm (England) Regulations 2015 as amended 2022",
+      basis: "Gas Safety (Installation and Use) Regulations 1998; Electrical Safety Standards Regulations 2020; Smoke and Carbon Monoxide Alarm (England) Regulations 2015 as amended",
       body:
-        "Gas: a Gas Safe registered engineer checks every gas appliance and flue every 12 months. The current certificate is dated {{gas_safety_date}}. A copy has been given to the Tenant.\n\n" +
-        "Electricity: the installation is inspected at least every 5 years. The current EICR is dated {{eicr_date}}. A copy has been given to the Tenant.\n\n" +
-        "Alarms: a smoke alarm is fitted on every storey used as living accommodation, and a carbon monoxide alarm is fitted in every room with a fixed combustion appliance other than a gas cooker. The Landlord will repair or replace any alarm reported as faulty as soon as reasonably practicable.\n\n" +
-        "Energy: the Property has an EPC rating of {{epc_rating}}. A copy of the EPC has been given to the Tenant.",
+        "Gas: a Gas Safe registered engineer checks every gas appliance and flue every 12 months. The current certificate is dated {{gas_safety_date}}.\n\n" +
+        "Electricity: the installation is inspected at least every 5 years. The current EICR is dated {{eicr_date}}.\n\n" +
+        "Alarms: a smoke alarm is fitted on every storey used as living accommodation, and a carbon monoxide alarm in every room with a fixed combustion appliance other than a gas cooker.\n\n" +
+        "Energy: the Property has an EPC rating of {{epc_rating}}.",
     },
     {
       id: "eng_docs",
       heading: "Documents given to the Tenant",
       statutory: true,
-      basis: "Deregulation Act 2015 s.38; Assured Shorthold Tenancy Notices and Prescribed Requirements (England) Regulations 2015",
+      basis: "Renters' Rights Act 2025; Housing Act 2004",
       body:
-        "Before the Tenant took occupation the Landlord gave the Tenant: the current How to Rent guide, on {{how_to_rent_date}}; the Energy Performance Certificate; the Gas Safety Record where gas is present; and the Electrical Installation Condition Report.\n\n" +
-        "Licence: {{licence_type}}. Licence number: {{licence_number}}.\n\n" +
-        "The Landlord acknowledges that failing to serve these documents prevents a valid Section 21 notice being given.",
+        "Before the Tenant took occupation the Landlord gave the Tenant: the Renters' Rights information sheet, on {{info_sheet_date}}; the Energy Performance Certificate; the Gas Safety Record where gas is present; and the Electrical Installation Condition Report.\n\n" +
+        "Licence: {{licence_type}}. Licence number: {{licence_number}}. PRS Database entry: {{prs_database_ref}}.",
     },
     {
       id: "eng_ending",
-      heading: "Ending an assured shorthold tenancy",
+      heading: "Ending the tenancy",
       statutory: true,
-      basis: "Housing Act 1988 ss.5, 8, 21",
+      replaces: "ending",
+      basis: "Housing Act 1988 s.8 as amended by the Renters' Rights Act 2025",
       body:
-        "The Landlord may end the tenancy only by serving a valid statutory notice and, if the Tenant does not leave, by obtaining a possession order from the county court. The Landlord may not evict the Tenant without a court order and a warrant executed by a county court bailiff or High Court enforcement officer.\n\n" +
-        "A Section 8 notice may be served where a statutory ground for possession applies. The notice period depends on the ground.\n\n" +
-        "A Section 21 notice may be served where the statutory preconditions are met. It cannot be served in the first four months of the tenancy, is valid for six months, and cannot be served where the deposit is unprotected, the prescribed documents were not given, the property is unlicensed but licensable, or a prohibited payment has not been repaid.\n\n" +
-        "The Tenant may end a periodic tenancy by giving at least one month's notice in writing expiring at the end of a rental period.\n\n" +
-        "Government policy in this area is under active reform. Check the current position before serving any notice.",
+        "The Tenant may end the tenancy at any time by giving the Landlord 2 months' notice in writing, expiring at the end of a rental period.\n\n" +
+        "The Landlord may end the tenancy only by serving a section 8 notice stating a statutory ground for possession, and then, if the Tenant does not leave, by obtaining a possession order from the county court.\n\n" +
+        "Section 21 was abolished on 1 May 2026. There is no longer any route to possession without a ground. The Landlord may not evict the Tenant without a court order and a warrant executed by a county court bailiff or High Court enforcement officer.\n\n" +
+        "Where the Landlord seeks possession in order to sell the Property or to move in themselves or a close family member, that ground may not be used in the first 12 months of the tenancy, requires 4 months' notice, and the Property may not be re-let or re-marketed for 12 months afterwards.\n\n" +
+        "The mandatory rent arrears ground now requires at least 3 months' arrears and 4 weeks' notice.",
+    },
+    {
+      id: "eng_redress",
+      heading: "Redress and the PRS Database",
+      statutory: true,
+      basis: "Renters' Rights Act 2025",
+      body:
+        "The Private Rented Sector Database requires landlords to register themselves and their properties. Registration is rolling out from late 2026 and becomes a precondition of marketing and letting.\n\n" +
+        "A mandatory Private Rented Sector Landlord Ombudsman scheme follows, with decisions binding on landlords. The Landlord will join the scheme when required to do so.",
     },
     {
       id: "eng_right_to_rent",
@@ -104,22 +159,47 @@ export const ENGLAND_SPEC: AgreementSpec = {
       basis: "Immigration Act 2014 ss.20-37",
       body:
         "The Landlord carried out a Right to Rent check on {{right_to_rent_date}} for every adult who will occupy the Property as their only or main home.\n\n" +
-        "Where an occupier has a time limited right to rent, the Landlord will carry out a follow up check before that right expires and must report to the Home Office if it lapses.",
+        "Where an occupier has a time limited right to rent, the Landlord will carry out a follow up check before that right expires.",
     },
   ],
   attachments: [
-    { label: "How to Rent guide (current version)", note: "Serve the version in force on the day the tenancy starts. An out of date copy invalidates a later Section 21." },
+    { label: "Written statement of terms", note: "Must be given BEFORE the tenancy is entered into. Civil penalty up to 7,000 pounds if missed." },
+    { label: "Renters' Rights information sheet", note: "Replaced the How to Rent guide. Existing tenancies had to be served by 31 May 2026." },
     { label: "Energy Performance Certificate", note: "Must be E or better unless an exemption is registered." },
-    { label: "Gas Safety Record", note: "Required before the tenant takes occupation where any gas appliance is present." },
-    { label: "Electrical Installation Condition Report", note: "Give within 28 days of the inspection and to a new tenant before occupation." },
-    { label: "Inventory and schedule of condition", note: "Your single most useful document in a deposit dispute." },
+    { label: "Gas Safety Record", note: "Before the tenant takes occupation where any gas appliance is present." },
+    { label: "Electrical Installation Condition Report", note: "Every 5 years." },
+    { label: "Inventory and schedule of condition", note: "Your most useful document in a deposit dispute." },
     { label: "Deposit prescribed information", note: "Within 30 days of receiving the deposit." },
   ],
   warnings: [
-    "The Renters' Rights reforms will abolish assured shorthold tenancies and Section 21. Confirm the position in force on the day you let before you rely on this template.",
-    "The deposit cap, the prescribed information deadline and the licensing position are the three things that most often invalidate a possession claim. Check all three.",
+    "Assured shorthold tenancies and Section 21 were abolished in England on 1 May 2026. Every possession claim now needs a ground under Section 8 and a court order.",
+    "You may not take any rent before the agreement is signed, and no more than one month's rent in advance after it is signed.",
+    "Pet bans, pet deposits and compulsory pet insurance are unenforceable. You must answer a written pet request within 28 days.",
   ],
   constraints: [
+    {
+      field: "end_date",
+      rule: "empty",
+      severity: "error",
+      message:
+        "An assured periodic tenancy has no end date. Fixed terms were abolished in England on 1 May 2026. Clear the end date before generating.",
+    },
+    {
+      field: "term_type",
+      rule: "notEqual",
+      value: "Fixed term",
+      severity: "error",
+      message:
+        "Fixed term assured tenancies can no longer be created in England. Choose Periodic (rolling).",
+    },
+    {
+      field: "term_type",
+      rule: "notEqual",
+      value: "Fixed term then periodic",
+      severity: "error",
+      message:
+        "A fixed term followed by a periodic tenancy is no longer possible in England. The tenancy is periodic from the outset.",
+    },
     {
       field: "epc_rating",
       rule: "notEqual",
@@ -193,6 +273,7 @@ export const WALES_SPEC: AgreementSpec = {
       id: "wls_ending",
       heading: "Ending an occupation contract",
       statutory: true,
+      replaces: "ending",
       basis: "Renting Homes (Wales) Act 2016 ss.173, 182, 186-189",
       body:
         "The Landlord may end a periodic standard contract by a notice under section 173 giving at least 6 months. A section 173 notice may not be given in the first 6 months of the occupation date, and may not be given where the Landlord has failed to give the written statement, has not protected the deposit, is not registered and licensed with Rent Smart Wales, or has not given the required safety documents.\n\n" +
@@ -213,6 +294,7 @@ export const WALES_SPEC: AgreementSpec = {
       id: "wls_deposit",
       heading: "Deposit",
       statutory: true,
+      replaces: "deposit",
       basis: "Renting Homes (Wales) Act 2016 Sch 5",
       body:
         "The deposit of {{deposit_amount}} is protected in the {{deposit_scheme}}, reference {{deposit_ref}}, and the prescribed information will be given to the contract holder within 30 days of receipt.\n\n" +
@@ -259,6 +341,7 @@ export const SCOTLAND_SPEC: AgreementSpec = {
       id: "sct_type",
       heading: "Type of tenancy",
       statutory: true,
+      replaces: "term",
       basis: "Private Housing (Tenancies) (Scotland) Act 2016 s.1",
       body:
         "This agreement creates a private residential tenancy under the Private Housing (Tenancies) (Scotland) Act 2016.\n\n" +
@@ -268,6 +351,7 @@ export const SCOTLAND_SPEC: AgreementSpec = {
       id: "sct_rent",
       heading: "Rent and rent increases",
       statutory: true,
+      replaces: "rent",
       basis: "Private Housing (Tenancies) (Scotland) Act 2016 ss.18-24",
       body:
         "The rent is {{rent_amount}} {{rent_period}}.\n\n" +
@@ -278,6 +362,7 @@ export const SCOTLAND_SPEC: AgreementSpec = {
       id: "sct_deposit",
       heading: "Deposit",
       statutory: true,
+      replaces: "deposit",
       basis: "Tenancy Deposit Schemes (Scotland) Regulations 2011",
       body:
         "The deposit of {{deposit_amount}} will be lodged with {{deposit_scheme}}, an approved scheme, within 30 working days of the start of the tenancy, and the prescribed information given to the Tenant.\n\n" +
@@ -306,6 +391,7 @@ export const SCOTLAND_SPEC: AgreementSpec = {
       id: "sct_ending",
       heading: "Ending a private residential tenancy",
       statutory: true,
+      replaces: "ending",
       basis: "Private Housing (Tenancies) (Scotland) Act 2016 ss.44-56, Sch 3",
       body:
         "The Tenant may end the tenancy at any time by giving the Landlord 28 days' notice in writing, unless a longer period is agreed in writing after the tenancy has started.\n\n" +
@@ -399,6 +485,7 @@ export const NI_SPEC: AgreementSpec = {
       id: "ni_deposit",
       heading: "Deposit",
       statutory: true,
+      replaces: "deposit",
       basis: "Tenancy Deposit Schemes Regulations (Northern Ireland) 2012 as amended 2022",
       body:
         "The deposit of {{deposit_amount}} will be protected with {{deposit_scheme}} within 28 days of receipt, and the Landlord will give the Tenant the prescribed information within 35 days of receipt.\n\n" +
@@ -418,6 +505,7 @@ export const NI_SPEC: AgreementSpec = {
       id: "ni_ending",
       heading: "Ending the tenancy",
       statutory: true,
+      replaces: "ending",
       basis: "Private Tenancies (Northern Ireland) Order 2006 art.14; Private Tenancies Act (NI) 2022 s.6",
       body:
         "The Landlord must serve a valid Notice to Quit. The notice period depends on how long the Tenant has lived in the Property: at least 4 weeks where the tenancy has lasted 12 months or less, at least 8 weeks where it has lasted more than 12 months but not more than 10 years, and at least 12 weeks where it has lasted more than 10 years.\n\n" +

@@ -230,7 +230,10 @@ export function missingRequired(fields: AgreementField[], values: Record<string,
 export function composeAgreement(input: AgreementInput): ComposedAgreement {
   const { spec, values } = input;
   const disabled = input.disabledClauseIds ?? [];
-  const all = [...CORE_CLAUSES, ...spec.clauses];
+  // A region clause may supersede a core clause; drop the core one so the
+  // document never states a general rule its own region clause contradicts.
+  const superseded = new Set(spec.clauses.map((c) => c.replaces).filter(Boolean) as string[]);
+  const all = [...CORE_CLAUSES.filter((c) => !superseded.has(c.id)), ...spec.clauses];
 
   const sections = all
     .filter((c) => clauseEnabled(c, disabled) && !isEmptyAfterFill(c, values))
