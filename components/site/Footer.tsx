@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
-import { COUNTRIES } from "@/lib/i18n/regions";
 
 /** Public site footer, editorial palette. */
 export function SiteFooter() {
@@ -11,8 +10,8 @@ export function SiteFooter() {
      <div className="max-w-xs">
       <Logo />
       <p className="mt-4 text-[15px] leading-relaxed text-umber">
-       Tenancy agreements, tax, compliance and rent for landlords in {COUNTRIES.length} countries.
-       Correct in every market, not just the one the software was written in.
+       Tenancy agreements, tax, compliance and rent for UK landlords. Correct across England,
+       Scotland, Wales and Northern Ireland.
       </p>
      </div>
      <div className="grid grid-cols-2 gap-10 text-[15px] sm:grid-cols-3">
@@ -26,13 +25,12 @@ export function SiteFooter() {
        </ul>
       </div>
       <div>
-       <p className="mb-3 font-display text-[15px] text-char">Regions</p>
+       <p className="mb-3 font-display text-[15px] text-char">Nations</p>
        <ul className="space-y-2 text-umber">
-        <li>United Kingdom</li>
-        <li>Europe</li>
-        <li>United States</li>
-        <li>Middle East</li>
-        <li>Africa, Asia, Oceania</li>
+        <li>England</li>
+        <li>Scotland</li>
+        <li>Wales</li>
+        <li>Northern Ireland</li>
        </ul>
       </div>
       <div>

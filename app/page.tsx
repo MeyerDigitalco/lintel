@@ -2,7 +2,6 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/site/Header";
 import { SiteFooter } from "@/components/site/Footer";
 import { CallbackForm } from "@/components/site/CallbackForm";
-import { COUNTRIES } from "@/lib/i18n/regions";
 import { issueFormToken } from "@/lib/spam";
 
 /**
@@ -23,6 +22,35 @@ import { issueFormToken } from "@/lib/spam";
  * and every visitor would be told the form had expired.
  */
 export const dynamic = "force-dynamic";
+
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://lintelsquared.com";
+
+export const metadata = {
+  title: "UK landlord software: tax, compliance, rent & agreements",
+  description:
+    "Lintel Squared keeps tax records, compliance, rent and tenancy agreements in one place for UK landlords, with the right rules for England, Scotland, Wales and Northern Ireland. Free until 31 August 2026.",
+  alternates: { canonical: "/" },
+};
+
+// Structured data helps Google understand what Lintel is and can earn a richer
+// result. SoftwareApplication is the right type for a SaaS product.
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Lintel Squared",
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Web, iOS, Android",
+  url: APP_URL,
+  description:
+    "Property management software for UK landlords: tax records, compliance tracking, rent, documents and region-aware tenancy agreements.",
+  areaServed: "GB",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "GBP",
+    description: "Free for all users until 31 August 2026.",
+  },
+};
 
 const PILLARS = [
   {
@@ -49,6 +77,10 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-bone">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+      />
       <SiteHeader />
 
       {/* Hero + callback, side by side. The form is above the fold on purpose. */}
@@ -56,7 +88,7 @@ export default function HomePage() {
         <div className="mx-auto grid max-w-6xl gap-12 px-5 py-14 md:grid-cols-[1.05fr_0.95fr] md:gap-16 md:py-20">
           <div>
             <div className="text-[13px] font-medium uppercase tracking-[0.12em] text-clay">
-              Property management, {COUNTRIES.length} countries
+              Property management for UK landlords
             </div>
             <h1 className="display mt-5 text-[2.9rem] text-char md:text-[4rem]">
               One platform.
@@ -64,12 +96,12 @@ export default function HomePage() {
               <span className="text-clay">Everything handled.</span>
             </h1>
             <p className="mt-6 max-w-[44ch] text-[19px] leading-relaxed text-char/80">
-              Lintel looks after the agreements, the deadlines, the rent and the record keeping for
-              landlords, in whichever country the property sits.
+              Lintel looks after the agreements, the deadlines, the rent and the record keeping so
+              you can run your whole portfolio from one place.
             </p>
             <p className="mt-5 max-w-[46ch] text-[17px] leading-relaxed text-umber">
-              Most software assumes you let in one place. Lintel knows the rules change at the
-              border, and applies the right ones automatically.
+              Built for the way letting works in England, Scotland, Wales and Northern Ireland, with
+              the right rules for each nation applied automatically.
             </p>
 
             <div className="mt-9 flex flex-wrap items-center gap-6">
@@ -108,25 +140,28 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Reach, stated plainly without publishing the rules themselves. */}
+      {/* Reach, UK-focused: the four nations, not a country count. */}
       <section id="regions" className="border-y border-sepia bg-char">
         <div className="mx-auto max-w-6xl px-5 py-16 md:py-24">
           <h2 className="display max-w-[20ch] text-[2.1rem] text-bone md:text-[2.9rem]">
-            Correct wherever the property is.
+            Correct in all four UK nations.
           </h2>
-          <p className="mt-6 max-w-[52ch] text-[18px] leading-relaxed text-bone/75">
-            Tenancy law, compliance duties and tax treatment differ in every market we cover. Lintel
-            applies the right ones for each property you own, without you having to know them.
+          <p className="mt-6 max-w-[54ch] text-[18px] leading-relaxed text-bone/75">
+            Tenancy law and compliance duties are not the same across the UK. An assured periodic
+            tenancy in England is an occupation contract in Wales and a private residential tenancy
+            in Scotland. Lintel applies the right rules for each property, so you do not have to
+            keep track of which nation changed what.
           </p>
-          <div className="mt-12 grid gap-10 border-t border-bone/20 pt-10 sm:grid-cols-3">
+          <div className="mt-12 grid gap-8 border-t border-bone/20 pt-10 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { fig: String(COUNTRIES.length), lab: "Countries covered" },
-              { fig: "10", lab: "Languages, including right to left" },
-              { fig: "20", lab: "Currencies, formatted locally" },
-            ].map((s) => (
-              <div key={s.lab}>
-                <div className="display text-[3.6rem] leading-none tabular-nums text-bone">{s.fig}</div>
-                <p className="mt-3 text-[16px] text-bone/70">{s.lab}</p>
+              { n: "England", d: "Renters' Rights Act, assured periodic tenancies" },
+              { n: "Scotland", d: "Private residential tenancies, First-tier Tribunal" },
+              { n: "Wales", d: "Occupation contracts, Renting Homes (Wales) Act" },
+              { n: "Northern Ireland", d: "Private tenancies, rent books, deposit rules" },
+            ].map((x) => (
+              <div key={x.n}>
+                <div className="font-display text-[22px] leading-tight text-bone">{x.n}</div>
+                <p className="mt-2 text-[15px] leading-relaxed text-bone/65">{x.d}</p>
               </div>
             ))}
           </div>

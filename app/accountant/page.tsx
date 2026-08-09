@@ -4,7 +4,6 @@ import { CallbackForm } from "@/components/site/CallbackForm";
 import { AccessGate } from "@/components/site/AccessGate";
 import { hasAccountantAccess } from "./actions";
 import { issueFormToken } from "@/lib/spam";
-import { COUNTRIES } from "@/lib/i18n/regions";
 import {
   PreviewDataQuality,
   PreviewSa105,
@@ -43,7 +42,7 @@ const OBJECTIONS = [
 const NUMBERS = [
   { fig: "Free", lab: "Accountant seats, permanently. One per client, unlimited clients." },
   { fig: "Read-only", lab: "Enforced by row-level security, not by hiding buttons in the UI." },
-  { fig: String(COUNTRIES.length), lab: "Countries, each mapped to its own return: SA105, Schedule E, ITR12, IR3, Anlage V." },
+  { fig: "SA105", lab: "Mapped and export-ready, with finance costs kept separate for the Section 24 reducer." },
 ];
 
 export default async function AccountantPage() {

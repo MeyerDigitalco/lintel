@@ -1,13 +1,20 @@
 "use client";
 
-import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { signInAction, signUpAction, type AuthState } from "@/app/(auth)/actions";
-import { COUNTRIES, COUNTRY_OPTIONS } from "@/lib/i18n/regions";
-import { currencyForCountry, CURRENCIES } from "@/lib/i18n/currency";
 
 const fieldCls =
   "h-11 w-full rounded-edge border border-sepia bg-surface px-3 text-sm outline-none focus:ring-2 focus:ring-char/30";
+
+// Public signup is UK-only. The i18n engine still supports every country, this
+// form simply does not expose the choice. To reopen international signup, restore
+// the country <select> over COUNTRY_OPTIONS from "@/lib/i18n/regions".
+const UK_NATIONS = [
+  { value: "england", label: "England" },
+  { value: "wales", label: "Wales" },
+  { value: "scotland", label: "Scotland" },
+  { value: "northern_ireland", label: "Northern Ireland" },
+];
 
 function Submit({ label }: { label: string }) {
   const { pending } = useFormStatus();
@@ -22,25 +29,17 @@ function Submit({ label }: { label: string }) {
   );
 }
 
-const SUBREGION_LABEL: Record<string, string> = { US: "state", AE: "emirate", ZA: "province" };
-
 export function AuthForm({
   mode,
   next,
-  defaultCountry = "GB",
 }: {
   mode: "signin" | "signup";
   next?: string;
+  /** Retained for API compatibility; public signup is locked to the UK. */
   defaultCountry?: string;
 }) {
   const action = mode === "signin" ? signInAction : signUpAction;
   const [state, formAction] = useFormState<AuthState, FormData>(action, undefined);
-  const [country, setCountry] = useState(defaultCountry);
-
-  const info = COUNTRIES.find((c) => c.code === country) ?? COUNTRIES[0];
-  const isUK = info.code === "GB";
-  const currency = currencyForCountry(country);
-  const cur = CURRENCIES[currency];
 
   return (
     <form action={formAction} className="space-y-4">
@@ -52,30 +51,19 @@ export function AuthForm({
           </label>
 
           <label className="block">
-            <span className="mb-1 block text-sm text-char">Country</span>
-            <select name="country" value={country} onChange={(e) => setCountry(e.target.value)} className={fieldCls}>
-              {COUNTRY_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
-          </label>
-
-          <label className="block">
-            <span className="mb-1 block text-sm text-char">
-              Your {isUK ? "nation" : SUBREGION_LABEL[info.code] ?? "region"}
-            </span>
-            <select name={isUK ? "region" : "region_code"} defaultValue={info.regions[0]?.value} className={fieldCls} key={country}>
-              {info.regions.map((o) => (
+            <span className="mb-1 block text-sm text-char">Where your properties are</span>
+            <select name="region" defaultValue="england" className={fieldCls}>
+              {UK_NATIONS.map((o) => (
                 <option key={o.value} value={o.value}>{o.label}</option>
               ))}
             </select>
             <span className="mt-1 block text-xs text-umber">
-              Loads the right rules and bills in {cur?.symbol} {currency}. Pick where your properties are.
+              Loads the right rules for your nation and bills in £ GBP.
             </span>
           </label>
 
-          {!isUK && <input type="hidden" name="region" value="england" />}
-          <input type="hidden" name="currency" value={currency} />
+          <input type="hidden" name="country" value="GB" />
+          <input type="hidden" name="currency" value="GBP" />
         </>
       )}
 

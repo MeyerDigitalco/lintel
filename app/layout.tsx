@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Inter_Tight, Newsreader } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@/components/site/Analytics";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,27 +29,30 @@ const interTight = Inter_Tight({
 });
 
 export const metadata: Metadata = {
-  title: "Lintel, tax, compliance & rent for landlords worldwide",
+  title: {
+    default: "Lintel Squared, tax, compliance & rent for UK landlords",
+    template: "%s · Lintel Squared",
+  },
   description:
-    "Lintel keeps tax records, compliance, rent and documents in one place, tuned to your country's rules across the UK, US, Europe, the Gulf, Asia and beyond.",
+    "Lintel keeps tax records, compliance, rent and documents in one place for UK landlords, with the right rules for England, Scotland, Wales and Northern Ireland.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
   manifest: "/manifest.webmanifest",
-  appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "Lintel" },
+  appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "Lintel Squared" },
+  alternates: { canonical: "/" },
   icons: { apple: "/apple-touch-icon.png" },
-  keywords: ["landlord software", "property management", "rental compliance", "Making Tax Digital", "tenant portal", "rent tracking", "court-ready evidence", "international landlords"],
+  keywords: ["landlord software", "property management", "rental compliance", "Making Tax Digital", "tenant portal", "rent tracking", "court-ready evidence", "UK landlords", "Renters Rights Act"],
   openGraph: {
     type: "website",
-    siteName: "Lintel",
-    title: "Lintel, tax, compliance & rent for landlords worldwide",
-    description: "Tax records, compliance, rent and documents in one place, tuned to your country's rules. Free for 30 days.",
+    siteName: "Lintel Squared",
+    title: "Lintel Squared, tax, compliance & rent for UK landlords",
+    description: "Tax records, compliance, rent and documents in one place for UK landlords. Free until 31 August 2026.",
+    locale: "en_GB",
     url: process.env.NEXT_PUBLIC_APP_URL ?? "https://lintelsquared.com",
-    images: [{ url: "/icon-512.png", width: 512, height: 512, alt: "Lintel" }],
   },
   twitter: {
-    card: "summary",
-    title: "Lintel, landlord software, worldwide",
-    description: "Tax records, compliance, rent and documents in one place. Free for 30 days.",
-    images: ["/icon-512.png"],
+    card: "summary_large_image",
+    title: "Lintel Squared, UK landlord software",
+    description: "Tax records, compliance, rent and documents in one place for UK landlords. Free until 31 August 2026.",
   },
 };
 
@@ -65,7 +69,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en-GB" className={`${inter.variable} ${interTight.variable} ${newsreader.variable}`}>
-      <body className="font-sans antialiased">{children}<CookieConsent /></body>
+      <body className="font-sans antialiased">{children}<CookieConsent /><Analytics /></body>
     </html>
   );
 }

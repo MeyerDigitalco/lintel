@@ -118,7 +118,26 @@ export default function PrivacyPage() {
      </section>
 
      <section>
-      <h2>5. Who Can See What</h2>
+      <h2>5. Cookies and Analytics</h2>
+      <p>
+       We use essential cookies to keep you signed in and to remember your preferences. These are
+       necessary for the site to work and do not require consent.
+      </p>
+      <p>
+       With your consent, we also use Google Analytics to understand how visitors use the site so we
+       can improve it. Analytics cookies are only set after you choose Accept in our cookie banner.
+       If you choose Reject, no analytics cookies are set and Google Analytics runs in a mode that
+       does not store information on your device. You can change your choice at any time by clearing
+       the site data in your browser, which will bring the banner back.
+      </p>
+      <p>
+       We ask Google to anonymise IP addresses. We do not use advertising or personalisation
+       cookies.
+      </p>
+     </section>
+
+     <section>
+      <h2>6. Who Can See What</h2>
       <p>Lintel Squared² is built around the principle that each party only sees what is relevant to them:</p>
       <ul>
        <li><strong>Landlord</strong>: full visibility of their own portfolio: properties, tenants, documents, and finances</li>
@@ -130,12 +149,12 @@ export default function PrivacyPage() {
      </section>
 
      <section>
-      <h2>6. Where Your Data Is Stored</h2>
+      <h2>7. Where Your Data Is Stored</h2>
       <p>Your data is stored using reputable cloud infrastructure providers. As we are in active development during the trial period, our specific sub-processors may change. We will publish a full list of sub-processors before general release and payment processing begins. Where any data is processed outside the UK, we ensure appropriate safeguards are in place in line with UK GDPR requirements.</p>
      </section>
 
      <section>
-      <h2>7. Data Retention</h2>
+      <h2>8. Data Retention</h2>
       <ul>
        <li><strong>During the trial</strong>: your data is retained for the duration of the trial period and your active use of the platform.</li>
        <li><strong>If you do not convert to a paid plan</strong>: trial data will be retained for a reasonable period after the trial ends to allow you to export or reactivate, after which it will be deleted unless we agree otherwise with you.</li>
@@ -144,7 +163,7 @@ export default function PrivacyPage() {
      </section>
 
      <section>
-      <h2>8. Your Rights</h2>
+      <h2>9. Your Rights</h2>
       <p>Under UK GDPR, you have the right to:</p>
       <ul>
        <li><strong>Access</strong>: request a copy of the personal data we hold about you</li>
@@ -159,7 +178,7 @@ export default function PrivacyPage() {
      </section>
 
      <section>
-      <h2>9. Security</h2>
+      <h2>10. Security</h2>
       <ul>
        <li>Data in transit is encrypted</li>
        <li>Passwords are stored securely and never in plain text</li>
@@ -170,12 +189,12 @@ export default function PrivacyPage() {
      </section>
 
      <section>
-      <h2>10. Children&apos;s Privacy</h2>
+      <h2>11. Children&apos;s Privacy</h2>
       <p>Lintel Squared² is not directed at individuals under 18 and we do not knowingly collect data from children.</p>
      </section>
 
      <section>
-      <h2>11. Changes to This Statement</h2>
+      <h2>12. Changes to This Statement</h2>
       <p>As Lintel Squared² moves from trial to general release, including the introduction of paid subscriptions via Stripe, this statement will be updated to reflect the full scope of our data processing. We will notify trial users by email of any material change before it takes effect.</p>
       <p>This is a trial-stage statement, written to be honest about where Lintel Squared² is today rather than describing features or processes that are not yet live. If anything here is unclear, or you would like more detail on any point, please contact us directly.</p>
      </section>
