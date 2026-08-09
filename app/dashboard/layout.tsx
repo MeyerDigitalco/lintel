@@ -1,4 +1,5 @@
 import { requireSession, loadEntitlements, isWriterRole } from "@/lib/auth";
+import { isLintelAdmin } from "@/lib/admin";
 import { getLang } from "@/lib/i18n/lang";
 import { availableLanguages, isRTL } from "@/lib/i18n/dictionaries";
 import { resolveRegion } from "@/lib/i18n/rulesets";
@@ -21,6 +22,7 @@ export default async function DashboardLayout({
   const session = await requireSession();
   const entitlements = await loadEntitlements(session.orgId);
   const readOnly = !isWriterRole(session.role);
+  const isAdmin = isLintelAdmin(session.email);
   const lang = getLang(session.country);
   const langs = availableLanguages(session.country);
   const ruleset = resolveRegion(session.country, session.region, session.regionCode);
@@ -36,7 +38,7 @@ export default async function DashboardLayout({
     <EntitlementProvider value={entitlements}>
       <RoleProvider readOnly={readOnly}>
         <div className="flex min-h-screen bg-paper" dir={isRTL(lang) ? "rtl" : "ltr"}>
-          <Sidebar readOnly={readOnly} lang={lang} langs={langs} country={session.country} />
+          <Sidebar readOnly={readOnly} lang={lang} langs={langs} country={session.country} isAdmin={isAdmin} />
           <ContentColumn region={session.region} dir={isRTL(lang) ? "rtl" : "ltr"}>
             <Topbar email={session.email} orgName={org?.name} regionName={ruleset.subregionName ? `${ruleset.subregionName}, ${ruleset.countryName}` : ruleset.countryName} />
             <main className="flex-1 px-5 py-8">

@@ -29,6 +29,7 @@ const NAV = [
   { href: "/dashboard/tax", key: "nav.tax" },
   { href: "/dashboard/accountant", key: "nav.accountant" },
   { href: "/dashboard/settings", key: "nav.settings" },
+  { href: "/dashboard/leads", key: "nav.leads", adminOnly: true },
 ];
 
 const TAX_SHORT: Record<string, string> = { en: "Tax", es: "Impuestos", fr: "Impôts", de: "Steuern", ar: "الضرائب", hi: "कर", it: "Tasse", pt: "Impostos", ja: "税金" };
@@ -38,17 +39,19 @@ export function Sidebar({
   lang = "en",
   langs = ["en"],
   country = "GB",
+  isAdmin = false,
 }: {
   readOnly?: boolean;
   lang?: string;
   langs?: string[];
   country?: string;
+  isAdmin?: boolean;
 }) {
   const pathname = usePathname();
   const isUK = country === "GB";
-  const items = NAV.filter((i) => !(readOnly && i.writerOnly)).filter(
-    (i) => isUK || i.href !== "/dashboard/toolkit"
-  );
+  const items = NAV.filter((i) => !(readOnly && i.writerOnly))
+    .filter((i) => isUK || i.href !== "/dashboard/toolkit")
+    .filter((i) => isAdmin || !i.adminOnly);
   return (
     <aside className="hidden w-60 shrink-0 border-r border-hairline bg-surface md:flex md:flex-col">
       <div className="border-b border-hairline px-5 py-6">

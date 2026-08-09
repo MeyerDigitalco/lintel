@@ -38,7 +38,7 @@ export const DICTIONARIES: Record<string, Dict> = {
     "nav.court": "Court ready", "nav.maintenance": "Maintenance", "nav.tasks": "Tasks",
     "nav.notice": "Notices", "nav.agreement": "Tenancy agreements", "nav.compliance": "Compliance", "nav.region": "Region rules",
     "nav.documents": "Documents", "nav.toolkit": "Toolkit", "nav.reports": "Reports",
-    "nav.assistant": "AI assistant", "nav.tax": "Tax & MTD", "nav.accountant": "Accountant", "nav.settings": "Settings",
+    "nav.assistant": "AI assistant", "nav.tax": "Tax & MTD", "nav.accountant": "Accountant", "nav.settings": "Settings", "nav.leads": "Leads",
   },
   es: {
     "nav.overview": "Resumen", "nav.properties": "Propiedades", "nav.contacts": "Contactos",
@@ -46,7 +46,7 @@ export const DICTIONARIES: Record<string, Dict> = {
     "nav.court": "Preparación judicial", "nav.maintenance": "Mantenimiento", "nav.tasks": "Tareas",
     "nav.notice": "Generador de notificaciones", "nav.agreement": "Contratos de arrendamiento", "nav.compliance": "Cumplimiento", "nav.region": "Normas regionales",
     "nav.documents": "Documentos", "nav.toolkit": "Herramientas", "nav.reports": "Informes",
-    "nav.assistant": "Asistente", "nav.tax": "Impuestos", "nav.accountant": "Contable", "nav.settings": "Ajustes",
+    "nav.assistant": "Asistente", "nav.tax": "Impuestos", "nav.accountant": "Contable", "nav.settings": "Ajustes", "nav.leads": "Leads",
   },
   fr: {
     "nav.overview": "Aperçu", "nav.properties": "Biens", "nav.contacts": "Contacts",
@@ -54,7 +54,7 @@ export const DICTIONARIES: Record<string, Dict> = {
     "nav.court": "Préparation au tribunal", "nav.maintenance": "Maintenance", "nav.tasks": "Tâches",
     "nav.notice": "Générateur d'avis", "nav.agreement": "Contrats de location", "nav.compliance": "Conformité", "nav.region": "Règles régionales",
     "nav.documents": "Documents", "nav.toolkit": "Boîte à outils", "nav.reports": "Rapports",
-    "nav.assistant": "Assistant", "nav.tax": "Impôts", "nav.accountant": "Comptable", "nav.settings": "Paramètres",
+    "nav.assistant": "Assistant", "nav.tax": "Impôts", "nav.accountant": "Comptable", "nav.settings": "Paramètres", "nav.leads": "Leads",
   },
   de: {
     "nav.overview": "Übersicht", "nav.properties": "Immobilien", "nav.contacts": "Kontakte",
@@ -62,7 +62,7 @@ export const DICTIONARIES: Record<string, Dict> = {
     "nav.court": "Gerichtsbereitschaft", "nav.maintenance": "Instandhaltung", "nav.tasks": "Aufgaben",
     "nav.notice": "Kündigungsgenerator", "nav.agreement": "Mietverträge", "nav.compliance": "Compliance", "nav.region": "Regionale Regeln",
     "nav.documents": "Dokumente", "nav.toolkit": "Werkzeuge", "nav.reports": "Berichte",
-    "nav.assistant": "Assistent", "nav.tax": "Steuern", "nav.accountant": "Steuerberater", "nav.settings": "Einstellungen",
+    "nav.assistant": "Assistent", "nav.tax": "Steuern", "nav.accountant": "Steuerberater", "nav.settings": "Einstellungen", "nav.leads": "Leads",
   },
   ar: {
     "nav.overview": "نظرة عامة", "nav.properties": "العقارات", "nav.contacts": "جهات الاتصال",
@@ -70,7 +70,7 @@ export const DICTIONARIES: Record<string, Dict> = {
     "nav.court": "الجاهزية القضائية", "nav.maintenance": "الصيانة", "nav.tasks": "المهام",
     "nav.notice": "منشئ الإشعارات", "nav.agreement": "عقود الإيجار", "nav.compliance": "الامتثال", "nav.region": "قواعد المنطقة",
     "nav.documents": "المستندات", "nav.toolkit": "الأدوات", "nav.reports": "التقارير",
-    "nav.assistant": "المساعد", "nav.tax": "الضرائب", "nav.accountant": "المحاسب", "nav.settings": "الإعدادات",
+    "nav.assistant": "المساعد", "nav.tax": "الضرائب", "nav.accountant": "المحاسب", "nav.settings": "الإعدادات", "nav.leads": "العملاء المحتملون",
   },
   hi: {
     "nav.overview": "अवलोकन", "nav.properties": "संपत्तियाँ", "nav.contacts": "संपर्क",
@@ -78,12 +78,12 @@ export const DICTIONARIES: Record<string, Dict> = {
     "nav.court": "न्यायालय तैयारी", "nav.maintenance": "रखरखाव", "nav.tasks": "कार्य",
     "nav.notice": "नोटिस जनरेटर", "nav.agreement": "किरायेदारी अनुबंध", "nav.compliance": "अनुपालन", "nav.region": "क्षेत्रीय नियम",
     "nav.documents": "दस्तावेज़", "nav.toolkit": "टूलकिट", "nav.reports": "रिपोर्ट",
-    "nav.assistant": "सहायक", "nav.tax": "कर", "nav.accountant": "लेखाकार", "nav.settings": "सेटिंग्स",
+    "nav.assistant": "सहायक", "nav.tax": "कर", "nav.accountant": "लेखाकार", "nav.settings": "सेटिंग्स", "nav.leads": "लीड्स",
   },
-  it: { "nav.overview": "Panoramica", "nav.properties": "Immobili", "nav.contacts": "Contatti", "nav.income": "Entrate e spese", "nav.invoices": "Fatture", "nav.rent": "Registro affitti", "nav.court": "Pronto per il tribunale", "nav.maintenance": "Manutenzione", "nav.tasks": "Attività", "nav.notice": "Generatore di avvisi", "nav.agreement": "Contratti di locazione", "nav.compliance": "Conformità", "nav.region": "Regole regionali", "nav.documents": "Documenti", "nav.toolkit": "Strumenti", "nav.reports": "Report", "nav.assistant": "Assistente", "nav.tax": "Tasse", "nav.accountant": "Commercialista", "nav.settings": "Impostazioni" },
-  pt: { "nav.overview": "Visão geral", "nav.properties": "Imóveis", "nav.contacts": "Contactos", "nav.income": "Receitas e despesas", "nav.invoices": "Faturas", "nav.rent": "Registo de rendas", "nav.court": "Preparação judicial", "nav.maintenance": "Manutenção", "nav.tasks": "Tarefas", "nav.notice": "Gerador de notificações", "nav.agreement": "Contratos de arrendamento", "nav.compliance": "Conformidade", "nav.region": "Regras regionais", "nav.documents": "Documentos", "nav.toolkit": "Ferramentas", "nav.reports": "Relatórios", "nav.assistant": "Assistente", "nav.tax": "Impostos", "nav.accountant": "Contabilista", "nav.settings": "Definições" },
-  ja: { "nav.overview": "概要", "nav.properties": "物件", "nav.contacts": "連絡先", "nav.income": "収入と経費", "nav.invoices": "請求書", "nav.rent": "家賃台帳", "nav.court": "訴訟準備", "nav.maintenance": "メンテナンス", "nav.tasks": "タスク", "nav.notice": "通知ジェネレーター", "nav.agreement": "賃貸借契約書", "nav.compliance": "コンプライアンス", "nav.region": "地域ルール", "nav.documents": "書類", "nav.toolkit": "ツール", "nav.reports": "レポート", "nav.assistant": "アシスタント", "nav.tax": "税金", "nav.accountant": "会計士", "nav.settings": "設定" },
-  he: { "nav.overview": "בית", "nav.properties": "נכסים", "nav.contacts": "אנשי קשר", "nav.income": "הכנסות והוצאות", "nav.invoices": "חשבוניות", "nav.rent": "שכר דירה", "nav.court": "מוכנות משפטית", "nav.maintenance": "תחזוקה", "nav.tasks": "משימות", "nav.notice": "מחולל הודעות", "nav.agreement": "הסכמי שכירות", "nav.compliance": "תאימות", "nav.region": "כללי אזור", "nav.documents": "מסמכים", "nav.toolkit": "ערכת כלים", "nav.reports": "דוחות", "nav.assistant": "עוזר AI", "nav.tax": "מס", "nav.accountant": "רואה חשבון", "nav.settings": "הגדרות" },
+  it: { "nav.overview": "Panoramica", "nav.properties": "Immobili", "nav.contacts": "Contatti", "nav.income": "Entrate e spese", "nav.invoices": "Fatture", "nav.rent": "Registro affitti", "nav.court": "Pronto per il tribunale", "nav.maintenance": "Manutenzione", "nav.tasks": "Attività", "nav.notice": "Generatore di avvisi", "nav.agreement": "Contratti di locazione", "nav.compliance": "Conformità", "nav.region": "Regole regionali", "nav.documents": "Documenti", "nav.toolkit": "Strumenti", "nav.reports": "Report", "nav.assistant": "Assistente", "nav.tax": "Tasse", "nav.accountant": "Commercialista", "nav.settings": "Impostazioni", "nav.leads": "Lead" },
+  pt: { "nav.overview": "Visão geral", "nav.properties": "Imóveis", "nav.contacts": "Contactos", "nav.income": "Receitas e despesas", "nav.invoices": "Faturas", "nav.rent": "Registo de rendas", "nav.court": "Preparação judicial", "nav.maintenance": "Manutenção", "nav.tasks": "Tarefas", "nav.notice": "Gerador de notificações", "nav.agreement": "Contratos de arrendamento", "nav.compliance": "Conformidade", "nav.region": "Regras regionais", "nav.documents": "Documentos", "nav.toolkit": "Ferramentas", "nav.reports": "Relatórios", "nav.assistant": "Assistente", "nav.tax": "Impostos", "nav.accountant": "Contabilista", "nav.settings": "Definições", "nav.leads": "Leads" },
+  ja: { "nav.overview": "概要", "nav.properties": "物件", "nav.contacts": "連絡先", "nav.income": "収入と経費", "nav.invoices": "請求書", "nav.rent": "家賃台帳", "nav.court": "訴訟準備", "nav.maintenance": "メンテナンス", "nav.tasks": "タスク", "nav.notice": "通知ジェネレーター", "nav.agreement": "賃貸借契約書", "nav.compliance": "コンプライアンス", "nav.region": "地域ルール", "nav.documents": "書類", "nav.toolkit": "ツール", "nav.reports": "レポート", "nav.assistant": "アシスタント", "nav.tax": "税金", "nav.accountant": "会計士", "nav.settings": "設定", "nav.leads": "リード" },
+  he: { "nav.overview": "בית", "nav.properties": "נכסים", "nav.contacts": "אנשי קשר", "nav.income": "הכנסות והוצאות", "nav.invoices": "חשבוניות", "nav.rent": "שכר דירה", "nav.court": "מוכנות משפטית", "nav.maintenance": "תחזוקה", "nav.tasks": "משימות", "nav.notice": "מחולל הודעות", "nav.agreement": "הסכמי שכירות", "nav.compliance": "תאימות", "nav.region": "כללי אזור", "nav.documents": "מסמכים", "nav.toolkit": "ערכת כלים", "nav.reports": "דוחות", "nav.assistant": "עוזר AI", "nav.tax": "מס", "nav.accountant": "רואה חשבון", "nav.settings": "הגדרות", "nav.leads": "לידים" },
 };
 
 const DASH_DICT: Record<string, Record<string, string>> = {
