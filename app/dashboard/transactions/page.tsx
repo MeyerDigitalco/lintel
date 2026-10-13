@@ -4,6 +4,8 @@ import { PageHeader, Stat, EmptyState, Badge } from "@/components/app/ui";
 import { Card, CardBody } from "@/components/ui/Card";
 import { AddTransactionForm } from "@/components/app/AddTransactionForm";
 import { TransactionsTable } from "@/components/app/TransactionsTable";
+import { Button } from "@/components/ui/Button";
+import { deleteRepeatedEntries } from "@/app/dashboard/transactions/actions";
 import { resolveRegion } from "@/lib/i18n/rulesets";
 import { formatMoney } from "@/lib/i18n/currency";
 import { fmtDate, quarterlyPeriods, taxYearStartFor } from "@/lib/dates";
@@ -16,7 +18,8 @@ export default async function TransactionsPage() {
   const gbp = (n: number, opts?: { decimals?: boolean }) => formatMoney(n, currency, opts);
   const supabase = createClient();
 
-  const [{ data: properties }, { data: tx }] = await Promise.all([
+  const today = new Date().toISOString().slice(0, 10);
+  const [{ data: properties }, { data: tx }, { count: repeatedAll }, { count: repeatedFuture }] = await Promise.all([
     supabase.from("properties").select("id, label").eq("org_id", orgId),
     supabase
       .from("transactions")
@@ -24,6 +27,8 @@ export default async function TransactionsPage() {
       .eq("org_id", orgId)
       .order("occurred_on", { ascending: false })
       .limit(200),
+    supabase.from("transactions").select("id", { count: "exact", head: true }).eq("org_id", orgId).eq("recurring", true),
+    supabase.from("transactions").select("id", { count: "exact", head: true }).eq("org_id", orgId).eq("recurring", true).gt("occurred_on", today),
   ]);
 
   const rows = await Promise.all(
@@ -65,6 +70,31 @@ export default async function TransactionsPage() {
         <Stat label="Finance costs" value={gbp(finance)} hint={country === "GB" ? "Section 24, 20% reducer" : "Interest & finance"} />
         <Stat label="Net (excl. finance)" value={gbp(income - expenses)} />
       </div>
+
+      {(repeatedAll ?? 0) > 0 && (
+        <Card className="mb-6">
+          <CardBody>
+            <p className="text-sm font-medium text-ink">
+              {repeatedAll} repeated {repeatedAll === 1 ? "entry" : "entries"} from the old repeat/backdate option
+            </p>
+            <p className="mt-1 text-xs text-slate">
+              {repeatedFuture ?? 0} dated after today. Deleting removes them permanently, including any attached receipt.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {(repeatedFuture ?? 0) > 0 && (
+                <form action={deleteRepeatedEntries}>
+                  <input type="hidden" name="scope" value="future" />
+                  <Button size="sm" variant="outline" type="submit">Delete {repeatedFuture} future</Button>
+                </form>
+              )}
+              <form action={deleteRepeatedEntries}>
+                <input type="hidden" name="scope" value="all" />
+                <Button size="sm" variant="ghost" type="submit">Delete all {repeatedAll}</Button>
+              </form>
+            </div>
+          </CardBody>
+        </Card>
+      )}
 
       <AddTransactionForm properties={properties ?? []} country={country} />
 

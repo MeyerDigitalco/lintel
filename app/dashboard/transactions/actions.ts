@@ -7,27 +7,6 @@ import { mileageAllowance } from "@/lib/sa105";
 
 const RECEIPTS_BUCKET = "receipts";
 
-/** Insert transaction rows; if the optional `recurring` column is missing, retry without it. */
-async function insertTx(supabase: any, rows: Record<string, unknown>[]) {
-  let res = await supabase.from("transactions").insert(rows);
-  if (res.error && /recurring/i.test(String(res.error.message ?? ""))) {
-    const stripped = rows.map((r) => { const { recurring, ...rest } = r as any; return rest; });
-    res = await supabase.from("transactions").insert(stripped);
-  }
-  if (res.error) throw new Error(res.error.message);
-}
-
-/** Add n months to a YYYY-MM-DD date, clamping to the end of the target month. */
-function addMonthsISO(dateStr: string, n: number): string {
-  const [y, m, d] = dateStr.split("-").map(Number);
-  const base = new Date(Date.UTC(y, m - 1 + n, 1));
-  const daysInMonth = new Date(Date.UTC(base.getUTCFullYear(), base.getUTCMonth() + 1, 0)).getUTCDate();
-  const day = Math.min(d || 1, daysInMonth);
-  const mm = String(base.getUTCMonth() + 1).padStart(2, "0");
-  const dd = String(day).padStart(2, "0");
-  return `${base.getUTCFullYear()}-${mm}-${dd}`;
-}
-
 export async function createTransaction(formData: FormData) {
   const { orgId } = await requireSession();
   const supabase = createClient();
@@ -48,37 +27,17 @@ export async function createTransaction(formData: FormData) {
     }
   }
 
-  // Repeat / backdate. Legacy `recurring=on` (mobile) still means forward 12 months.
-  const legacyRecurring = formData.get("recurring") === "on";
-  const mode = String(formData.get("repeat_mode") ?? "") || (legacyRecurring ? "forward" : "none");
-  const freq = String(formData.get("repeat_freq") ?? "monthly");
-  const stepMonths = freq === "yearly" ? 12 : freq === "quarterly" ? 3 : 1;
-  let count = parseInt(String(formData.get("repeat_count") ?? "12"), 10);
-  if (!isFinite(count) || count < 1) count = 1;
-  count = Math.min(count, 60); // safety cap
-  const startDate = String(formData.get("occurred_on") ?? "") || new Date().toISOString().slice(0, 10);
-  const base = {
+  const { error } = await supabase.from("transactions").insert({
     org_id: orgId,
     property_id: String(formData.get("property_id") ?? "") || null,
     direction,
     sa105_category: String(formData.get("sa105_category") ?? "") || null,
     amount: isNaN(amount) ? 0 : amount,
+    occurred_on: String(formData.get("occurred_on") ?? "") || new Date().toISOString().slice(0, 10),
     description: String(formData.get("description") ?? "") || null,
-  };
-
-  if (mode === "forward" || mode === "back") {
-    // Generate `count` entries from the anchor date, forwards or backwards.
-    const sign = mode === "back" ? -1 : 1;
-    const rows = Array.from({ length: count }, (_, i) => ({
-      ...base,
-      occurred_on: addMonthsISO(startDate, sign * i * stepMonths),
-      receipt_url: i === 0 ? receiptUrl : null, // receipt only on the anchor entry
-      recurring: true,
-    }));
-    await insertTx(supabase, rows);
-  } else {
-    await insertTx(supabase, [{ ...base, occurred_on: startDate, receipt_url: receiptUrl, recurring: false }]);
-  }
+    receipt_url: receiptUrl,
+  });
+  if (error) throw new Error(error.message);
 
   revalidatePath("/dashboard/transactions");
 }
@@ -145,5 +104,32 @@ export async function deleteTransaction(formData: FormData) {
   }
   const { error } = await supabase.from("transactions").delete().eq("id", id).eq("org_id", orgId);
   if (error) throw new Error(error.message);
+  revalidatePath("/dashboard/transactions");
+}
+
+export async function deleteRepeatedEntries(formData: FormData) {
+  const { orgId, role } = await requireSession();
+  if (!isWriterRole(role)) throw new Error("You don't have permission to delete entries.");
+  const supabase = createClient();
+  const scope = String(formData.get("scope") ?? "future");
+  const today = new Date().toISOString().slice(0, 10);
+
+  let sel = supabase.from("transactions").select("id, receipt_url").eq("org_id", orgId).eq("recurring", true);
+  if (scope !== "all") sel = sel.gt("occurred_on", today);
+  const { data: rows, error: selErr } = await sel;
+  if (selErr) throw new Error(selErr.message);
+  if (!rows || rows.length === 0) {
+    revalidatePath("/dashboard/transactions");
+    return;
+  }
+
+  const receipts = rows.map((r: any) => r.receipt_url).filter(Boolean) as string[];
+  if (receipts.length) await supabase.storage.from(RECEIPTS_BUCKET).remove(receipts);
+
+  const ids = rows.map((r: any) => r.id);
+  for (let i = 0; i < ids.length; i += 200) {
+    const { error } = await supabase.from("transactions").delete().in("id", ids.slice(i, i + 200)).eq("org_id", orgId);
+    if (error) throw new Error(error.message);
+  }
   revalidatePath("/dashboard/transactions");
 }

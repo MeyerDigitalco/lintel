@@ -93,7 +93,7 @@ export function TransactionsTable({
         <td className="px-4 py-3 text-ink">
           <span className="flex flex-wrap items-center gap-2">
             {t.description || "-"}
-            {t.recurring ? <span className="rounded-full bg-ink/5 px-2 py-0.5 text-[11px] text-slate">Monthly</span> : null}
+            {t.recurring ? <span className="rounded-full bg-ink/5 px-2 py-0.5 text-[11px] text-slate">Repeated</span> : null}
             {t.receiptUrl ? <a href={t.receiptUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-evergreen hover:underline">Receipt</a> : null}
           </span>
         </td>
